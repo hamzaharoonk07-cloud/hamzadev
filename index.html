@@ -16,6 +16,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <script>
@@ -87,6 +88,51 @@
   }
 
   .wrap { max-width: 1240px; margin: 0 auto; padding: 0 clamp(1.5rem, 4vw, 4rem); }
+
+  /* ── Loader ── */
+  #loader {
+    position: fixed; inset: 0; z-index: 3000;
+    background: var(--bg);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 1.4rem;
+    opacity: 1; visibility: visible;
+    transition: opacity .6s ease, visibility 0s linear 0s;
+  }
+  #loader.loader-done { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .6s ease, visibility 0s linear .6s; }
+  .loader-word {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 700; font-size: 0.85rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .loader-pct {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800; font-size: clamp(3rem, 10vw, 6rem);
+    letter-spacing: -0.02em; color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    display: flex; align-items: flex-start;
+  }
+  .loader-pct::after { content: '%'; font-size: 0.4em; margin-left: 0.15em; color: var(--accent); }
+  .loader-bar { width: min(220px, 55vw); height: 2px; background: var(--line); overflow: hidden; }
+  .loader-bar-fill { height: 100%; width: 0%; background: var(--accent); }
+  body.loading { overflow: hidden; }
+
+  /* ── Custom cursor ── */
+  #cursor { position: fixed; inset: 0; z-index: 2500; pointer-events: none; opacity: 0; transition: opacity .3s; }
+  html.has-custom-cursor #cursor { opacity: 1; }
+  html.has-custom-cursor, html.has-custom-cursor a, html.has-custom-cursor button, html.has-custom-cursor [role="button"] { cursor: none; }
+  #cursor-dot {
+    position: absolute; top: 0; left: 0;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent);
+  }
+  #cursor-ring {
+    position: absolute; top: 0; left: 0;
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 1.5px solid var(--ink);
+    transition: width .2s, height .2s, border-color .2s, background .2s, border-style .2s;
+  }
+  html.cursor-hover #cursor-ring { width: 54px; height: 54px; border-color: var(--accent); background: var(--accent-soft); }
+  html.cursor-drag #cursor-ring { width: 44px; height: 44px; border-color: var(--accent); background: transparent; border-style: dashed; }
 
   /* ── Skip link ── */
   .skip-link {
@@ -213,7 +259,9 @@
     padding-top: 8rem; padding-bottom: 4rem;
     position: relative;
   }
-  .hero-inner { position: relative; }
+  .hero-inner { position: relative; z-index: 1; }
+  #hero-canvas { position: absolute; inset: 0; z-index: 0; opacity: 0.55; pointer-events: none; }
+  @media (max-width: 700px) { #hero-canvas { display: none; } }
   .hero-tag {
     display: inline-flex; align-items: center; gap: 0.6rem;
     font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
@@ -230,25 +278,45 @@
   }
 
   .hero-headline {
-    font-size: clamp(3rem, 9vw, 7.2rem);
-    line-height: 0.94;
+    font-size: clamp(3.2rem, 11.5vw, 9.8rem);
+    line-height: 0.9;
     letter-spacing: -0.03em;
     text-transform: uppercase;
-    max-width: 15ch;
+    position: relative; z-index: 2;
   }
   .hero-headline .thin { -webkit-text-stroke: 1.5px var(--ink); color: transparent; }
+  .hl-mask { display: block; overflow: hidden; }
+  .hl-mask:nth-child(2) { margin-left: clamp(1rem, 9vw, 6rem); }
+  .hl-line { display: block; }
+
+  .hero-bg-word {
+    position: absolute; z-index: 0;
+    top: 48%; left: 50%;
+    transform: translate(-50%,-50%) rotate(-4deg);
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    font-size: clamp(9rem, 34vw, 28rem);
+    line-height: 1;
+    -webkit-text-stroke: 1px var(--line);
+    color: transparent;
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+  }
+  @media (max-width: 700px) { .hero-bg-word { display: none; } }
 
   .hero-photo {
     position: absolute;
-    top: -2rem; right: 2vw;
-    width: min(280px, 26vw);
+    top: 7.5rem; right: -1.5vw;
+    width: min(340px, 30vw);
     aspect-ratio: 3/4;
+    z-index: 1;
     border-radius: 1.4rem;
     overflow: hidden;
     background: linear-gradient(150deg, #dcd4bd, #c9c0a3);
     border: 6px solid var(--cream);
     box-shadow: 0 20px 50px rgba(20,19,15,0.2);
-    transform: rotate(4deg);
+    transform: rotate(-3deg);
   }
   .hero-photo img { width: 100%; height: 100%; object-fit: cover; }
   .hero-photo .fallback {
@@ -291,20 +359,57 @@
   }
   .hero-roles span::before { content: '\2014\A0'; }
 
+  /* ── Marquee ── */
+  .marquee {
+    overflow: hidden;
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    padding: 1.1rem 0;
+    background: var(--bg);
+    position: relative; z-index: 1;
+  }
+  .marquee-track { display: flex; width: max-content; animation: marqueeScroll 28s linear infinite; }
+  .marquee:hover .marquee-track { animation-play-state: paused; }
+  .marquee-item {
+    font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700;
+    font-size: clamp(1.5rem, 3.6vw, 2.6rem);
+    -webkit-text-stroke: 1px var(--ink); color: transparent;
+    padding: 0 1.4rem; white-space: nowrap;
+  }
+  .marquee-item.filled { -webkit-text-stroke: 0; color: var(--accent); }
+  @keyframes marqueeScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ── Draggable card ── */
+  .drag-zone { position: relative; min-height: 200px; margin-top: 2.5rem; }
+  .drag-card {
+    position: absolute; top: 0; left: 0;
+    width: 190px; padding: 1.3rem;
+    background: var(--dark); color: var(--cream);
+    border-radius: 1rem;
+    box-shadow: 0 20px 40px rgba(20,19,15,0.25);
+    cursor: grab; touch-action: none; user-select: none;
+    will-change: transform;
+  }
+  .drag-card:active { cursor: grabbing; }
+  .drag-card .dc-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-bottom: 0.8rem; }
+  .drag-card .dc-tag { font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(245,241,232,0.5); margin-bottom: 0.8rem; }
+  .drag-card .dc-name { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.05rem; }
+  .drag-card .dc-role { font-size: 0.72rem; color: rgba(245,241,232,0.6); margin-top: 0.3rem; }
+
   /* ── About ── */
   #about { background: var(--bg-alt); }
   .about-grid {
     display: grid;
-    grid-template-columns: 1.1fr 1fr;
+    grid-template-columns: 1fr 1.15fr;
     gap: clamp(2.5rem, 6vw, 5rem);
     align-items: start;
   }
   .about-statement {
     font-family: 'Bricolage Grotesque', sans-serif;
-    font-weight: 600;
-    font-size: clamp(1.5rem, 3vw, 2.1rem);
-    line-height: 1.35;
-    letter-spacing: -0.01em;
+    font-weight: 700;
+    font-size: clamp(2rem, 4.4vw, 3.4rem);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    transform: rotate(-1deg);
   }
   .about-statement .accent { color: var(--accent); }
   .about-body p {
@@ -346,6 +451,7 @@
     justify-content: flex-end;
   }
   .tag {
+    display: inline-flex; align-items: center; gap: 0.45rem;
     font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
     padding: 0.45rem 0.9rem;
     border: 1px solid var(--line);
@@ -353,6 +459,9 @@
     color: var(--ink-soft);
     white-space: nowrap;
   }
+  .tag svg { width: 16px; height: 16px; flex-shrink: 0; color: var(--accent); border-radius: 4px; }
+  .tag:nth-child(odd) { transform: translateY(-2px); }
+  .tag:nth-child(even) { transform: translateY(2px); }
   .tools-row { padding: 2rem 0 0; display: flex; flex-wrap: wrap; gap: 0.6rem; }
 
   /* ── Projects ── */
@@ -362,7 +471,7 @@
     grid-template-columns: repeat(2, 1fr);
     gap: clamp(1.5rem, 3vw, 2.5rem);
   }
-  .project-card { text-decoration: none; color: inherit; display: block; group: card; }
+  .project-card { color: inherit; display: block; cursor: pointer; }
   .project-media {
     position: relative;
     aspect-ratio: 16/11;
@@ -407,13 +516,17 @@
     font-size: 2.6rem; font-weight: 700; color: rgba(255,255,255,0.92);
     letter-spacing: -0.02em;
   }
-  .project-card:hover .project-media { transform: translateY(-4px); }
+  .project-card:hover .project-media { transform: translateY(-4px) rotate(0deg) !important; }
   .project-media { transition: transform .35s ease; }
+  .project-card:nth-child(4n+1) .project-media, .project-card:nth-child(4n+4) .project-media { transform: rotate(-0.6deg); }
+  .project-card:nth-child(4n+2) .project-media, .project-card:nth-child(4n+3) .project-media { transform: rotate(0.6deg); }
+  .project-card:nth-child(even) { margin-top: clamp(0px, 4vw, 3.2rem); }
+  @media (max-width: 860px) { .project-card:nth-child(even) { margin-top: 0; } }
 
-  .p1 .project-visual { background: linear-gradient(140deg,#0f5c5c,#12878c 55%,#7fe0d6); }
-  .p2 .project-visual { background: linear-gradient(140deg,#7a2b0a,#e8622a 55%,#ffc46b); }
-  .p3 .project-visual { background: linear-gradient(140deg,#2c1a52,#6a3fd6 55%,#c7b3ff); }
-  .p4 .project-visual { background: linear-gradient(140deg,#5c0f1f,#c2273f 55%,#ffb199); }
+  .grad-teal { background: linear-gradient(140deg,#0f5c5c,#12878c 55%,#7fe0d6); }
+  .grad-orange { background: linear-gradient(140deg,#7a2b0a,#e8622a 55%,#ffc46b); }
+  .grad-violet { background: linear-gradient(140deg,#2c1a52,#6a3fd6 55%,#c7b3ff); }
+  .grad-crimson { background: linear-gradient(140deg,#5c0f1f,#c2273f 55%,#ffb199); }
 
   .project-info { padding-top: 1.3rem; }
   .project-index {
@@ -435,6 +548,40 @@
     color: var(--ink-soft);
   }
   .project-stack span:not(:last-child)::after { content: '/'; margin-left: 0.5rem; color: var(--line); }
+
+  /* ── Project modal ── */
+  #project-modal {
+    position: fixed; inset: 0; z-index: 2000;
+    display: flex; align-items: center; justify-content: center;
+    padding: 1.5rem;
+    opacity: 0; visibility: hidden;
+    transition: opacity .3s ease, visibility 0s linear .3s;
+  }
+  #project-modal.open { opacity: 1; visibility: visible; transition: opacity .3s ease; }
+  .modal-backdrop { position: absolute; inset: 0; background: rgba(10,9,7,0.7); backdrop-filter: blur(4px); }
+  .modal-panel {
+    position: relative; z-index: 1;
+    width: min(760px, 100%); max-height: 88vh; overflow-y: auto;
+    background: var(--bg); border-radius: 1.4rem;
+    border: 1px solid var(--line);
+    padding: clamp(1.5rem, 4vw, 2.8rem);
+    transform: scale(.94); transition: transform .35s cubic-bezier(.16,1,.3,1);
+  }
+  #project-modal.open .modal-panel { transform: scale(1); }
+  .modal-close {
+    position: absolute; top: 1.2rem; right: 1.2rem; z-index: 2;
+    width: 2.4rem; height: 2.4rem; border-radius: 50%;
+    border: 1px solid var(--line); background: var(--bg);
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+    color: var(--ink);
+  }
+  .modal-close svg { width: 16px; height: 16px; }
+  .modal-media { margin-bottom: 1.6rem; }
+  .modal-index { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; }
+  .modal-title { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: clamp(1.3rem, 3vw, 1.8rem); margin-bottom: 1rem; }
+  .modal-desc { font-size: 0.92rem; line-height: 1.8; color: var(--ink-soft); margin-bottom: 1.4rem; }
+  .modal-stack { margin-bottom: 1.8rem; }
+  body.modal-open { overflow: hidden; }
 
   /* ── Education ── */
   .edu-list { border-top: 1px solid var(--line); }
@@ -476,7 +623,8 @@
   }
   .contact-links {
     display: flex; flex-wrap: wrap; justify-content: center; gap: 1.1rem;
-    margin-bottom: 5rem;
+    margin-bottom: 2rem;
+    position: relative; z-index: 1;
   }
   .contact-links a {
     display: inline-flex; align-items: center; justify-content: center;
@@ -513,16 +661,17 @@
   }
   footer span { color: var(--accent); }
 
-  /* ── Scroll reveal ── */
-  .reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1); }
-  .reveal.visible { opacity: 1; transform: translateY(0); }
-  .reveal-d1 { transition-delay: .08s; }
-  .reveal-d2 { transition-delay: .16s; }
-  .reveal-d3 { transition-delay: .24s; }
+  /* ── Scroll reveal ──
+     .reveal elements are visible by default (no CSS animation) so the page
+     works with no JS. GSAP + ScrollTrigger (if loaded) apply the actual
+     from-hidden entrance animation at runtime — see the script at the
+     bottom of the page. */
 
   @media (prefers-reduced-motion: reduce) {
     * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
-    .reveal { opacity: 1; transform: none; }
+    #loader { display: none !important; }
+    #hero-canvas { display: none !important; }
+    .marquee-track { animation: none !important; }
   }
 
   /* ── Responsive ── */
@@ -539,6 +688,17 @@
 </head>
 
 <body>
+
+<div id="loader" role="status" aria-live="polite" aria-label="Loading">
+  <div class="loader-word">HAMZA<span style="color:var(--accent)">.</span>DEV</div>
+  <div class="loader-pct" id="loaderPct">0</div>
+  <div class="loader-bar"><div class="loader-bar-fill" id="loaderFill"></div></div>
+</div>
+
+<div id="cursor" aria-hidden="true">
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
+</div>
 
 <a href="#main" class="skip-link">Skip to content</a>
 
@@ -577,13 +737,18 @@
 
 <!-- HERO -->
 <section id="hero">
+  <canvas id="hero-canvas" aria-hidden="true"></canvas>
+  <div class="hero-bg-word" aria-hidden="true">CODE</div>
   <div class="wrap hero-inner">
     <div class="hero-tag">Available for freelance work</div>
 
-    <h1 class="hero-headline">FRONTEND<br><span class="thin">DEVELOPER</span></h1>
+    <h1 class="hero-headline">
+      <span class="hl-mask"><span class="hl-line">FRONTEND</span></span>
+      <span class="hl-mask"><span class="hl-line thin">DEVELOPER</span></span>
+    </h1>
 
     <div class="hero-photo">
-      <img src="profile.jpg" alt="Portrait of Hamza Haroon" id="heroPhoto" onerror="this.hidden=true;document.getElementById('heroPhotoFallback').hidden=false;">
+      <img src="profile.png" alt="Portrait of Hamza Haroon" id="heroPhoto" onerror="this.hidden=true;document.getElementById('heroPhotoFallback').hidden=false;">
       <div class="fallback" id="heroPhotoFallback" hidden>HH</div>
     </div>
 
@@ -602,13 +767,26 @@
           <span>View Work</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg>
         </a>
-        <a href="resume.pdf" class="btn btn-ghost" download>
-          <span>Download CV</span>
+        <a href="resume.pdf" class="btn btn-ghost" target="_blank" rel="noopener noreferrer">
+          <span>View CV</span>
         </a>
       </div>
     </div>
   </div>
 </section>
+
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span class="marquee-item">FRONTEND DEVELOPER</span>
+    <span class="marquee-item filled">GRAPHIC DESIGNER</span>
+    <span class="marquee-item">AVAILABLE FOR WORK</span>
+    <span class="marquee-item filled">BASED IN KARACHI</span>
+    <span class="marquee-item">FRONTEND DEVELOPER</span>
+    <span class="marquee-item filled">GRAPHIC DESIGNER</span>
+    <span class="marquee-item">AVAILABLE FOR WORK</span>
+    <span class="marquee-item filled">BASED IN KARACHI</span>
+  </div>
+</div>
 
 <!-- ABOUT -->
 <section id="about">
@@ -618,9 +796,19 @@
       <h2 class="section-title">About <span class="outline">Me</span></h2>
     </div>
     <div class="about-grid">
-      <p class="about-statement reveal">
-        I work at the intersection of <span class="accent">code</span> and <span class="accent">creativity</span> — building interfaces that feel as good as they look.
-      </p>
+      <div class="about-left">
+        <p class="about-statement reveal">
+          I work at the intersection of <span class="accent">code</span> and <span class="accent">creativity</span> — building interfaces that feel as good as they look.
+        </p>
+        <div class="drag-zone" aria-hidden="true">
+          <div class="drag-card">
+            <div class="dc-dot"></div>
+            <div class="dc-tag">Grab &amp; drag</div>
+            <div class="dc-name">Hamza Haroon</div>
+            <div class="dc-role">Frontend Dev / Designer</div>
+          </div>
+        </div>
+      </div>
       <div class="about-body reveal reveal-d1">
         <p>I'm a frontend developer and graphic designer with a passion for building fast, visually compelling web experiences. With a strong grip on HTML, CSS, JavaScript, Bootstrap, and jQuery, I build everything from landing pages to multi-section platforms — and on the design side, I bring brands to life through logos, visual identities, and digital assets.</p>
         <p>I'm always pushing to learn, currently deep-diving into advanced JavaScript patterns and modern design systems while completing my formal education.</p>
@@ -655,30 +843,30 @@
       <div class="skills-row">
         <span class="cat">Frontend</span>
         <div class="tags">
-          <span class="tag">HTML5</span>
-          <span class="tag">CSS3</span>
-          <span class="tag">JavaScript</span>
-          <span class="tag">Bootstrap 5</span>
-          <span class="tag">jQuery</span>
-          <span class="tag">Responsive Design</span>
+          <span class="tag"><svg viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#E34F26"/><path d="M7 8l-3 4 3 4M17 8l3 4-3 4" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>HTML5</span>
+          <span class="tag"><svg viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#1572B6"/><path d="M9 6c-1.5 0-2 .8-2 2v2c0 .8-.5 1.3-1.3 1.3.8 0 1.3.5 1.3 1.3v2c0 1.2.5 2 2 2M15 6c1.5 0 2 .8 2 2v2c0 .8.5 1.3 1.3 1.3-.8 0-1.3.5-1.3 1.3v2c0 1.2-.5 2-2 2" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>CSS3</span>
+          <span class="tag"><svg viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#F7DF1E"/><text x="12" y="16.5" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="10" fill="#000" text-anchor="middle">JS</text></svg>JavaScript</span>
+          <span class="tag"><svg viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#7952B3"/><text x="12" y="17" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="13" fill="#fff" text-anchor="middle">B</text></svg>Bootstrap 5</span>
+          <span class="tag"><svg viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#0769AD"/><text x="12" y="16" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="9" fill="#fff" text-anchor="middle">jQ</text></svg>jQuery</span>
+          <span class="tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="14" height="10" rx="1"/><path d="M2 17h14"/><rect x="17" y="8" width="5" height="12" rx="1"/></svg>Responsive Design</span>
         </div>
       </div>
       <div class="skills-row">
         <span class="cat">Design</span>
         <div class="tags">
-          <span class="tag">UI Design</span>
-          <span class="tag">Brand Identity</span>
-          <span class="tag">Photoshop</span>
-          <span class="tag">Canva Pro</span>
+          <span class="tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>UI Design</span>
+          <span class="tag"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/></svg>Brand Identity</span>
+          <span class="tag"><svg viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#001E36"/><text x="12" y="16.5" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="10" fill="#31A8FF" text-anchor="middle">Ps</text></svg>Photoshop</span>
+          <span class="tag"><svg viewBox="0 0 24 24"><defs><linearGradient id="canvaGrad1" x1="0" y1="0" x2="24" y2="24"><stop offset="0%" stop-color="#00C4CC"/><stop offset="50%" stop-color="#7D2AE8"/><stop offset="100%" stop-color="#FF2E63"/></linearGradient></defs><rect width="24" height="24" rx="12" fill="url(#canvaGrad1)"/><text x="12" y="16.5" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="12" fill="#fff" text-anchor="middle">C</text></svg>Canva Pro</span>
         </div>
       </div>
       <div class="skills-row">
         <span class="cat">Workflow</span>
         <div class="tags">
-          <span class="tag">Git &amp; GitHub</span>
-          <span class="tag">VS Code</span>
-          <span class="tag">Chrome DevTools</span>
-          <span class="tag">Flexbox / Grid</span>
+          <span class="tag"><svg viewBox="0 0 24 24"><rect width="24" height="24" rx="12" fill="#181717"/><g transform="translate(4,4) scale(0.68)"><path fill="#fff" d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55 0-.27-.01-1.16-.02-2.11-3.2.7-3.88-1.36-3.88-1.36-.52-1.34-1.28-1.69-1.28-1.69-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.7 5.39-5.26 5.68.41.36.78 1.07.78 2.15 0 1.55-.01 2.8-.01 3.18 0 .3.2.66.79.55A10.52 10.52 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z"/></g></svg>Git &amp; GitHub</span>
+          <span class="tag"><svg viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#007ACC"/><path d="M7 8l4 4-4 4" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="13" y1="16" x2="17" y2="16" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>VS Code</span>
+          <span class="tag"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#fff"/><path d="M12 1a11 11 0 0 1 9.53 5.5H12a5.5 5.5 0 0 0-4.76 2.75L2.47 6.5A11 11 0 0 1 12 1z" fill="#EA4335"/><path d="M21.53 6.5A11 11 0 0 1 17.5 20.68L12.98 13a5.5 5.5 0 0 0 0-5.5h8.55z" fill="#FBBC05"/><path d="M2.47 6.5 7 14.25A5.5 5.5 0 0 0 12 17.5l-4.53 7.82A11 11 0 0 1 2.47 6.5z" fill="#34A853"/><circle cx="12" cy="12" r="4" fill="#4285F4"/></svg>Chrome DevTools</span>
+          <span class="tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Flexbox / Grid</span>
         </div>
       </div>
     </div>
@@ -695,10 +883,16 @@
 
     <div class="projects-grid">
 
-      <a class="project-card p1 reveal" href="https://hamzamedicare.vercel.app/" target="_blank" rel="noopener noreferrer">
+      <div class="project-card reveal" tabindex="0" role="button" aria-haspopup="dialog"
+        aria-label="View MediCare project details"
+        data-index="Project 01" data-title="MediCare — Book Appointments Online"
+        data-desc="A fully responsive healthcare site giving patients easy access to doctor profiles, department info, and online appointment booking."
+        data-stack="HTML5,CSS3,Bootstrap,jQuery,JavaScript"
+        data-url="https://hamzamedicare.vercel.app/" data-url-label="hamzamedicare.vercel.app"
+        data-mono="MC" data-glyph="MediCare" data-grad="grad-teal">
         <div class="project-media">
           <div class="browser-bar"><i></i><i></i><i></i><span class="url">hamzamedicare.vercel.app</span></div>
-          <div class="project-visual" data-mono="MC"><span class="glyph">MediCare</span></div>
+          <div class="project-visual grad-teal" data-mono="MC"><span class="glyph">MediCare</span></div>
         </div>
         <div class="project-info">
           <div class="project-index">Project 01</div>
@@ -708,12 +902,18 @@
           <p class="project-desc">A fully responsive healthcare site giving patients easy access to doctor profiles, department info, and online appointment booking.</p>
           <div class="project-stack"><span>HTML5</span><span>CSS3</span><span>Bootstrap</span><span>jQuery</span><span>JavaScript</span></div>
         </div>
-      </a>
+      </div>
 
-      <a class="project-card p2 reveal reveal-d1" href="https://wilsonsports.vercel.app/" target="_blank" rel="noopener noreferrer">
+      <div class="project-card reveal reveal-d1" tabindex="0" role="button" aria-haspopup="dialog"
+        aria-label="View Wilson Sports project details"
+        data-index="Project 02" data-title="Wilson Sports"
+        data-desc="A modern e-commerce platform for sports goods, built for athletes and enthusiasts with a clean, product-first layout."
+        data-stack="HTML,JavaScript,Bootstrap,jQuery,Git"
+        data-url="https://wilsonsports.vercel.app/" data-url-label="wilsonsports.vercel.app"
+        data-mono="WS" data-glyph="Wilson Sports" data-grad="grad-orange">
         <div class="project-media">
           <div class="browser-bar"><i></i><i></i><i></i><span class="url">wilsonsports.vercel.app</span></div>
-          <div class="project-visual" data-mono="WS"><span class="glyph">Wilson Sports</span></div>
+          <div class="project-visual grad-orange" data-mono="WS"><span class="glyph">Wilson Sports</span></div>
         </div>
         <div class="project-info">
           <div class="project-index">Project 02</div>
@@ -723,12 +923,18 @@
           <p class="project-desc">A modern e-commerce platform for sports goods, built for athletes and enthusiasts with a clean, product-first layout.</p>
           <div class="project-stack"><span>HTML</span><span>JavaScript</span><span>Bootstrap</span><span>jQuery</span><span>Git</span></div>
         </div>
-      </a>
+      </div>
 
-      <a class="project-card p3 reveal" href="https://pakistan-mart12.vercel.app/" target="_blank" rel="noopener noreferrer">
+      <div class="project-card reveal" tabindex="0" role="button" aria-haspopup="dialog"
+        aria-label="View PakistanMart project details"
+        data-index="Project 03" data-title="PakistanMart"
+        data-desc="An elegantly designed e-commerce marketplace for authentic products sourced from across Pakistan."
+        data-stack="HTML,CSS3,JavaScript,jQuery"
+        data-url="https://pakistan-mart12.vercel.app/" data-url-label="pakistan-mart12.vercel.app"
+        data-mono="PM" data-glyph="PakistanMart" data-grad="grad-violet">
         <div class="project-media">
           <div class="browser-bar"><i></i><i></i><i></i><span class="url">pakistan-mart12.vercel.app</span></div>
-          <div class="project-visual" data-mono="PM"><span class="glyph">PakistanMart</span></div>
+          <div class="project-visual grad-violet" data-mono="PM"><span class="glyph">PakistanMart</span></div>
         </div>
         <div class="project-info">
           <div class="project-index">Project 03</div>
@@ -738,12 +944,18 @@
           <p class="project-desc">An elegantly designed e-commerce marketplace for authentic products sourced from across Pakistan.</p>
           <div class="project-stack"><span>HTML</span><span>CSS3</span><span>JavaScript</span><span>jQuery</span></div>
         </div>
-      </a>
+      </div>
 
-      <a class="project-card p4 reveal reveal-d1" href="https://zaikaekarachi.vercel.app/" target="_blank" rel="noopener noreferrer">
+      <div class="project-card reveal reveal-d1" tabindex="0" role="button" aria-haspopup="dialog"
+        aria-label="View Zaika-e-Karachi project details"
+        data-index="Project 04" data-title="Zaika-e-Karachi"
+        data-desc="A premium desi dining restaurant site showcasing Karachi's street food scene, with reservations and a photo gallery."
+        data-stack="HTML5,CSS3,JavaScript,Bootstrap,jQuery"
+        data-url="https://zaikaekarachi.vercel.app/" data-url-label="zaikaekarachi.vercel.app"
+        data-mono="ZK" data-glyph="Zaika-e-Karachi" data-grad="grad-crimson">
         <div class="project-media">
           <div class="browser-bar"><i></i><i></i><i></i><span class="url">zaikaekarachi.vercel.app</span></div>
-          <div class="project-visual" data-mono="ZK"><span class="glyph">Zaika-e-Karachi</span></div>
+          <div class="project-visual grad-crimson" data-mono="ZK"><span class="glyph">Zaika-e-Karachi</span></div>
         </div>
         <div class="project-info">
           <div class="project-index">Project 04</div>
@@ -753,7 +965,7 @@
           <p class="project-desc">A premium desi dining restaurant site showcasing Karachi's street food scene, with reservations and a photo gallery.</p>
           <div class="project-stack"><span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>Bootstrap</span><span>jQuery</span></div>
         </div>
-      </a>
+      </div>
 
     </div>
   </div>
@@ -828,8 +1040,33 @@
   </footer>
 </section>
 
+<div id="project-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-backdrop"></div>
+  <div class="modal-panel">
+    <button class="modal-close" aria-label="Close project details">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
+    <div class="modal-media project-media" id="modalMedia"></div>
+    <div class="modal-index" id="modalIndex"></div>
+    <h3 class="modal-title" id="modalTitle"></h3>
+    <p class="modal-desc" id="modalDesc"></p>
+    <div class="project-stack modal-stack" id="modalStack"></div>
+    <a class="btn btn-primary" id="modalLink" target="_blank" rel="noopener noreferrer">
+      <span>Open Live Site</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg>
+    </a>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
 <script>
-  // Theme toggle
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
+
+  // ===== Theme toggle =====
   const themeToggle = document.getElementById('themeToggle');
   const rootEl = document.documentElement;
   themeToggle.setAttribute('aria-pressed', String(rootEl.getAttribute('data-theme') === 'dark'));
@@ -839,9 +1076,10 @@
     localStorage.setItem('theme', next);
     themeToggle.setAttribute('aria-pressed', String(next === 'dark'));
     document.querySelector('meta[name="theme-color"]').setAttribute('content', next === 'dark' ? '#121110' : '#f5f1e8');
+    if (window.updateHeroCanvasTheme) window.updateHeroCanvasTheme();
   });
 
-  // Nav overlay toggle
+  // ===== Nav overlay toggle =====
   const navToggle = document.getElementById('navToggle');
   const navOverlay = document.getElementById('nav-overlay');
 
@@ -860,19 +1098,7 @@
   navOverlay.querySelectorAll('a').forEach(link => link.addEventListener('click', closeNav));
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeNav(); });
 
-  // Scroll reveal
-  const reveals = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        observer.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.12 });
-  reveals.forEach(r => observer.observe(r));
-
-  // Smooth scroll with nav offset
+  // ===== Smooth scroll with nav offset =====
   document.querySelectorAll('a[href^="#"]').forEach(link => {
     link.addEventListener('click', e => {
       const target = document.querySelector(link.getAttribute('href'));
@@ -882,6 +1108,347 @@
       }
     });
   });
+
+  // ===== Loading screen =====
+  // Base content is always visible via CSS regardless of this — the loader
+  // is purely a cosmetic overlay gated on fonts/hero-photo readiness with a
+  // hard timeout, so it can never leave the site stuck.
+  function initLoader() {
+    const loader = document.getElementById('loader');
+    const pctEl = document.getElementById('loaderPct');
+    const fillEl = document.getElementById('loaderFill');
+    if (!loader) { playHeroEntrance(); return; }
+
+    if (prefersReducedMotion) {
+      loader.remove();
+      playHeroEntrance();
+      return;
+    }
+
+    document.body.classList.add('loading');
+    const heroImg = document.getElementById('heroPhoto');
+    const imgReady = new Promise(res => {
+      if (heroImg.complete) return res();
+      heroImg.addEventListener('load', res, { once: true });
+      heroImg.addEventListener('error', res, { once: true });
+    });
+    const fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();
+    const readySignal = Promise.race([
+      Promise.all([imgReady, fontsReady]),
+      new Promise(res => setTimeout(res, 4000))
+    ]);
+    const minTime = new Promise(res => setTimeout(res, 900));
+
+    let doneWaiting = false;
+    Promise.all([readySignal, minTime]).then(() => { doneWaiting = true; });
+
+    // Driven by real elapsed time (not frame count) so it can't stall under
+    // requestAnimationFrame throttling (e.g. a backgrounded/inactive tab).
+    const loaderStart = performance.now();
+    let finished = false;
+    (function frame() {
+      if (finished) return;
+      const elapsed = performance.now() - loaderStart;
+      const shown = doneWaiting ? 100 : Math.min(90, Math.round((elapsed / 800) * 90));
+      pctEl.textContent = shown;
+      fillEl.style.width = shown + '%';
+      if (shown >= 100) {
+        finished = true;
+        setTimeout(() => {
+          loader.classList.add('loader-done');
+          document.body.classList.remove('loading');
+          setTimeout(() => loader.remove(), 700);
+          playHeroEntrance();
+        }, 150);
+      } else {
+        requestAnimationFrame(frame);
+      }
+    })();
+  }
+
+  // ===== Hero entrance timeline =====
+  function playHeroEntrance() {
+    if (!window.gsap) return;
+    gsap.set(['.hero-tag', '.hl-line', '.hero-photo', '.hero-roles span', '.hero-desc', '.hero-cta .btn'], { opacity: 0 });
+    gsap.set('.hl-line', { yPercent: 110 });
+    gsap.set('.hero-photo', { scale: 0.85, y: 20 });
+    gsap.set(['.hero-tag', '.hero-desc', '.hero-cta .btn'], { y: 16 });
+
+    const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+    tl.to('.hero-tag', { opacity: 1, y: 0, duration: 0.6 })
+      .to('.hl-line', { opacity: 1, yPercent: 0, duration: 0.85, stagger: 0.12 }, '-=0.3')
+      .to('.hero-photo', { opacity: 1, scale: 1, y: 0, duration: 0.8 }, '-=0.6')
+      .to('.hero-roles span', { opacity: 1, duration: 0.5, stagger: 0.08 }, '-=0.5')
+      .to('.hero-desc', { opacity: 1, y: 0, duration: 0.6 }, '-=0.4')
+      .to('.hero-cta .btn', { opacity: 1, y: 0, duration: 0.5, stagger: 0.1 }, '-=0.4');
+  }
+
+  // ===== Scroll reveals + parallax (GSAP ScrollTrigger, progressive enhancement) =====
+  function initScrollReveals() {
+    if (!window.gsap || !window.ScrollTrigger) return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    document.querySelectorAll('.reveal').forEach(el => {
+      gsap.from(el, {
+        opacity: 0, y: 28, duration: 0.7, ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 88%' }
+      });
+    });
+
+    document.querySelectorAll('.project-card').forEach(card => {
+      const media = card.querySelector('.project-media');
+      gsap.to(media, {
+        yPercent: -6, ease: 'none',
+        scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: true }
+      });
+    });
+
+    // Cinematic hero exit: as the hero scrolls naturally out of view, scale
+    // and fade it out (no pin/scroll-jacking — that risks the page getting
+    // stuck on some input devices/browsers, so this scrubs against the
+    // hero's own natural scroll distance instead).
+    if (!isCoarsePointer && window.innerWidth >= 700) {
+      gsap.timeline({
+        scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 0.6 }
+      })
+        .to('.hero-headline', { scale: 0.9, opacity: 0, ease: 'none' }, 0)
+        .to('.hero-photo', { y: -60, opacity: 0, ease: 'none' }, 0)
+        .to('.hero-tag', { opacity: 0, y: -20, ease: 'none' }, 0)
+        .to('.hero-roles', { opacity: 0, ease: 'none' }, 0)
+        .to(['.hero-desc', '.hero-cta'], { opacity: 0, y: -20, ease: 'none' }, 0)
+        .to('#hero-canvas', { opacity: 0, ease: 'none' }, 0);
+
+      gsap.to('.hero-bg-word', {
+        yPercent: 25, ease: 'none',
+        scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true }
+      });
+    }
+  }
+
+  // ===== Custom cursor =====
+  function initCustomCursor() {
+    if (isCoarsePointer) return;
+    document.documentElement.classList.add('has-custom-cursor');
+    const dot = document.getElementById('cursor-dot');
+    const ring = document.getElementById('cursor-ring');
+    let mx = -100, my = -100, rx = -100, ry = -100;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%,-50%)`;
+      if (prefersReducedMotion) {
+        ring.style.transform = `translate(${mx}px, ${my}px) translate(-50%,-50%)`;
+      }
+    });
+
+    if (!prefersReducedMotion) {
+      (function loop() {
+        rx += (mx - rx) * 0.18;
+        ry += (my - ry) * 0.18;
+        ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%,-50%)`;
+        requestAnimationFrame(loop);
+      })();
+    }
+
+    const hoverSelector = 'a, button, [role="button"], .tag';
+    document.addEventListener('mouseover', e => {
+      if (e.target.closest(hoverSelector)) document.documentElement.classList.add('cursor-hover');
+    });
+    document.addEventListener('mouseout', e => {
+      if (e.target.closest(hoverSelector)) document.documentElement.classList.remove('cursor-hover');
+    });
+  }
+
+  // ===== Draggable ID card =====
+  function initDragCard() {
+    const card = document.querySelector('.drag-card');
+    const zone = document.querySelector('.drag-zone');
+    if (!card || !zone) return;
+
+    let x = 0, y = 0, vx = 0, vy = 0, rot = -6;
+    let dragging = false, startX = 0, startY = 0, lastX = 0, lastY = 0, lastT = 0;
+
+    function bounds() {
+      const zr = zone.getBoundingClientRect();
+      const cr = card.getBoundingClientRect();
+      return { minX: 0, maxX: Math.max(0, zr.width - cr.width), minY: 0, maxY: Math.max(0, zr.height - cr.height) };
+    }
+    function render() { card.style.transform = `translate(${x}px, ${y}px) rotate(${rot}deg)`; }
+    function place(px, py) {
+      const b = bounds();
+      x = Math.min(b.maxX, Math.max(b.minX, px));
+      y = Math.min(b.maxY, Math.max(b.minY, py));
+      render();
+    }
+    const b0 = bounds();
+    place(b0.maxX * 0.15, b0.maxY * 0.25);
+
+    card.addEventListener('pointerdown', e => {
+      dragging = true;
+      card.setPointerCapture(e.pointerId);
+      startX = e.clientX - x; startY = e.clientY - y;
+      lastX = e.clientX; lastY = e.clientY; lastT = performance.now();
+      document.documentElement.classList.add('cursor-drag');
+    });
+
+    card.addEventListener('pointermove', e => {
+      if (!dragging) return;
+      const now = performance.now();
+      const dt = Math.max(1, now - lastT);
+      vx = (e.clientX - lastX) / dt * 16;
+      vy = (e.clientY - lastY) / dt * 16;
+      lastX = e.clientX; lastY = e.clientY; lastT = now;
+      x = e.clientX - startX; y = e.clientY - startY;
+      rot = Math.max(-18, Math.min(18, vx * 1.4));
+      render();
+    });
+
+    function endDrag() {
+      if (!dragging) return;
+      dragging = false;
+      document.documentElement.classList.remove('cursor-drag');
+      momentum();
+    }
+    card.addEventListener('pointerup', endDrag);
+    card.addEventListener('pointercancel', endDrag);
+
+    function momentum() {
+      const b = bounds();
+      (function step() {
+        if (dragging) return;
+        x += vx; y += vy;
+        vx *= 0.92; vy *= 0.92; rot *= 0.92;
+        if (x < b.minX) { x = b.minX; vx *= -0.4; }
+        if (x > b.maxX) { x = b.maxX; vx *= -0.4; }
+        if (y < b.minY) { y = b.minY; vy *= -0.4; }
+        if (y > b.maxY) { y = b.maxY; vy *= -0.4; }
+        render();
+        if (Math.abs(vx) > 0.05 || Math.abs(vy) > 0.05) requestAnimationFrame(step);
+      })();
+    }
+
+    window.addEventListener('resize', () => place(x, y));
+  }
+
+  // ===== Three.js hero flourish =====
+  function initHeroCanvas() {
+    if (!window.THREE || prefersReducedMotion || isCoarsePointer || window.innerWidth < 700) return;
+    const canvas = document.getElementById('hero-canvas');
+    const heroSection = document.getElementById('hero');
+    if (!canvas || !heroSection) return;
+
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+    camera.position.z = 9;
+
+    const count = 240;
+    const positions = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      positions[i * 3] = (Math.random() - 0.5) * 16;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 10;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 8;
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+    function pointColor() {
+      const v = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+      return v || '#ff5a36';
+    }
+    const mat = new THREE.PointsMaterial({ color: pointColor(), size: 0.045, transparent: true, opacity: 0.55 });
+    const points = new THREE.Points(geo, mat);
+    scene.add(points);
+
+    function resize() {
+      const w = heroSection.clientWidth, h = heroSection.clientHeight;
+      if (!w || !h) return;
+      renderer.setSize(w, h);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    let mouseX = 0, mouseY = 0;
+    window.addEventListener('mousemove', e => {
+      mouseX = e.clientX / window.innerWidth - 0.5;
+      mouseY = e.clientY / window.innerHeight - 0.5;
+    });
+
+    let running = true;
+    new IntersectionObserver(entries => { running = entries[0].isIntersecting; }, { threshold: 0 }).observe(heroSection);
+
+    (function animate() {
+      requestAnimationFrame(animate);
+      if (!running) return;
+      points.rotation.y += 0.0009;
+      points.rotation.x += 0.0002;
+      camera.position.x += (mouseX * 1.2 - camera.position.x) * 0.02;
+      camera.position.y += (-mouseY * 1.2 - camera.position.y) * 0.02;
+      camera.lookAt(scene.position);
+      renderer.render(scene, camera);
+    })();
+
+    window.updateHeroCanvasTheme = function () { mat.color.set(pointColor()); };
+  }
+
+  // ===== Project detail modal =====
+  function initProjectModal() {
+    const modal = document.getElementById('project-modal');
+    if (!modal) return;
+    const closeBtn = modal.querySelector('.modal-close');
+    const mediaWrap = document.getElementById('modalMedia');
+    const indexEl = document.getElementById('modalIndex');
+    const titleEl = document.getElementById('modalTitle');
+    const descEl = document.getElementById('modalDesc');
+    const stackEl = document.getElementById('modalStack');
+    const linkEl = document.getElementById('modalLink');
+    let lastFocused = null;
+
+    function onKey(e) { if (e.key === 'Escape') closeModal(); }
+
+    function openModal(card) {
+      lastFocused = card;
+      indexEl.textContent = card.dataset.index;
+      titleEl.textContent = card.dataset.title;
+      descEl.textContent = card.dataset.desc;
+      stackEl.innerHTML = card.dataset.stack.split(',').map(s => `<span>${s}</span>`).join('');
+      linkEl.href = card.dataset.url;
+      mediaWrap.innerHTML =
+        `<div class="browser-bar"><i></i><i></i><i></i><span class="url">${card.dataset.urlLabel}</span></div>` +
+        `<div class="project-visual ${card.dataset.grad}" data-mono="${card.dataset.mono}"><span class="glyph">${card.dataset.glyph}</span></div>`;
+      modal.classList.add('open');
+      document.body.classList.add('modal-open');
+      closeBtn.focus();
+      document.addEventListener('keydown', onKey);
+    }
+    function closeModal() {
+      modal.classList.remove('open');
+      document.body.classList.remove('modal-open');
+      document.removeEventListener('keydown', onKey);
+      if (lastFocused) lastFocused.focus();
+    }
+
+    document.querySelectorAll('.project-card').forEach(card => {
+      card.addEventListener('click', () => openModal(card));
+      card.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(card); }
+      });
+    });
+    closeBtn.addEventListener('click', closeModal);
+    modal.querySelector('.modal-backdrop').addEventListener('click', closeModal);
+  }
+
+  // ===== Init =====
+  initLoader();
+  initScrollReveals();
+  initProjectModal();
+  try { initCustomCursor(); } catch (e) { /* cursor is a non-essential enhancement */ }
+  try { initDragCard(); } catch (e) { /* drag card is a non-essential enhancement */ }
+  try { initHeroCanvas(); } catch (e) { /* WebGL not available — hero still fully usable */ }
 </script>
 </body>
 </html>

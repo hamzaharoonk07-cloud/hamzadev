@@ -122,16 +122,16 @@
   html.has-custom-cursor, html.has-custom-cursor a, html.has-custom-cursor button, html.has-custom-cursor [role="button"] { cursor: none; }
   #cursor-dot {
     position: absolute; top: 0; left: 0;
-    width: 6px; height: 6px; border-radius: 50%;
+    width: 7px; height: 7px; border-radius: 50%;
     background: var(--accent);
   }
   #cursor-ring {
     position: absolute; top: 0; left: 0;
     width: 34px; height: 34px; border-radius: 50%;
-    border: 1.5px solid var(--ink);
-    transition: width .2s, height .2s, border-color .2s, background .2s, border-style .2s;
+    border: 1.5px solid var(--accent);
+    transition: width .2s, height .2s, background .2s;
   }
-  html.cursor-hover #cursor-ring { width: 54px; height: 54px; border-color: var(--accent); background: var(--accent-soft); }
+  html.cursor-hover #cursor-ring { width: 54px; height: 54px; background: var(--accent-soft); }
 
   /* ── Skip link ── */
   .skip-link {
@@ -270,8 +270,6 @@
     position: relative;
   }
   .hero-inner { position: relative; z-index: 1; }
-  #hero-canvas { position: absolute; inset: 0; z-index: 0; opacity: 0.55; pointer-events: none; }
-  @media (max-width: 700px) { #hero-canvas { display: none; } }
   .hero-tag {
     display: inline-flex; align-items: center; gap: 0.6rem;
     font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
@@ -327,7 +325,7 @@
 
   .hero-photo {
     position: relative;
-    width: min(190px, 30vw);
+    width: min(280px, 34vw);
     aspect-ratio: 3/4;
     flex-shrink: 0;
     border-radius: 1.2rem;
@@ -441,24 +439,40 @@
     gap: clamp(1.25rem, 3vw, 2rem);
   }
   .skill-card {
+    position: relative; overflow: hidden;
     border: 1px solid var(--line);
+    border-top: 3px solid var(--card-accent, var(--accent));
     border-radius: 1.2rem;
     padding: clamp(1.6rem, 3vw, 2.2rem);
     background: var(--bg-alt);
-    transition: transform .3s ease, border-color .3s ease;
+    transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
   }
-  .skill-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+  .skill-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); }
+  .skill-card::after {
+    content: attr(data-num);
+    position: absolute; right: 0.8rem; bottom: -1.1rem;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800; font-size: 6.5rem; line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--line);
+    pointer-events: none;
+  }
+  .skill-card:nth-child(1) { --card-accent: #E34F26; }
+  .skill-card:nth-child(2) { --card-accent: #db2777; }
+  .skill-card:nth-child(3) { --card-accent: #2fbf5a; }
   .skill-index {
+    position: relative; z-index: 1;
     font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase;
     color: var(--muted); margin-bottom: 1.3rem;
   }
   .skill-index span { color: var(--accent); }
   .skill-card .cat {
+    position: relative; z-index: 1;
     font-family: 'Bricolage Grotesque', sans-serif;
     font-weight: 700; font-size: clamp(1.3rem, 2.6vw, 1.7rem);
     margin-bottom: 1.5rem;
   }
-  .skill-card .tags { display: flex; flex-wrap: wrap; gap: 0.55rem; }
+  .skill-card .tags { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 0.55rem; }
   @media (max-width: 860px) { .skills-grid { grid-template-columns: 1fr; } }
   .tag {
     display: inline-flex; align-items: center; gap: 0.45rem;
@@ -525,6 +539,17 @@
     font-size: 2.6rem; font-weight: 700; color: rgba(255,255,255,0.92);
     letter-spacing: -0.02em;
   }
+  .project-logo-plate {
+    position: relative; z-index: 1;
+    width: min(150px, 40%); aspect-ratio: 1/1;
+    background: #fff; border-radius: 1.3rem;
+    display: flex; align-items: center; justify-content: center;
+    padding: 1.2rem;
+    box-shadow: 0 14px 34px rgba(0,0,0,0.3);
+    transition: transform .35s ease;
+  }
+  .project-card:hover .project-logo-plate { transform: scale(1.05) rotate(0deg); }
+  .project-logo-plate img { width: 100%; height: 100%; object-fit: contain; }
   .project-card:hover .project-media { transform: translateY(-4px) rotate(0deg) !important; }
   .project-media { transition: transform .35s ease; }
   .project-card:nth-child(4n+1) .project-media, .project-card:nth-child(4n+4) .project-media { transform: rotate(-0.6deg); }
@@ -690,7 +715,6 @@
   @media (prefers-reduced-motion: reduce) {
     * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
     #loader { display: none !important; }
-    #hero-canvas { display: none !important; }
     .marquee-track { animation: none !important; }
   }
 
@@ -758,7 +782,6 @@
 
 <!-- HERO -->
 <section id="hero">
-  <canvas id="hero-canvas" aria-hidden="true"></canvas>
   <div class="hero-bg-word" aria-hidden="true">CODE</div>
   <div class="wrap hero-inner">
     <div class="hero-top">
@@ -856,7 +879,7 @@
     </div>
 
     <div class="skills-grid">
-      <div class="skill-card reveal">
+      <div class="skill-card reveal" data-num="01">
         <div class="skill-index">Category <span>01</span></div>
         <div class="cat">Frontend</div>
         <div class="tags">
@@ -868,7 +891,7 @@
           <span class="tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="14" height="10" rx="1"/><path d="M2 17h14"/><rect x="17" y="8" width="5" height="12" rx="1"/></svg>Responsive Design</span>
         </div>
       </div>
-      <div class="skill-card reveal reveal-d1">
+      <div class="skill-card reveal reveal-d1" data-num="02">
         <div class="skill-index">Category <span>02</span></div>
         <div class="cat">Design</div>
         <div class="tags">
@@ -878,7 +901,7 @@
           <span class="tag"><svg viewBox="0 0 24 24"><defs><linearGradient id="canvaGrad1" x1="0" y1="0" x2="24" y2="24"><stop offset="0%" stop-color="#00C4CC"/><stop offset="50%" stop-color="#7D2AE8"/><stop offset="100%" stop-color="#FF2E63"/></linearGradient></defs><rect width="24" height="24" rx="12" fill="url(#canvaGrad1)"/><text x="12" y="16.5" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="12" fill="#fff" text-anchor="middle">C</text></svg>Canva Pro</span>
         </div>
       </div>
-      <div class="skill-card reveal reveal-d2">
+      <div class="skill-card reveal reveal-d2" data-num="03">
         <div class="skill-index">Category <span>03</span></div>
         <div class="cat">Workflow</div>
         <div class="tags">
@@ -908,10 +931,10 @@
         data-desc="A modern, responsive e-commerce platform for cosmetics and personal care, with a mobile-first interface, dynamic cart management, and an interactive checkout workflow."
         data-stack="HTML,CSS,JavaScript,Bootstrap"
         data-url="https://shop-xtra-pk.vercel.app/" data-url-label="shop-xtra-pk.vercel.app"
-        data-mono="SX" data-glyph="ShopXtra" data-grad="grad-rose">
+        data-mono="SX" data-glyph="ShopXtra" data-grad="grad-rose" data-logo="logo-shopxtra.png">
         <div class="project-media">
           <div class="browser-bar"><i></i><i></i><i></i><span class="url">shop-xtra-pk.vercel.app</span></div>
-          <div class="project-visual grad-rose" data-mono="SX"><span class="glyph">ShopXtra</span></div>
+          <div class="project-visual grad-rose" data-mono="SX"><div class="project-logo-plate"><img src="logo-shopxtra.png" alt="ShopXtra logo"></div></div>
         </div>
         <div class="project-info">
           <div class="project-index">Project 01</div>
@@ -929,10 +952,10 @@
         data-desc="An AI-powered digital physiotherapy platform combining interactive 3D joint/condition visualizers, real-time exercise feedback, and smart recovery tracking for clinical-grade rehab from anywhere."
         data-stack="HTML,CSS,JavaScript,AI Integration"
         data-url="https://physiosync-pk.vercel.app/" data-url-label="physiosync-pk.vercel.app"
-        data-mono="PS" data-glyph="PhysioSync" data-grad="grad-violet">
+        data-mono="PS" data-glyph="PhysioSync" data-grad="grad-violet" data-logo="logo-physiosync.png">
         <div class="project-media">
           <div class="browser-bar"><i></i><i></i><i></i><span class="url">physiosync-pk.vercel.app</span></div>
-          <div class="project-visual grad-violet" data-mono="PS"><span class="glyph">PhysioSync</span></div>
+          <div class="project-visual grad-violet" data-mono="PS"><div class="project-logo-plate"><img src="logo-physiosync.png" alt="PhysioSync logo"></div></div>
         </div>
         <div class="project-info">
           <div class="project-index">Project 02</div>
@@ -950,10 +973,10 @@
         data-desc="A fully responsive healthcare site giving patients easy access to doctor profiles, department info, and online appointment booking."
         data-stack="HTML5,CSS3,Bootstrap,jQuery,JavaScript"
         data-url="https://hamzamedicare.vercel.app/" data-url-label="hamzamedicare.vercel.app"
-        data-mono="MC" data-glyph="MediCare" data-grad="grad-teal">
+        data-mono="MC" data-glyph="MediCare" data-grad="grad-teal" data-logo="logo-medicare.png">
         <div class="project-media">
           <div class="browser-bar"><i></i><i></i><i></i><span class="url">hamzamedicare.vercel.app</span></div>
-          <div class="project-visual grad-teal" data-mono="MC"><span class="glyph">MediCare</span></div>
+          <div class="project-visual grad-teal" data-mono="MC"><div class="project-logo-plate"><img src="logo-medicare.png" alt="MediCare logo"></div></div>
         </div>
         <div class="project-info">
           <div class="project-index">Project 03</div>
@@ -971,10 +994,10 @@
         data-desc="A premium desi dining restaurant site showcasing Karachi's street food scene, with reservations and a photo gallery."
         data-stack="HTML5,CSS3,JavaScript,Bootstrap,jQuery"
         data-url="https://zaikaekarachi.vercel.app/" data-url-label="zaikaekarachi.vercel.app"
-        data-mono="ZK" data-glyph="Zaika-e-Karachi" data-grad="grad-crimson">
+        data-mono="ZK" data-glyph="Zaika-e-Karachi" data-grad="grad-crimson" data-logo="logo-zaika.png">
         <div class="project-media">
           <div class="browser-bar"><i></i><i></i><i></i><span class="url">zaikaekarachi.vercel.app</span></div>
-          <div class="project-visual grad-crimson" data-mono="ZK"><span class="glyph">Zaika-e-Karachi</span></div>
+          <div class="project-visual grad-crimson" data-mono="ZK"><div class="project-logo-plate"><img src="logo-zaika.png" alt="Zaika-e-Karachi logo"></div></div>
         </div>
         <div class="project-info">
           <div class="project-index">Project 04</div>
@@ -1079,7 +1102,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 
 <script>
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1095,7 +1117,6 @@
     localStorage.setItem('theme', next);
     themeToggle.setAttribute('aria-pressed', String(next === 'dark'));
     document.querySelector('meta[name="theme-color"]').setAttribute('content', next === 'dark' ? '#121110' : '#f5f1e8');
-    if (window.updateHeroCanvasTheme) window.updateHeroCanvasTheme();
   });
 
   // ===== Nav overlay toggle =====
@@ -1234,8 +1255,7 @@
         .to('.hero-photo', { y: -60, opacity: 0, ease: 'none' }, 0)
         .to('.hero-tag', { opacity: 0, y: -20, ease: 'none' }, 0)
         .to('.hero-roles', { opacity: 0, ease: 'none' }, 0)
-        .to(['.hero-desc', '.hero-cta'], { opacity: 0, y: -20, ease: 'none' }, 0)
-        .to('#hero-canvas', { opacity: 0, ease: 'none' }, 0);
+        .to(['.hero-desc', '.hero-cta'], { opacity: 0, y: -20, ease: 'none' }, 0);
 
       gsap.to('.hero-bg-word', {
         yPercent: 25, ease: 'none',
@@ -1278,71 +1298,6 @@
     });
   }
 
-  // ===== Three.js hero flourish =====
-  function initHeroCanvas() {
-    if (!window.THREE || prefersReducedMotion || isCoarsePointer || window.innerWidth < 700) return;
-    const canvas = document.getElementById('hero-canvas');
-    const heroSection = document.getElementById('hero');
-    if (!canvas || !heroSection) return;
-
-    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
-    camera.position.z = 9;
-
-    const count = 240;
-    const positions = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 16;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 10;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 8;
-    }
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-
-    function pointColor() {
-      const v = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
-      return v || '#ff5a36';
-    }
-    const mat = new THREE.PointsMaterial({ color: pointColor(), size: 0.045, transparent: true, opacity: 0.55 });
-    const points = new THREE.Points(geo, mat);
-    scene.add(points);
-
-    function resize() {
-      const w = heroSection.clientWidth, h = heroSection.clientHeight;
-      if (!w || !h) return;
-      renderer.setSize(w, h);
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-    }
-    resize();
-    window.addEventListener('resize', resize);
-
-    let mouseX = 0, mouseY = 0;
-    window.addEventListener('mousemove', e => {
-      mouseX = e.clientX / window.innerWidth - 0.5;
-      mouseY = e.clientY / window.innerHeight - 0.5;
-    });
-
-    let running = true;
-    new IntersectionObserver(entries => { running = entries[0].isIntersecting; }, { threshold: 0 }).observe(heroSection);
-
-    (function animate() {
-      requestAnimationFrame(animate);
-      if (!running) return;
-      points.rotation.y += 0.0009;
-      points.rotation.x += 0.0002;
-      camera.position.x += (mouseX * 1.2 - camera.position.x) * 0.02;
-      camera.position.y += (-mouseY * 1.2 - camera.position.y) * 0.02;
-      camera.lookAt(scene.position);
-      renderer.render(scene, camera);
-    })();
-
-    window.updateHeroCanvasTheme = function () { mat.color.set(pointColor()); };
-  }
-
   // ===== Project detail modal =====
   function initProjectModal() {
     const modal = document.getElementById('project-modal');
@@ -1365,9 +1320,12 @@
       descEl.textContent = card.dataset.desc;
       stackEl.innerHTML = card.dataset.stack.split(',').map(s => `<span>${s}</span>`).join('');
       linkEl.href = card.dataset.url;
+      const inner = card.dataset.logo
+        ? `<div class="project-logo-plate"><img src="${card.dataset.logo}" alt="${card.dataset.glyph} logo"></div>`
+        : `<span class="glyph">${card.dataset.glyph}</span>`;
       mediaWrap.innerHTML =
         `<div class="browser-bar"><i></i><i></i><i></i><span class="url">${card.dataset.urlLabel}</span></div>` +
-        `<div class="project-visual ${card.dataset.grad}" data-mono="${card.dataset.mono}"><span class="glyph">${card.dataset.glyph}</span></div>`;
+        `<div class="project-visual ${card.dataset.grad}" data-mono="${card.dataset.mono}">${inner}</div>`;
       modal.classList.add('open');
       document.body.classList.add('modal-open');
       closeBtn.focus();
@@ -1391,16 +1349,28 @@
   }
 
   // ===== Nav status: live Karachi time + weather =====
+  function weatherIcon(code) {
+    if (code === 0) return '☀️';
+    if ([1, 2].includes(code)) return '🌤️';
+    if (code === 3) return '☁️';
+    if ([45, 48].includes(code)) return '🌫️';
+    if ([51, 53, 55, 56, 57, 80, 81, 82].includes(code)) return '🌦️';
+    if ([61, 63, 65, 66, 67].includes(code)) return '🌧️';
+    if ([71, 73, 75, 77, 85, 86].includes(code)) return '❄️';
+    if ([95, 96, 99].includes(code)) return '⛈️';
+    return '🌤️';
+  }
+
   function initNavStatus() {
     const el = document.getElementById('navStatusText');
     if (!el) return;
-    let time = '', temp = null;
+    let time = '', temp = null, icon = '';
     function render() {
-      el.textContent = 'Karachi' + (time ? ` · ${time}` : '') + (temp !== null ? ` · ${temp}°C` : '');
+      el.textContent = (icon ? `${icon} ` : '') + 'Karachi' + (time ? ` · ${time}` : '') + (temp !== null ? ` · ${temp}°C` : '');
     }
     function updateTime() {
-      time = new Intl.DateTimeFormat('en-GB', {
-        timeZone: 'Asia/Karachi', hour: '2-digit', minute: '2-digit'
+      time = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Asia/Karachi', hour: 'numeric', minute: '2-digit', hour12: true
       }).format(new Date());
       render();
     }
@@ -1410,8 +1380,9 @@
     fetch('https://api.open-meteo.com/v1/forecast?latitude=24.8607&longitude=67.0011&current_weather=true')
       .then(res => res.json())
       .then(data => {
-        if (data && data.current_weather && typeof data.current_weather.temperature === 'number') {
-          temp = Math.round(data.current_weather.temperature);
+        if (data && data.current_weather) {
+          if (typeof data.current_weather.temperature === 'number') temp = Math.round(data.current_weather.temperature);
+          if (typeof data.current_weather.weathercode === 'number') icon = weatherIcon(data.current_weather.weathercode);
           render();
         }
       })
@@ -1423,7 +1394,6 @@
   initScrollReveals();
   initProjectModal();
   try { initCustomCursor(); } catch (e) { /* cursor is a non-essential enhancement */ }
-  try { initHeroCanvas(); } catch (e) { /* WebGL not available — hero still fully usable */ }
   try { initNavStatus(); } catch (e) { /* nav status is a non-essential enhancement */ }
 </script>
 </body>

@@ -16,7 +16,15 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<script>
+  (function () {
+    var stored = localStorage.getItem('theme');
+    var theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', theme);
+  })();
+</script>
 
 <style>
   :root {
@@ -28,15 +36,34 @@
     --line: rgba(20,19,15,0.12);
     --accent: #ff5a36;
     --accent-soft: rgba(255,90,54,0.12);
+    --success: #1f8a41;
+    --success-bg: rgba(47,191,90,0.12);
     --cream: #f5f1e8;
     --dark: #14130f;
+    color-scheme: light;
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #121110;
+    --bg-alt: #1a1815;
+    --ink: #f2ede2;
+    --ink-soft: #cdc7b8;
+    --muted: #8b8577;
+    --line: rgba(245,241,232,0.14);
+    --accent: #ff7a52;
+    --accent-soft: rgba(255,122,82,0.16);
+    --success: #4ade80;
+    --success-bg: rgba(74,222,128,0.14);
+    color-scheme: dark;
   }
 
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   html { scroll-behavior: smooth; }
 
-  ::selection { background: var(--ink); color: var(--cream); }
+  body { transition: background-color .3s ease, color .3s ease; }
+
+  ::selection { background: var(--ink); color: var(--bg); }
 
   body {
     background: var(--bg);
@@ -55,7 +82,7 @@
   }
 
   h1, h2, h3, .display {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Bricolage Grotesque', sans-serif;
     font-weight: 700;
   }
 
@@ -64,7 +91,7 @@
   /* ── Skip link ── */
   .skip-link {
     position: absolute; left: -999px; top: 0; z-index: 2000;
-    background: var(--ink); color: var(--cream);
+    background: var(--dark); color: var(--cream);
     padding: 0.8rem 1.4rem; font-size: 0.85rem;
   }
   .skip-link:focus { left: 1rem; top: 1rem; }
@@ -75,9 +102,9 @@
     display: flex; justify-content: center; align-items: center; gap: 0.6rem;
     pointer-events: none;
   }
-  .nav-pill, .nav-toggle {
+  .nav-pill, .nav-toggle, .theme-toggle {
     pointer-events: auto;
-    background: var(--ink);
+    background: var(--dark);
     color: var(--cream);
     border-radius: 999px;
     display: flex; align-items: center;
@@ -85,17 +112,17 @@
   }
   .nav-pill {
     padding: 0.75rem 1.5rem;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Bricolage Grotesque', sans-serif;
     font-weight: 700; font-size: 1rem; letter-spacing: 0.02em;
     text-decoration: none;
   }
   .nav-pill span { color: var(--accent); }
-  .nav-toggle {
+  .nav-toggle, .theme-toggle {
     width: 3rem; height: 3rem;
     justify-content: center;
     border: none; cursor: pointer;
-    flex-direction: column; gap: 4px;
   }
+  .nav-toggle { flex-direction: column; gap: 4px; }
   .nav-toggle .bar {
     width: 18px; height: 2px; background: var(--cream);
     transition: transform .3s, opacity .3s;
@@ -104,13 +131,21 @@
   .nav-toggle[aria-expanded="true"] .bar:nth-child(2) { opacity: 0; }
   .nav-toggle[aria-expanded="true"] .bar:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 
+  .theme-toggle svg { width: 18px; height: 18px; stroke: var(--cream); fill: none; stroke-width: 2; }
+  .theme-toggle .icon-sun { display: none; }
+  .theme-toggle .icon-moon { display: block; }
+  :root[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+  :root[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+
   /* ── Nav overlay ── */
   #nav-overlay {
     position: fixed; inset: 0; z-index: 999;
-    background: var(--ink);
+    background: var(--dark);
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    gap: 2.2rem;
+    gap: clamp(1rem, 3vh, 2rem);
+    padding: 6rem 1.5rem 3rem;
+    overflow-y: auto;
     opacity: 0; visibility: hidden;
     transform: translateY(-12px);
     transition: opacity .35s ease, transform .35s ease, visibility 0s linear .35s;
@@ -120,9 +155,9 @@
     transition: opacity .35s ease, transform .35s ease;
   }
   #nav-overlay a {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Bricolage Grotesque', sans-serif;
     font-weight: 700;
-    font-size: clamp(2rem, 6vw, 3.4rem);
+    font-size: clamp(1.6rem, 5vw, 3.4rem);
     color: var(--cream);
     text-decoration: none;
     opacity: 0.55;
@@ -130,12 +165,23 @@
   }
   #nav-overlay a:hover, #nav-overlay a:focus-visible { opacity: 1; color: var(--accent); }
   .nav-overlay-social {
-    position: absolute; bottom: 3rem;
-    display: flex; gap: 1.6rem;
-    font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase;
+    display: flex; gap: 0.9rem;
+    margin-top: 1rem;
   }
-  .nav-overlay-social a { color: var(--muted); text-decoration: none; }
-  .nav-overlay-social a:hover { color: var(--cream); }
+  #nav-overlay .nav-overlay-social a {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 2.6rem; height: 2.6rem;
+    border-radius: 50%;
+    border: 1px solid rgba(245,241,232,0.18);
+    color: rgba(245,241,232,0.7);
+    text-decoration: none; opacity: 1;
+    transition: color .25s, border-color .25s, background .25s, transform .25s;
+  }
+  #nav-overlay .nav-overlay-social a svg { width: 18px; height: 18px; }
+  #nav-overlay .nav-overlay-social a:hover {
+    color: var(--cream); border-color: var(--accent);
+    background: rgba(255,90,54,0.15); transform: translateY(-2px);
+  }
 
   body.nav-open { overflow: hidden; }
 
@@ -208,7 +254,7 @@
   .hero-photo .fallback {
     width: 100%; height: 100%;
     display: flex; align-items: center; justify-content: center;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Bricolage Grotesque', sans-serif;
     font-size: 4rem; font-weight: 700;
     color: var(--ink);
   }
@@ -223,7 +269,7 @@
   .hero-cta { display: flex; gap: 0.9rem; flex-wrap: wrap; }
   .btn {
     display: inline-flex; align-items: center; gap: 0.6rem;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Bricolage Grotesque', sans-serif;
     font-weight: 700; font-size: 0.85rem;
     letter-spacing: 0.02em;
     padding: 0.9rem 1.7rem;
@@ -231,7 +277,7 @@
     text-decoration: none;
     transition: transform .25s, background .25s, color .25s;
   }
-  .btn-primary { background: var(--ink); color: var(--cream); }
+  .btn-primary { background: var(--dark); color: var(--cream); }
   .btn-primary:hover { transform: translateY(-3px); background: var(--accent); }
   .btn-ghost { border: 1px solid var(--line); color: var(--ink); }
   .btn-ghost:hover { border-color: var(--ink); transform: translateY(-3px); }
@@ -254,7 +300,7 @@
     align-items: start;
   }
   .about-statement {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Bricolage Grotesque', sans-serif;
     font-weight: 600;
     font-size: clamp(1.5rem, 3vw, 2.1rem);
     line-height: 1.35;
@@ -272,7 +318,7 @@
     border-top: 1px solid var(--line);
   }
   .about-stat .num {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Bricolage Grotesque', sans-serif;
     font-size: 2.1rem; font-weight: 700; color: var(--ink);
     display: block;
   }
@@ -291,7 +337,7 @@
     flex-wrap: wrap;
   }
   .skills-row .cat {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Bricolage Grotesque', sans-serif;
     font-weight: 700; font-size: clamp(1.3rem, 3vw, 2rem);
   }
   .skills-row .tags {
@@ -338,7 +384,7 @@
     margin-left: 0.6rem;
     font-size: 0.62rem; color: rgba(255,255,255,0.7);
     letter-spacing: 0.03em;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Bricolage Grotesque', sans-serif;
   }
   .project-visual {
     position: absolute; inset: 0;
@@ -348,7 +394,7 @@
   .project-visual::after {
     content: attr(data-mono);
     position: absolute;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Bricolage Grotesque', sans-serif;
     font-weight: 700;
     font-size: clamp(4rem, 12vw, 8rem);
     color: rgba(255,255,255,0.1);
@@ -357,7 +403,7 @@
   }
   .project-visual .glyph {
     position: relative; z-index: 1;
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Bricolage Grotesque', sans-serif;
     font-size: 2.6rem; font-weight: 700; color: rgba(255,255,255,0.92);
     letter-spacing: -0.02em;
   }
@@ -375,7 +421,7 @@
     text-transform: uppercase; margin-bottom: 0.5rem;
   }
   .project-title {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Bricolage Grotesque', sans-serif;
     font-weight: 700; font-size: 1.35rem;
     margin-bottom: 0.6rem;
     display: flex; align-items: center; gap: 0.5rem;
@@ -405,10 +451,10 @@
     padding: 0.4rem 0.8rem; border-radius: 999px;
     white-space: nowrap;
   }
-  .edu-status.completed { background: rgba(47,191,90,0.12); color: #1f8a41; }
+  .edu-status.completed { background: var(--success-bg); color: var(--success); }
   .edu-status.inprogress { background: var(--accent-soft); color: var(--accent); }
   .edu-main .degree {
-    font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.05rem;
+    font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.05rem;
   }
   .edu-main .school { font-size: 0.82rem; color: var(--muted); margin-top: 0.2rem; }
   .edu-year { font-size: 0.78rem; color: var(--muted); white-space: nowrap; }
@@ -429,23 +475,23 @@
     font-size: 1rem; line-height: 1.8; color: rgba(245,241,232,0.65);
   }
   .contact-links {
-    display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem;
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 1.1rem;
     margin-bottom: 5rem;
   }
   .contact-links a {
-    display: inline-flex; align-items: center; gap: 0.6rem;
-    padding: 0.9rem 1.6rem;
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 3.4rem; height: 3.4rem;
     border: 1px solid rgba(245,241,232,0.18);
-    border-radius: 999px;
+    border-radius: 50%;
     text-decoration: none;
-    font-size: 0.85rem;
     color: var(--cream);
     transition: background .25s, border-color .25s, transform .25s;
   }
+  .contact-links a svg { width: 22px; height: 22px; }
   .contact-links a:hover { background: var(--accent); border-color: var(--accent); transform: translateY(-3px); }
 
   .watermark {
-    font-family: 'Space Grotesk', sans-serif;
+    font-family: 'Bricolage Grotesque', sans-serif;
     font-weight: 700;
     font-size: clamp(4rem, 16vw, 12rem);
     line-height: 1;
@@ -499,6 +545,10 @@
 <!-- NAV -->
 <nav id="navbar">
   <a href="#hero" class="nav-pill">HAMZA<span>.</span></a>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle light and dark theme" aria-pressed="false">
+    <svg class="icon-sun" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.5M12 19v2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M2.5 12H5M19 12h2.5M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></svg>
+    <svg class="icon-moon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z"/></svg>
+  </button>
   <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="nav-overlay" aria-label="Toggle navigation menu">
     <span class="bar"></span><span class="bar"></span><span class="bar"></span>
   </button>
@@ -511,9 +561,15 @@
   <a href="#education">Education</a>
   <a href="#contact">Contact</a>
   <div class="nav-overlay-social">
-    <a href="mailto:hamzaharoonk07@gmail.com">Email</a>
-    <a href="https://github.com/hamzaharoonk07-cloud" target="_blank" rel="noopener noreferrer">GitHub</a>
-    <a href="https://www.linkedin.com/in/hamza-haroon-91532b281/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    <a href="mailto:hamzaharoonk07@gmail.com" aria-label="Email Hamza">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+    </a>
+    <a href="https://github.com/hamzaharoonk07-cloud" target="_blank" rel="noopener noreferrer" aria-label="Hamza's GitHub">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55 0-.27-.01-1.16-.02-2.11-3.2.7-3.88-1.36-3.88-1.36-.52-1.34-1.28-1.69-1.28-1.69-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.7 5.39-5.26 5.68.41.36.78 1.07.78 2.15 0 1.55-.01 2.8-.01 3.18 0 .3.2.66.79.55A10.52 10.52 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/in/hamza-haroon-91532b281/" target="_blank" rel="noopener noreferrer" aria-label="Hamza's LinkedIn">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
+    </a>
   </div>
 </div>
 
@@ -753,9 +809,15 @@
       Whether it's a new project, a freelance gig, or just a hello — my inbox is always open. Let's build something.
     </p>
     <div class="contact-links reveal reveal-d2">
-      <a href="mailto:hamzaharoonk07@gmail.com">hamzaharoonk07@gmail.com</a>
-      <a href="https://github.com/hamzaharoonk07-cloud" target="_blank" rel="noopener noreferrer">GitHub</a>
-      <a href="https://www.linkedin.com/in/hamza-haroon-91532b281/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="mailto:hamzaharoonk07@gmail.com" aria-label="Email hamzaharoonk07@gmail.com" title="hamzaharoonk07@gmail.com">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+      </a>
+      <a href="https://github.com/hamzaharoonk07-cloud" target="_blank" rel="noopener noreferrer" aria-label="GitHub" title="GitHub">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55 0-.27-.01-1.16-.02-2.11-3.2.7-3.88-1.36-3.88-1.36-.52-1.34-1.28-1.69-1.28-1.69-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.7 5.39-5.26 5.68.41.36.78 1.07.78 2.15 0 1.55-.01 2.8-.01 3.18 0 .3.2.66.79.55A10.52 10.52 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/in/hamza-haroon-91532b281/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
+      </a>
     </div>
   </div>
   <div class="watermark">HAMZA.DEV</div>
@@ -767,6 +829,18 @@
 </section>
 
 <script>
+  // Theme toggle
+  const themeToggle = document.getElementById('themeToggle');
+  const rootEl = document.documentElement;
+  themeToggle.setAttribute('aria-pressed', String(rootEl.getAttribute('data-theme') === 'dark'));
+  themeToggle.addEventListener('click', () => {
+    const next = rootEl.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    rootEl.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    themeToggle.setAttribute('aria-pressed', String(next === 'dark'));
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', next === 'dark' ? '#121110' : '#f5f1e8');
+  });
+
   // Nav overlay toggle
   const navToggle = document.getElementById('navToggle');
   const navOverlay = document.getElementById('nav-overlay');

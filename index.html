@@ -132,7 +132,6 @@
     transition: width .2s, height .2s, border-color .2s, background .2s, border-style .2s;
   }
   html.cursor-hover #cursor-ring { width: 54px; height: 54px; border-color: var(--accent); background: var(--accent-soft); }
-  html.cursor-drag #cursor-ring { width: 44px; height: 44px; border-color: var(--accent); background: transparent; border-style: dashed; }
 
   /* ── Skip link ── */
   .skip-link {
@@ -148,7 +147,7 @@
     display: flex; justify-content: center; align-items: center; gap: 0.6rem;
     pointer-events: none;
   }
-  .nav-pill, .nav-toggle, .theme-toggle {
+  .nav-pill, .nav-toggle, .theme-toggle, .nav-status {
     pointer-events: auto;
     background: var(--dark);
     color: var(--cream);
@@ -163,6 +162,17 @@
     text-decoration: none;
   }
   .nav-pill span { color: var(--accent); }
+  .nav-status {
+    padding: 0.75rem 1.1rem;
+    font-size: 0.7rem; letter-spacing: 0.04em; white-space: nowrap;
+    gap: 0.5rem;
+  }
+  .nav-status .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #2fbf5a; flex-shrink: 0;
+    box-shadow: 0 0 0 3px rgba(47,191,90,0.18);
+  }
+  @media (max-width: 760px) { .nav-status { display: none; } }
   .nav-toggle, .theme-toggle {
     width: 3rem; height: 3rem;
     justify-content: center;
@@ -278,16 +288,18 @@
   }
 
   .hero-headline {
-    font-size: clamp(3.2rem, 11.5vw, 9.8rem);
+    font-size: clamp(2.6rem, 8.5vw, 7rem);
     line-height: 0.9;
     letter-spacing: -0.03em;
     text-transform: uppercase;
     position: relative; z-index: 2;
+    max-width: 100%;
   }
   .hero-headline .thin { -webkit-text-stroke: 1.5px var(--ink); color: transparent; }
-  .hl-mask { display: block; overflow: hidden; }
-  .hl-mask:nth-child(2) { margin-left: clamp(1rem, 9vw, 6rem); }
-  .hl-line { display: block; }
+  /* width: fit-content is a safety net — the mask must never clip text
+     horizontally (only the vertical slide-in reveal should be masked). */
+  .hl-mask { display: block; overflow: hidden; width: fit-content; max-width: 100%; }
+  .hl-line { display: block; white-space: nowrap; }
 
   .hero-bg-word {
     position: absolute; z-index: 0;
@@ -305,17 +317,24 @@
   }
   @media (max-width: 700px) { .hero-bg-word { display: none; } }
 
+  .hero-top { position: relative; z-index: 1; }
+
+  .hero-meta {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    gap: 2rem; flex-wrap: wrap;
+    margin-top: clamp(1.5rem, 4vw, 2.5rem);
+  }
+
   .hero-photo {
-    position: absolute;
-    top: 7.5rem; right: -1.5vw;
-    width: min(340px, 30vw);
+    position: relative;
+    width: min(190px, 30vw);
     aspect-ratio: 3/4;
-    z-index: 1;
-    border-radius: 1.4rem;
+    flex-shrink: 0;
+    border-radius: 1.2rem;
     overflow: hidden;
     background: linear-gradient(150deg, #dcd4bd, #c9c0a3);
-    border: 6px solid var(--cream);
-    box-shadow: 0 20px 50px rgba(20,19,15,0.2);
+    border: 5px solid var(--cream);
+    box-shadow: 0 16px 36px rgba(20,19,15,0.2);
     transform: rotate(-3deg);
   }
   .hero-photo img { width: 100%; height: 100%; object-fit: cover; }
@@ -378,23 +397,6 @@
   .marquee-item.filled { -webkit-text-stroke: 0; color: var(--accent); }
   @keyframes marqueeScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-  /* ── Draggable card ── */
-  .drag-zone { position: relative; min-height: 200px; margin-top: 2.5rem; }
-  .drag-card {
-    position: absolute; top: 0; left: 0;
-    width: 190px; padding: 1.3rem;
-    background: var(--dark); color: var(--cream);
-    border-radius: 1rem;
-    box-shadow: 0 20px 40px rgba(20,19,15,0.25);
-    cursor: grab; touch-action: none; user-select: none;
-    will-change: transform;
-  }
-  .drag-card:active { cursor: grabbing; }
-  .drag-card .dc-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-bottom: 0.8rem; }
-  .drag-card .dc-tag { font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(245,241,232,0.5); margin-bottom: 0.8rem; }
-  .drag-card .dc-name { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.05rem; }
-  .drag-card .dc-role { font-size: 0.72rem; color: rgba(245,241,232,0.6); margin-top: 0.3rem; }
-
   /* ── About ── */
   #about { background: var(--bg-alt); }
   .about-grid {
@@ -432,24 +434,32 @@
     color: var(--muted); margin-top: 0.2rem;
   }
 
-  /* ── Skills (list style) ── */
-  .skills-list { border-top: 1px solid var(--line); }
-  .skills-row {
-    display: flex; justify-content: space-between; align-items: center;
-    gap: 2rem;
-    padding: 1.8rem 0;
-    border-bottom: 1px solid var(--line);
-    flex-wrap: wrap;
+  /* ── Skills (card grid) ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.25rem, 3vw, 2rem);
   }
-  .skills-row .cat {
+  .skill-card {
+    border: 1px solid var(--line);
+    border-radius: 1.2rem;
+    padding: clamp(1.6rem, 3vw, 2.2rem);
+    background: var(--bg-alt);
+    transition: transform .3s ease, border-color .3s ease;
+  }
+  .skill-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+  .skill-index {
+    font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 1.3rem;
+  }
+  .skill-index span { color: var(--accent); }
+  .skill-card .cat {
     font-family: 'Bricolage Grotesque', sans-serif;
-    font-weight: 700; font-size: clamp(1.3rem, 3vw, 2rem);
+    font-weight: 700; font-size: clamp(1.3rem, 2.6vw, 1.7rem);
+    margin-bottom: 1.5rem;
   }
-  .skills-row .tags {
-    display: flex; flex-wrap: wrap; gap: 0.6rem;
-    max-width: 55%;
-    justify-content: flex-end;
-  }
+  .skill-card .tags { display: flex; flex-wrap: wrap; gap: 0.55rem; }
+  @media (max-width: 860px) { .skills-grid { grid-template-columns: 1fr; } }
   .tag {
     display: inline-flex; align-items: center; gap: 0.45rem;
     font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
@@ -462,7 +472,6 @@
   .tag svg { width: 16px; height: 16px; flex-shrink: 0; color: var(--accent); border-radius: 4px; }
   .tag:nth-child(odd) { transform: translateY(-2px); }
   .tag:nth-child(even) { transform: translateY(2px); }
-  .tools-row { padding: 2rem 0 0; display: flex; flex-wrap: wrap; gap: 0.6rem; }
 
   /* ── Projects ── */
   #projects { background: var(--bg); }
@@ -527,6 +536,7 @@
   .grad-orange { background: linear-gradient(140deg,#7a2b0a,#e8622a 55%,#ffc46b); }
   .grad-violet { background: linear-gradient(140deg,#2c1a52,#6a3fd6 55%,#c7b3ff); }
   .grad-crimson { background: linear-gradient(140deg,#5c0f1f,#c2273f 55%,#ffb199); }
+  .grad-rose { background: linear-gradient(140deg,#831843,#db2777 55%,#f9a8d4); }
 
   .project-info { padding-top: 1.3rem; }
   .project-index {
@@ -583,15 +593,23 @@
   .modal-stack { margin-bottom: 1.8rem; }
   body.modal-open { overflow: hidden; }
 
-  /* ── Education ── */
-  .edu-list { border-top: 1px solid var(--line); }
-  .edu-row {
-    display: grid;
-    grid-template-columns: auto 1fr auto auto;
-    align-items: center;
-    gap: 1.5rem;
-    padding: 1.8rem 0;
-    border-bottom: 1px solid var(--line);
+  /* ── Education (timeline) ── */
+  .edu-timeline { position: relative; }
+  .edu-timeline::before {
+    content: ''; position: absolute; left: 7px; top: 10px; bottom: 10px;
+    width: 2px; background: var(--line);
+  }
+  .edu-item { position: relative; padding-left: clamp(2.2rem, 5vw, 2.9rem); padding-bottom: clamp(2rem, 5vw, 3.2rem); }
+  .edu-item:last-child { padding-bottom: 0; }
+  .edu-item::before {
+    content: ''; position: absolute; left: 0; top: 6px; z-index: 1;
+    width: 16px; height: 16px; border-radius: 50%;
+    background: var(--bg); border: 3px solid var(--accent);
+  }
+  .edu-item.completed::before { border-color: var(--success); }
+  .edu-item-head {
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+    margin-bottom: 0.7rem;
   }
   .edu-status {
     font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase;
@@ -600,11 +618,13 @@
   }
   .edu-status.completed { background: var(--success-bg); color: var(--success); }
   .edu-status.inprogress { background: var(--accent-soft); color: var(--accent); }
-  .edu-main .degree {
-    font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.05rem;
+  .edu-year { font-size: 0.76rem; color: var(--muted); letter-spacing: 0.05em; white-space: nowrap; }
+  .edu-degree {
+    font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700;
+    font-size: clamp(1.25rem, 2.8vw, 1.8rem);
+    margin-bottom: 0.5rem;
   }
-  .edu-main .school { font-size: 0.82rem; color: var(--muted); margin-top: 0.2rem; }
-  .edu-year { font-size: 0.78rem; color: var(--muted); white-space: nowrap; }
+  .edu-school { font-size: 0.9rem; color: var(--ink-soft); }
 
   /* ── Contact / Footer (dark) ── */
   #contact {
@@ -676,13 +696,10 @@
 
   /* ── Responsive ── */
   @media (max-width: 860px) {
-    .hero-photo { position: static; width: 55%; margin: 2rem 0 0; transform: rotate(2deg); }
-    .hero-headline { max-width: none; }
+    .hero-meta { flex-direction: column-reverse; align-items: flex-start; }
+    .hero-photo { width: 45%; transform: rotate(2deg); }
     .about-grid { grid-template-columns: 1fr; }
-    .skills-row { flex-direction: column; align-items: flex-start; }
-    .skills-row .tags { max-width: 100%; justify-content: flex-start; }
     .projects-grid { grid-template-columns: 1fr; }
-    .edu-row { grid-template-columns: 1fr; gap: 0.6rem; }
   }
 </style>
 </head>
@@ -704,6 +721,10 @@
 
 <!-- NAV -->
 <nav id="navbar">
+  <div class="nav-status" id="navStatus" aria-hidden="true">
+    <span class="dot"></span>
+    <span id="navStatusText">Karachi</span>
+  </div>
   <a href="#hero" class="nav-pill">HAMZA<span>.</span></a>
   <button class="theme-toggle" id="themeToggle" aria-label="Toggle light and dark theme" aria-pressed="false">
     <svg class="icon-sun" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.5M12 19v2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M2.5 12H5M19 12h2.5M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></svg>
@@ -740,22 +761,25 @@
   <canvas id="hero-canvas" aria-hidden="true"></canvas>
   <div class="hero-bg-word" aria-hidden="true">CODE</div>
   <div class="wrap hero-inner">
-    <div class="hero-tag">Available for freelance work</div>
+    <div class="hero-top">
+      <div class="hero-tag">Available for freelance work</div>
 
-    <h1 class="hero-headline">
-      <span class="hl-mask"><span class="hl-line">FRONTEND</span></span>
-      <span class="hl-mask"><span class="hl-line thin">DEVELOPER</span></span>
-    </h1>
+      <h1 class="hero-headline">
+        <span class="hl-mask"><span class="hl-line">FRONTEND</span></span>
+        <span class="hl-mask"><span class="hl-line thin">DEVELOPER</span></span>
+      </h1>
 
-    <div class="hero-photo">
-      <img src="profile.png" alt="Portrait of Hamza Haroon" id="heroPhoto" onerror="this.hidden=true;document.getElementById('heroPhotoFallback').hidden=false;">
-      <div class="fallback" id="heroPhotoFallback" hidden>HH</div>
-    </div>
-
-    <div class="hero-roles">
-      <span>HTML / CSS / JS</span>
-      <span>Bootstrap &amp; jQuery</span>
-      <span>Graphic Design</span>
+      <div class="hero-meta">
+        <div class="hero-roles">
+          <span>HTML / CSS / JS</span>
+          <span>Bootstrap &amp; jQuery</span>
+          <span>Graphic Design</span>
+        </div>
+        <div class="hero-photo">
+          <img src="profile.png" alt="Portrait of Hamza Haroon" id="heroPhoto" onerror="this.hidden=true;document.getElementById('heroPhotoFallback').hidden=false;">
+          <div class="fallback" id="heroPhotoFallback" hidden>HH</div>
+        </div>
+      </div>
     </div>
 
     <div class="hero-bottom">
@@ -800,18 +824,6 @@
         <p class="about-statement reveal">
           I work at the intersection of <span class="accent">code</span> and <span class="accent">creativity</span> — building interfaces that feel as good as they look.
         </p>
-        <div class="drag-zone" aria-hidden="true">
-          <div class="drag-card">
-            <div class="dc-dot"></div>
-            <div class="dc-tag">Grab &amp; drag</div>
-            <div class="dc-name">Hamza Haroon</div>
-            <div class="dc-role">Frontend Dev / Designer</div>
-          </div>
-        </div>
-      </div>
-      <div class="about-body reveal reveal-d1">
-        <p>I'm a frontend developer and graphic designer with a passion for building fast, visually compelling web experiences. With a strong grip on HTML, CSS, JavaScript, Bootstrap, and jQuery, I build everything from landing pages to multi-section platforms — and on the design side, I bring brands to life through logos, visual identities, and digital assets.</p>
-        <p>I'm always pushing to learn, currently deep-diving into advanced JavaScript patterns and modern design systems while completing my formal education.</p>
         <div class="about-stats">
           <div class="about-stat">
             <span class="num">3+</span>
@@ -827,6 +839,10 @@
           </div>
         </div>
       </div>
+      <div class="about-body reveal reveal-d1">
+        <p>I'm a frontend developer and graphic designer with a passion for building fast, visually compelling web experiences. With a strong grip on HTML, CSS, JavaScript, Bootstrap, and jQuery, I build everything from landing pages to multi-section platforms — and on the design side, I bring brands to life through logos, visual identities, and digital assets.</p>
+        <p>I'm always pushing to learn, currently deep-diving into advanced JavaScript patterns and modern design systems while completing my formal education.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -839,9 +855,10 @@
       <h2 class="section-title">Skills &amp; <span class="outline">Arsenal</span></h2>
     </div>
 
-    <div class="skills-list reveal">
-      <div class="skills-row">
-        <span class="cat">Frontend</span>
+    <div class="skills-grid">
+      <div class="skill-card reveal">
+        <div class="skill-index">Category <span>01</span></div>
+        <div class="cat">Frontend</div>
         <div class="tags">
           <span class="tag"><svg viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#E34F26"/><path d="M7 8l-3 4 3 4M17 8l3 4-3 4" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>HTML5</span>
           <span class="tag"><svg viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#1572B6"/><path d="M9 6c-1.5 0-2 .8-2 2v2c0 .8-.5 1.3-1.3 1.3.8 0 1.3.5 1.3 1.3v2c0 1.2.5 2 2 2M15 6c1.5 0 2 .8 2 2v2c0 .8.5 1.3 1.3 1.3-.8 0-1.3.5-1.3 1.3v2c0 1.2-.5 2-2 2" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>CSS3</span>
@@ -851,8 +868,9 @@
           <span class="tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="14" height="10" rx="1"/><path d="M2 17h14"/><rect x="17" y="8" width="5" height="12" rx="1"/></svg>Responsive Design</span>
         </div>
       </div>
-      <div class="skills-row">
-        <span class="cat">Design</span>
+      <div class="skill-card reveal reveal-d1">
+        <div class="skill-index">Category <span>02</span></div>
+        <div class="cat">Design</div>
         <div class="tags">
           <span class="tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>UI Design</span>
           <span class="tag"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.8 6.2L20 10l-6.2 1.8L12 18l-1.8-6.2L4 10l6.2-1.8z"/></svg>Brand Identity</span>
@@ -860,8 +878,9 @@
           <span class="tag"><svg viewBox="0 0 24 24"><defs><linearGradient id="canvaGrad1" x1="0" y1="0" x2="24" y2="24"><stop offset="0%" stop-color="#00C4CC"/><stop offset="50%" stop-color="#7D2AE8"/><stop offset="100%" stop-color="#FF2E63"/></linearGradient></defs><rect width="24" height="24" rx="12" fill="url(#canvaGrad1)"/><text x="12" y="16.5" font-family="Arial,Helvetica,sans-serif" font-weight="800" font-size="12" fill="#fff" text-anchor="middle">C</text></svg>Canva Pro</span>
         </div>
       </div>
-      <div class="skills-row">
-        <span class="cat">Workflow</span>
+      <div class="skill-card reveal reveal-d2">
+        <div class="skill-index">Category <span>03</span></div>
+        <div class="cat">Workflow</div>
         <div class="tags">
           <span class="tag"><svg viewBox="0 0 24 24"><rect width="24" height="24" rx="12" fill="#181717"/><g transform="translate(4,4) scale(0.68)"><path fill="#fff" d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55 0-.27-.01-1.16-.02-2.11-3.2.7-3.88-1.36-3.88-1.36-.52-1.34-1.28-1.69-1.28-1.69-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.7 5.39-5.26 5.68.41.36.78 1.07.78 2.15 0 1.55-.01 2.8-.01 3.18 0 .3.2.66.79.55A10.52 10.52 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z"/></g></svg>Git &amp; GitHub</span>
           <span class="tag"><svg viewBox="0 0 24 24"><rect width="24" height="24" rx="5" fill="#007ACC"/><path d="M7 8l4 4-4 4" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><line x1="13" y1="16" x2="17" y2="16" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>VS Code</span>
@@ -884,8 +903,50 @@
     <div class="projects-grid">
 
       <div class="project-card reveal" tabindex="0" role="button" aria-haspopup="dialog"
+        aria-label="View ShopXtra project details"
+        data-index="Project 01" data-title="ShopXtra — E-Commerce Platform"
+        data-desc="A modern, responsive e-commerce platform for cosmetics and personal care, with a mobile-first interface, dynamic cart management, and an interactive checkout workflow."
+        data-stack="HTML,CSS,JavaScript,Bootstrap"
+        data-url="https://shop-xtra-pk.vercel.app/" data-url-label="shop-xtra-pk.vercel.app"
+        data-mono="SX" data-glyph="ShopXtra" data-grad="grad-rose">
+        <div class="project-media">
+          <div class="browser-bar"><i></i><i></i><i></i><span class="url">shop-xtra-pk.vercel.app</span></div>
+          <div class="project-visual grad-rose" data-mono="SX"><span class="glyph">ShopXtra</span></div>
+        </div>
+        <div class="project-info">
+          <div class="project-index">Project 01</div>
+          <h3 class="project-title">ShopXtra — E-Commerce Platform
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg>
+          </h3>
+          <p class="project-desc">A modern, responsive e-commerce platform for cosmetics and personal care, with a mobile-first interface, dynamic cart management, and an interactive checkout workflow.</p>
+          <div class="project-stack"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>Bootstrap</span></div>
+        </div>
+      </div>
+
+      <div class="project-card reveal" tabindex="0" role="button" aria-haspopup="dialog"
+        aria-label="View PhysioSync project details"
+        data-index="Project 02" data-title="PhysioSync"
+        data-desc="An AI-powered digital physiotherapy platform combining interactive 3D joint/condition visualizers, real-time exercise feedback, and smart recovery tracking for clinical-grade rehab from anywhere."
+        data-stack="HTML,CSS,JavaScript,AI Integration"
+        data-url="https://physiosync-pk.vercel.app/" data-url-label="physiosync-pk.vercel.app"
+        data-mono="PS" data-glyph="PhysioSync" data-grad="grad-violet">
+        <div class="project-media">
+          <div class="browser-bar"><i></i><i></i><i></i><span class="url">physiosync-pk.vercel.app</span></div>
+          <div class="project-visual grad-violet" data-mono="PS"><span class="glyph">PhysioSync</span></div>
+        </div>
+        <div class="project-info">
+          <div class="project-index">Project 02</div>
+          <h3 class="project-title">PhysioSync
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg>
+          </h3>
+          <p class="project-desc">An AI-powered digital physiotherapy platform combining interactive 3D joint/condition visualizers, real-time exercise feedback, and smart recovery tracking for clinical-grade rehab from anywhere.</p>
+          <div class="project-stack"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>AI Integration</span></div>
+        </div>
+      </div>
+
+      <div class="project-card reveal reveal-d1" tabindex="0" role="button" aria-haspopup="dialog"
         aria-label="View MediCare project details"
-        data-index="Project 01" data-title="MediCare — Book Appointments Online"
+        data-index="Project 03" data-title="MediCare — Book Appointments Online"
         data-desc="A fully responsive healthcare site giving patients easy access to doctor profiles, department info, and online appointment booking."
         data-stack="HTML5,CSS3,Bootstrap,jQuery,JavaScript"
         data-url="https://hamzamedicare.vercel.app/" data-url-label="hamzamedicare.vercel.app"
@@ -895,7 +956,7 @@
           <div class="project-visual grad-teal" data-mono="MC"><span class="glyph">MediCare</span></div>
         </div>
         <div class="project-info">
-          <div class="project-index">Project 01</div>
+          <div class="project-index">Project 03</div>
           <h3 class="project-title">MediCare — Book Appointments Online
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg>
           </h3>
@@ -904,49 +965,7 @@
         </div>
       </div>
 
-      <div class="project-card reveal reveal-d1" tabindex="0" role="button" aria-haspopup="dialog"
-        aria-label="View Wilson Sports project details"
-        data-index="Project 02" data-title="Wilson Sports"
-        data-desc="A modern e-commerce platform for sports goods, built for athletes and enthusiasts with a clean, product-first layout."
-        data-stack="HTML,JavaScript,Bootstrap,jQuery,Git"
-        data-url="https://wilsonsports.vercel.app/" data-url-label="wilsonsports.vercel.app"
-        data-mono="WS" data-glyph="Wilson Sports" data-grad="grad-orange">
-        <div class="project-media">
-          <div class="browser-bar"><i></i><i></i><i></i><span class="url">wilsonsports.vercel.app</span></div>
-          <div class="project-visual grad-orange" data-mono="WS"><span class="glyph">Wilson Sports</span></div>
-        </div>
-        <div class="project-info">
-          <div class="project-index">Project 02</div>
-          <h3 class="project-title">Wilson Sports
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg>
-          </h3>
-          <p class="project-desc">A modern e-commerce platform for sports goods, built for athletes and enthusiasts with a clean, product-first layout.</p>
-          <div class="project-stack"><span>HTML</span><span>JavaScript</span><span>Bootstrap</span><span>jQuery</span><span>Git</span></div>
-        </div>
-      </div>
-
       <div class="project-card reveal" tabindex="0" role="button" aria-haspopup="dialog"
-        aria-label="View PakistanMart project details"
-        data-index="Project 03" data-title="PakistanMart"
-        data-desc="An elegantly designed e-commerce marketplace for authentic products sourced from across Pakistan."
-        data-stack="HTML,CSS3,JavaScript,jQuery"
-        data-url="https://pakistan-mart12.vercel.app/" data-url-label="pakistan-mart12.vercel.app"
-        data-mono="PM" data-glyph="PakistanMart" data-grad="grad-violet">
-        <div class="project-media">
-          <div class="browser-bar"><i></i><i></i><i></i><span class="url">pakistan-mart12.vercel.app</span></div>
-          <div class="project-visual grad-violet" data-mono="PM"><span class="glyph">PakistanMart</span></div>
-        </div>
-        <div class="project-info">
-          <div class="project-index">Project 03</div>
-          <h3 class="project-title">PakistanMart
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg>
-          </h3>
-          <p class="project-desc">An elegantly designed e-commerce marketplace for authentic products sourced from across Pakistan.</p>
-          <div class="project-stack"><span>HTML</span><span>CSS3</span><span>JavaScript</span><span>jQuery</span></div>
-        </div>
-      </div>
-
-      <div class="project-card reveal reveal-d1" tabindex="0" role="button" aria-haspopup="dialog"
         aria-label="View Zaika-e-Karachi project details"
         data-index="Project 04" data-title="Zaika-e-Karachi"
         data-desc="A premium desi dining restaurant site showcasing Karachi's street food scene, with reservations and a photo gallery."
@@ -979,30 +998,30 @@
       <h2 class="section-title">Education &amp; <span class="outline">Credentials</span></h2>
     </div>
 
-    <div class="edu-list reveal">
-      <div class="edu-row">
-        <span class="edu-status inprogress">In Progress</span>
-        <div class="edu-main">
-          <div class="degree">ADSE — Advanced Diploma in Software Engineering</div>
-          <div class="school">Aptech Computer Education</div>
+    <div class="edu-timeline reveal">
+      <div class="edu-item inprogress">
+        <div class="edu-item-head">
+          <span class="edu-status inprogress">In Progress</span>
+          <span class="edu-year">2023 — Present</span>
         </div>
-        <span class="edu-year">2023 — Present</span>
+        <div class="edu-degree">ADSE — Advanced Diploma in Software Engineering</div>
+        <div class="edu-school">Aptech Computer Education</div>
       </div>
-      <div class="edu-row">
-        <span class="edu-status inprogress">In Progress</span>
-        <div class="edu-main">
-          <div class="degree">Intermediate (Pre-Engineering)</div>
-          <div class="school">Ziauddin Examination Board</div>
+      <div class="edu-item inprogress">
+        <div class="edu-item-head">
+          <span class="edu-status inprogress">In Progress</span>
+          <span class="edu-year">2024 — Present</span>
         </div>
-        <span class="edu-year">2024 — Present</span>
+        <div class="edu-degree">Intermediate (Pre-Engineering)</div>
+        <div class="edu-school">Ziauddin Examination Board</div>
       </div>
-      <div class="edu-row">
-        <span class="edu-status completed">Completed</span>
-        <div class="edu-main">
-          <div class="degree">Matriculation (Science)</div>
-          <div class="school">Ziauddin Examination Board</div>
+      <div class="edu-item completed">
+        <div class="edu-item-head">
+          <span class="edu-status completed">Completed</span>
+          <span class="edu-year">2022</span>
         </div>
-        <span class="edu-year">2022</span>
+        <div class="edu-degree">Matriculation (Science)</div>
+        <div class="edu-school">Ziauddin Examination Board</div>
       </div>
     </div>
   </div>
@@ -1259,77 +1278,6 @@
     });
   }
 
-  // ===== Draggable ID card =====
-  function initDragCard() {
-    const card = document.querySelector('.drag-card');
-    const zone = document.querySelector('.drag-zone');
-    if (!card || !zone) return;
-
-    let x = 0, y = 0, vx = 0, vy = 0, rot = -6;
-    let dragging = false, startX = 0, startY = 0, lastX = 0, lastY = 0, lastT = 0;
-
-    function bounds() {
-      const zr = zone.getBoundingClientRect();
-      const cr = card.getBoundingClientRect();
-      return { minX: 0, maxX: Math.max(0, zr.width - cr.width), minY: 0, maxY: Math.max(0, zr.height - cr.height) };
-    }
-    function render() { card.style.transform = `translate(${x}px, ${y}px) rotate(${rot}deg)`; }
-    function place(px, py) {
-      const b = bounds();
-      x = Math.min(b.maxX, Math.max(b.minX, px));
-      y = Math.min(b.maxY, Math.max(b.minY, py));
-      render();
-    }
-    const b0 = bounds();
-    place(b0.maxX * 0.15, b0.maxY * 0.25);
-
-    card.addEventListener('pointerdown', e => {
-      dragging = true;
-      card.setPointerCapture(e.pointerId);
-      startX = e.clientX - x; startY = e.clientY - y;
-      lastX = e.clientX; lastY = e.clientY; lastT = performance.now();
-      document.documentElement.classList.add('cursor-drag');
-    });
-
-    card.addEventListener('pointermove', e => {
-      if (!dragging) return;
-      const now = performance.now();
-      const dt = Math.max(1, now - lastT);
-      vx = (e.clientX - lastX) / dt * 16;
-      vy = (e.clientY - lastY) / dt * 16;
-      lastX = e.clientX; lastY = e.clientY; lastT = now;
-      x = e.clientX - startX; y = e.clientY - startY;
-      rot = Math.max(-18, Math.min(18, vx * 1.4));
-      render();
-    });
-
-    function endDrag() {
-      if (!dragging) return;
-      dragging = false;
-      document.documentElement.classList.remove('cursor-drag');
-      momentum();
-    }
-    card.addEventListener('pointerup', endDrag);
-    card.addEventListener('pointercancel', endDrag);
-
-    function momentum() {
-      const b = bounds();
-      (function step() {
-        if (dragging) return;
-        x += vx; y += vy;
-        vx *= 0.92; vy *= 0.92; rot *= 0.92;
-        if (x < b.minX) { x = b.minX; vx *= -0.4; }
-        if (x > b.maxX) { x = b.maxX; vx *= -0.4; }
-        if (y < b.minY) { y = b.minY; vy *= -0.4; }
-        if (y > b.maxY) { y = b.maxY; vy *= -0.4; }
-        render();
-        if (Math.abs(vx) > 0.05 || Math.abs(vy) > 0.05) requestAnimationFrame(step);
-      })();
-    }
-
-    window.addEventListener('resize', () => place(x, y));
-  }
-
   // ===== Three.js hero flourish =====
   function initHeroCanvas() {
     if (!window.THREE || prefersReducedMotion || isCoarsePointer || window.innerWidth < 700) return;
@@ -1442,13 +1390,41 @@
     modal.querySelector('.modal-backdrop').addEventListener('click', closeModal);
   }
 
+  // ===== Nav status: live Karachi time + weather =====
+  function initNavStatus() {
+    const el = document.getElementById('navStatusText');
+    if (!el) return;
+    let time = '', temp = null;
+    function render() {
+      el.textContent = 'Karachi' + (time ? ` · ${time}` : '') + (temp !== null ? ` · ${temp}°C` : '');
+    }
+    function updateTime() {
+      time = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Asia/Karachi', hour: '2-digit', minute: '2-digit'
+      }).format(new Date());
+      render();
+    }
+    updateTime();
+    setInterval(updateTime, 30000);
+
+    fetch('https://api.open-meteo.com/v1/forecast?latitude=24.8607&longitude=67.0011&current_weather=true')
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.current_weather && typeof data.current_weather.temperature === 'number') {
+          temp = Math.round(data.current_weather.temperature);
+          render();
+        }
+      })
+      .catch(() => { /* weather is a non-essential enhancement */ });
+  }
+
   // ===== Init =====
   initLoader();
   initScrollReveals();
   initProjectModal();
   try { initCustomCursor(); } catch (e) { /* cursor is a non-essential enhancement */ }
-  try { initDragCard(); } catch (e) { /* drag card is a non-essential enhancement */ }
   try { initHeroCanvas(); } catch (e) { /* WebGL not available — hero still fully usable */ }
+  try { initNavStatus(); } catch (e) { /* nav status is a non-essential enhancement */ }
 </script>
 </body>
 </html>

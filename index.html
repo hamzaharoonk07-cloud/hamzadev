@@ -1472,6 +1472,31 @@ h1, h2, h3, h4 {
     setInterval(load, 15 * 60 * 1000);
   })();
 
+  /* ---- reveal on scroll ----
+     A sweep, not an IntersectionObserver: IO drops entries during fast
+     scrolling and on deep links, which left whole sections invisible. */
+  var revealQueue = [].slice.call(document.querySelectorAll('.rv'));
+  function sweep() {
+    if (!revealQueue.length) return;
+    var h = window.innerHeight || document.documentElement.clientHeight;
+    for (var i = revealQueue.length - 1; i >= 0; i--) {
+      if (revealQueue[i].getBoundingClientRect().top < h * 0.94) {
+        revealQueue[i].classList.add('in');
+        revealQueue.splice(i, 1);
+      }
+    }
+  }
+  window.addEventListener('scroll', sweep, { passive: true });
+  window.addEventListener('resize', sweep, { passive: true });
+  window.addEventListener('load', sweep);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(sweep);
+  // content being stuck invisible is far worse than a few cheap checks
+  var revealGuard = setInterval(function () {
+    sweep();
+    if (!revealQueue.length) clearInterval(revealGuard);
+  }, 300);
+  sweep();
+
   /* ---- active file tracking: tabs + explorer follow the scroll ---- */
   var sections = [].slice.call(document.querySelectorAll('.file'));
   var tabs = [].slice.call(document.querySelectorAll('.tab'));
@@ -1499,6 +1524,7 @@ h1, h2, h3, h4 {
       var pct = max > 0 ? window.scrollY / max : 0;
       stLine.textContent = 'Ln ' + (Math.round(pct * 419) + 1) + ', Col 1';
       if (prog) prog.style.width = (pct * 100).toFixed(2) + '%';
+      sweep();
 
       // whichever file crosses just under the chrome is the open one
       var line = 140, current = sections[0];
@@ -1515,18 +1541,6 @@ h1, h2, h3, h4 {
   }, { passive: true });
   onScroll();
 
-  /* ---- reveal ---- */
-  var items = document.querySelectorAll('.rv');
-  if (!('IntersectionObserver' in window)) {
-    [].forEach.call(items, function (el) { el.classList.add('in'); });
-  } else {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
-      });
-    }, { rootMargin: '0px 0px -6% 0px', threshold: 0.05 });
-    [].forEach.call(items, function (el) { io.observe(el); });
-  }
 })();
 </script>
 
@@ -1662,28 +1676,53 @@ h1, h2, h3, h4 {
     }
   }
 
-  /* ---------- 4. stats count up when seen ---------- */
+  /* ---------- 4. stats count up when scrolled to ----------
+     Swept on scroll rather than observed: IO drops entries on fast
+     scrolls, which left the counters sitting at zero. */
   var nums = [].slice.call(document.querySelectorAll('.stat b[data-to]'));
   function settle(el) {
     el.textContent = el.getAttribute('data-to') + (el.getAttribute('data-suffix') || '');
   }
-  if (reduced || !('IntersectionObserver' in window)) {
+  if (reduced) {
     nums.forEach(settle);
   } else {
-    var nio = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (!en.isIntersecting) return;
-        nio.unobserve(en.target);
-        var el = en.target, to = parseInt(el.getAttribute('data-to'), 10);
-        var sfx = el.getAttribute('data-suffix') || '', step = 0;
-        (function up() {
-          step++;
-          el.textContent = Math.min(step, to) + (step >= to ? sfx : '');
-          if (step < to) setTimeout(up, 190);
-        })();
-      });
-    }, { threshold: 0.6 });
-    nums.forEach(function (el) { nio.observe(el); });
+    var pendingNums = nums.slice();
+    var numTick = false;
+
+    function countUp(el) {
+      var to = parseInt(el.getAttribute('data-to'), 10);
+      var sfx = el.getAttribute('data-suffix') || '', step = 0;
+      (function up() {
+        step++;
+        el.textContent = Math.min(step, to) + (step >= to ? sfx : '');
+        if (step < to) setTimeout(up, 190);
+      })();
+    }
+
+    function numSweep() {
+      if (!pendingNums.length) return;
+      var h = window.innerHeight || document.documentElement.clientHeight;
+      for (var i = pendingNums.length - 1; i >= 0; i--) {
+        if (pendingNums[i].getBoundingClientRect().top < h * 0.94) {
+          countUp(pendingNums[i]);
+          pendingNums.splice(i, 1);
+        }
+      }
+    }
+
+    window.addEventListener('scroll', function () {
+      if (numTick) return;
+      numTick = true;
+      requestAnimationFrame(function () { numTick = false; numSweep(); });
+      numSweep();
+    }, { passive: true });
+    window.addEventListener('resize', numSweep, { passive: true });
+    window.addEventListener('load', numSweep);
+    var numGuard = setInterval(function () {
+      numSweep();
+      if (!pendingNums.length) clearInterval(numGuard);
+    }, 300);
+    numSweep();
   }
 
   /* ---------- 5. copy email ---------- */

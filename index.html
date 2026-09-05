@@ -260,6 +260,27 @@ section { scroll-margin-top: calc(var(--hud-h) + 58px); }
 .btn.start:hover { color: #0A0A18; filter: brightness(1.06); }
 .btn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.4; }
 
+.lore { margin-top: clamp(1.6rem, 3.5vw, 2.4rem); }
+.lore-body { padding: 1.1rem 1.2rem; }
+.lore-body p { max-width: 78ch; }
+.lore-body p + p { margin-top: .9rem; }
+
+.sub-head { margin: clamp(2rem, 5vw, 3.2rem) 0 clamp(1rem, 2.5vw, 1.6rem); }
+
+.combo { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(.8rem, 1.8vw, 1.2rem); }
+.step { padding: 1.1rem 1.15rem; }
+.step-no {
+  display: inline-block; font-family: 'Press Start 2P', monospace; font-size: .55rem;
+  background: var(--purple); color: #fff; padding: .35rem .5rem; margin-bottom: .8rem;
+}
+.step h4 {
+  font-family: 'Press Start 2P', monospace; font-size: .55rem;
+  color: var(--gold); margin-bottom: .6rem;
+}
+.step p { font-size: .86rem; color: var(--fg); }
+@media (max-width: 940px) { .combo { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .combo { grid-template-columns: 1fr; } }
+
 .sys { margin-top: clamp(1.6rem, 3.5vw, 2.4rem); }
 .sys-bar {
   display: flex; align-items: center; gap: .5rem; padding: .55rem .8rem;
@@ -529,6 +550,16 @@ footer { border-top: 2px solid var(--line); background: var(--panel); padding: 1
       </div>
     </div>
 
+    <div class="lore panel">
+      <div class="sys-bar"><b>&#9679;</b>&nbsp;LORE &middot; BACKSTORY</div>
+      <div class="lore-body">
+        <p>I'm a full stack developer and graphic designer based in Karachi. On the front end I work in HTML, CSS, JavaScript, Bootstrap, jQuery and React. Behind it I write PHP against MySQL, and Node, Express and MongoDB where the project calls for it — logins, CRUD, admin panels, and the database design that holds them together.</p>
+        <p>I came at this from design first. Logos, brand identities and digital assets taught me composition, colour and type before I ever wrote a layout — and that's still how I build. The interface gets designed properly, then coded, then wired to real data.</p>
+        <p>All five projects here are live, from an organic storefront on its own domain to a MERN career-guidance platform. Among them is CARE Group, a deployed PHP and MySQL doctor-appointment portal with separate patient, doctor and administrator panels — role-based logins, a live availability grid, and the schema underneath it.</p>
+        <p>I'm studying for my Advanced Diploma in Software Engineering at Aptech alongside my Intermediate, and going deeper into advanced JavaScript patterns, relational database design, and modern design systems.</p>
+      </div>
+    </div>
+
     <div class="sys panel">
       <div class="sys-bar"><b>&#9679;</b>&nbsp;SYSTEM &middot; BOOT LOG</div>
       <div class="sys-body" id="sysBody" aria-hidden="true"></div>
@@ -580,7 +611,7 @@ footer { border-top: 2px solid var(--line); background: var(--panel); padding: 1
       </div>
     </div>
 
-    <p class="stat-note rv">Levels are my own estimate, not a certification. I came at this from design first — logos and brand identities taught me composition, colour and type before I ever wrote a layout, and that is still how I build: designed properly, then coded, then wired to real data. Currently studying for my Advanced Diploma in Software Engineering at Aptech alongside my Intermediate.</p>
+    <p class="stat-note rv">Levels are my own estimate, not a certification — a rough read on what I reach for daily versus what I am still growing into.</p>
   </div>
 </section>
 
@@ -689,6 +720,17 @@ footer { border-top: 2px solid var(--line); background: var(--panel); padding: 1
         <p>The design side I started in: logos, colour and type systems, and the digital assets that keep a brand consistent wherever it shows up.</p>
         <ul><li>LOGO AND WORDMARK</li><li>COLOUR PALETTES AND TYPE</li><li>SOCIAL AND DIGITAL ASSETS</li></ul>
       </div>
+    </div>
+
+    <div class="sub-head rv">
+      <span class="sec-tag">// HOW I PLAY &middot; 4-STEP COMBO</span>
+    </div>
+
+    <div class="combo">
+      <div class="step panel rv"><span class="step-no">01</span><h4>UNDERSTAND</h4><p>What the site actually has to do, and who it is for, before anything gets designed.</p></div>
+      <div class="step panel rv"><span class="step-no">02</span><h4>DESIGN</h4><p>Layout, colour and type settled first, so the build isn't guesswork and revisions stay cheap.</p></div>
+      <div class="step panel rv"><span class="step-no">03</span><h4>BUILD</h4><p>Semantic HTML and CSS, responsive from the smallest screen up, then JavaScript for the behaviour.</p></div>
+      <div class="step panel rv"><span class="step-no">04</span><h4>SHIP</h4><p>Wire up the data, test on real devices, deploy, and hand it over.</p></div>
     </div>
   </div>
 </section>

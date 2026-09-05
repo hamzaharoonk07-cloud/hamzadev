@@ -11,7 +11,7 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Hamza Haroon — Full Stack Developer &amp; Graphic Designer">
 <meta property="og:description" content="Five projects live, from an organic storefront to a MERN career platform and a PHP appointment portal.">
-<meta property="og:image" content="profile.png">
+<meta property="og:image" content="profile.jpg">
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230A0A18'/%3E%3Cpath d='M3 3h2v4h6V3h2v10h-2V9H5v4H3z' fill='%23FFC93C'/%3E%3C/svg%3E">
@@ -293,6 +293,13 @@ section { scroll-margin-top: calc(var(--hud-h) + 58px); }
 .stat-card:nth-child(2) .fill { background: var(--pink); }
 .stat-card:nth-child(3) .fill { background: var(--purple); }
 .stat-card:nth-child(4) .fill { background: var(--gold); }
+.equip { display: flex; flex-wrap: wrap; gap: .4rem; }
+.equip span {
+  font-family: 'Press Start 2P', monospace; font-size: .45rem; color: var(--dim);
+  border: 2px solid var(--line); padding: .4rem .5rem; line-height: 1.6;
+  transition: color .2s, border-color .2s, transform .15s;
+}
+.equip span:hover { color: var(--gold); border-color: var(--gold); transform: translateY(-2px); }
 .stat-note { margin-top: 1.4rem; font-size: .86rem; color: var(--dim); max-width: 82ch; }
 @media (max-width: 760px) { .stat-grid { grid-template-columns: 1fr; } }
 
@@ -323,16 +330,22 @@ section { scroll-margin-top: calc(var(--hud-h) + 58px); }
 .level p { font-size: .89rem; color: var(--fg); margin-bottom: .7rem; }
 .loadout { display: flex; flex-wrap: wrap; gap: .3rem; }
 .loadout span { font-family: 'Press Start 2P', monospace; font-size: .42rem; border: 2px solid var(--line); padding: .28rem .4rem; color: var(--dim); }
-.play {
-  font-family: 'Press Start 2P', monospace; font-size: .5rem;
-  border: 2px solid var(--line); background: var(--panel-2); color: var(--fg);
-  padding: .8rem .9rem; white-space: nowrap; align-self: center;
-  transition: background .2s, color .2s, border-color .2s;
+.acts { display: flex; flex-direction: column; gap: .5rem; align-self: center; }
+.play, .code {
+  font-family: 'Press Start 2P', monospace; text-decoration: none;
+  border: 2px solid var(--line); white-space: nowrap; text-align: center;
+  transition: background .2s, color .2s, border-color .2s, transform .12s;
 }
+.play { font-size: .5rem; background: var(--panel-2); color: var(--fg); padding: .8rem .9rem; }
+.code { font-size: .44rem; background: transparent; color: var(--dim); padding: .55rem .9rem; }
 .level:hover .play { background: var(--gold); border-color: var(--gold); color: #0A0A18; }
+.code:hover { color: var(--cyan); border-color: var(--cyan); transform: translateY(-2px); }
+.level-link { text-decoration: none; color: inherit; }
+.level-link:hover { color: var(--gold); }
 @media (max-width: 780px) {
   .level { grid-template-columns: 84px minmax(0, 1fr); }
-  .play { grid-column: 1 / -1; text-align: center; }
+  .acts { grid-column: 1 / -1; flex-direction: row; }
+  .play, .code { flex: 1; }
 }
 
 /* ═══════════ QUESTS ═══════════ */
@@ -440,7 +453,7 @@ footer { border-top: 2px solid var(--line); background: var(--panel); padding: 1
 <!-- HUD -->
 <header class="hud">
   <div class="hud-player">
-    <img class="hud-ava" src="profile.png" alt="" onerror="this.hidden=true">
+    <img class="hud-ava" src="profile.jpg" alt="" onerror="this.hidden=true">
     <div>
       <div class="hud-name px">HAMZA HAROON</div>
       <div class="hud-class px">FULL-STACK DEV</div>
@@ -487,7 +500,7 @@ footer { border-top: 2px solid var(--line); background: var(--panel); padding: 1
   <div class="wrap hero">
     <div class="hero-grid">
       <div class="ava-box">
-        <img src="profile.png" alt="Hamza Haroon" onerror="this.closest('.ava-box').hidden=true">
+        <img src="profile.jpg" alt="Hamza Haroon" onerror="this.closest('.ava-box').hidden=true">
         <span class="ava-lv px">LV.3 &middot; 3+ YRS</span>
       </div>
 
@@ -538,17 +551,13 @@ footer { border-top: 2px solid var(--line); background: var(--panel); padding: 1
         <div class="skill"><div class="skill-top"><span class="skill-name">HTML5</span><span class="skill-num">95</span></div><div class="track"><div class="fill" data-lv="95"></div></div></div>
         <div class="skill"><div class="skill-top"><span class="skill-name">CSS3</span><span class="skill-num">92</span></div><div class="track"><div class="fill" data-lv="92"></div></div></div>
         <div class="skill"><div class="skill-top"><span class="skill-name">JAVASCRIPT</span><span class="skill-num">85</span></div><div class="track"><div class="fill" data-lv="85"></div></div></div>
-        <div class="skill"><div class="skill-top"><span class="skill-name">BOOTSTRAP</span><span class="skill-num">88</span></div><div class="track"><div class="fill" data-lv="88"></div></div></div>
         <div class="skill"><div class="skill-top"><span class="skill-name">REACT</span><span class="skill-num">70</span></div><div class="track"><div class="fill" data-lv="70"></div></div></div>
-        <div class="skill"><div class="skill-top"><span class="skill-name">JQUERY</span><span class="skill-num">75</span></div><div class="track"><div class="fill" data-lv="75"></div></div></div>
       </div>
 
       <div class="stat-card panel rv">
         <h3>BACK END</h3>
         <div class="skill"><div class="skill-top"><span class="skill-name">PHP</span><span class="skill-num">85</span></div><div class="track"><div class="fill" data-lv="85"></div></div></div>
         <div class="skill"><div class="skill-top"><span class="skill-name">MYSQL</span><span class="skill-num">82</span></div><div class="track"><div class="fill" data-lv="82"></div></div></div>
-        <div class="skill"><div class="skill-top"><span class="skill-name">AUTH / CRUD</span><span class="skill-num">80</span></div><div class="track"><div class="fill" data-lv="80"></div></div></div>
-        <div class="skill"><div class="skill-top"><span class="skill-name">SCHEMA DESIGN</span><span class="skill-num">78</span></div><div class="track"><div class="fill" data-lv="78"></div></div></div>
         <div class="skill"><div class="skill-top"><span class="skill-name">NODE + EXPRESS</span><span class="skill-num">68</span></div><div class="track"><div class="fill" data-lv="68"></div></div></div>
         <div class="skill"><div class="skill-top"><span class="skill-name">MONGODB</span><span class="skill-num">65</span></div><div class="track"><div class="fill" data-lv="65"></div></div></div>
       </div>
@@ -562,11 +571,12 @@ footer { border-top: 2px solid var(--line); background: var(--panel); padding: 1
       </div>
 
       <div class="stat-card panel rv">
-        <h3>TOOLS</h3>
-        <div class="skill"><div class="skill-top"><span class="skill-name">VS CODE</span><span class="skill-num">90</span></div><div class="track"><div class="fill" data-lv="90"></div></div></div>
-        <div class="skill"><div class="skill-top"><span class="skill-name">GIT + GITHUB</span><span class="skill-num">82</span></div><div class="track"><div class="fill" data-lv="82"></div></div></div>
-        <div class="skill"><div class="skill-top"><span class="skill-name">VERCEL DEPLOY</span><span class="skill-num">80</span></div><div class="track"><div class="fill" data-lv="80"></div></div></div>
-        <div class="skill"><div class="skill-top"><span class="skill-name">DEVTOOLS</span><span class="skill-num">78</span></div><div class="track"><div class="fill" data-lv="78"></div></div></div>
+        <h3>ALSO EQUIPPED</h3>
+        <div class="equip">
+          <span>BOOTSTRAP</span><span>JQUERY</span><span>GSAP</span><span>AUTH &amp; CRUD</span>
+          <span>SCHEMA DESIGN</span><span>PDO</span><span>APACHE</span><span>PERL</span>
+          <span>GIT + GITHUB</span><span>VS CODE</span><span>VERCEL</span><span>DEVTOOLS</span>
+        </div>
       </div>
     </div>
 
@@ -584,60 +594,72 @@ footer { border-top: 2px solid var(--line); background: var(--panel); padding: 1
 
     <div class="levels">
 
-      <a class="level panel rv" href="https://careerpassporttw.vercel.app/" target="_blank" rel="noopener noreferrer">
+      <article class="level panel rv" data-live="https://careerpassporttw.vercel.app/">
         <div class="level-art"><span class="level-no">01</span><img src="logo-pathseeker.jpg" alt="PathSeeker" loading="lazy"></div>
         <div>
           <div class="level-top"><span class="cleared">CLEARED</span><span class="klass">FULL-STACK &middot; MERN</span></div>
-          <h3>PathSeeker — Career Passport</h3>
+          <h3><a class="level-link" href="https://careerpassporttw.vercel.app/" target="_blank" rel="noopener noreferrer">PathSeeker — Career Passport</a></h3>
           <p>Ten honest questions, matched against 38 real careers. Every result shows its reasoning and its trade-offs, then lays out a six-stage route into the job. Staged as a boarding-pass journey, with a hand-written CSS design system — no UI or animation library.</p>
           <div class="loadout"><span>REACT</span><span>NODE</span><span>EXPRESS</span><span>MONGODB</span><span>CUSTOM CSS</span></div>
         </div>
-        <span class="play">PLAY &#9654;</span>
-      </a>
+        <div class="acts">
+          <a class="play" href="https://careerpassporttw.vercel.app/" target="_blank" rel="noopener noreferrer">PLAY &#9654;</a>
+          <a class="code" href="https://github.com/hamzaharoonk07-cloud/careerpassport" target="_blank" rel="noopener noreferrer">&lt;/&gt; CODE</a>
+        </div>
+      </article>
 
-      <a class="level panel rv" href="https://care-pk.infinityfreeapp.com/" target="_blank" rel="noopener noreferrer">
-        <div class="level-art"><span class="level-no">02</span><img src="logo-care.png" alt="CARE Group" loading="lazy"></div>
+      <article class="level panel rv" data-live="https://care-pk.infinityfreeapp.com/">
+        <div class="level-art"><span class="level-no">02</span><img src="logo-care.jpg" alt="CARE Group" loading="lazy"></div>
         <div>
           <div class="level-top"><span class="cleared">CLEARED</span><span class="klass">FULL-STACK &middot; PHP</span></div>
-          <h3>CARE Group — Appointment Portal</h3>
+          <h3><a class="level-link" href="https://care-pk.infinityfreeapp.com/" target="_blank" rel="noopener noreferrer">CARE Group — Appointment Portal</a></h3>
           <p>A three-role portal on PHP and MySQL. Patients search specialists by city and book from a doctor's live availability grid; doctors run their sittings, leave and appointment book; an admin maintains doctors, cities, logins and the public site's content. Localised for Pakistan, with a Perl management report.</p>
           <div class="loadout"><span>PHP 8</span><span>MYSQL</span><span>PDO</span><span>APACHE</span><span>PERL</span></div>
         </div>
-        <span class="play">PLAY &#9654;</span>
-      </a>
+        <div class="acts">
+          <a class="play" href="https://care-pk.infinityfreeapp.com/" target="_blank" rel="noopener noreferrer">PLAY &#9654;</a>
+          <a class="code" href="https://github.com/hamzaharoonk07-cloud/care" target="_blank" rel="noopener noreferrer">&lt;/&gt; CODE</a>
+        </div>
+      </article>
 
-      <a class="level panel rv" href="https://www.shopxtra.store/" target="_blank" rel="noopener noreferrer">
-        <div class="level-art"><span class="level-no">03</span><img src="logo-shopxtra.png" alt="ShopXtra" loading="lazy"></div>
+      <article class="level panel rv" data-live="https://www.shopxtra.store/">
+        <div class="level-art"><span class="level-no">03</span><img src="logo-shopxtra.jpg" alt="ShopXtra" loading="lazy"></div>
         <div>
           <div class="level-top"><span class="cleared">CLEARED</span><span class="klass">E-COMMERCE</span></div>
-          <h3>ShopXtra</h3>
+          <h3><a class="level-link" href="https://www.shopxtra.store/" target="_blank" rel="noopener noreferrer">ShopXtra</a></h3>
           <p>A working organic grocery and personal-care shop on its own domain — electrolytes, coffee, shampoo, home care and cosmetics. Category browsing, search, promo codes and a running cart, with cash on delivery nationwide.</p>
           <div class="loadout"><span>HTML</span><span>CSS</span><span>JAVASCRIPT</span><span>BOOTSTRAP</span><span>GSAP</span></div>
         </div>
-        <span class="play">PLAY &#9654;</span>
-      </a>
+        <div class="acts">
+          <a class="play" href="https://www.shopxtra.store/" target="_blank" rel="noopener noreferrer">PLAY &#9654;</a>
+        </div>
+      </article>
 
-      <a class="level panel rv" href="https://physiosync-pk.vercel.app/" target="_blank" rel="noopener noreferrer">
-        <div class="level-art"><span class="level-no">04</span><img src="logo-physiosync.png" alt="PhysioSync" loading="lazy"></div>
+      <article class="level panel rv" data-live="https://physiosync-pk.vercel.app/">
+        <div class="level-art"><span class="level-no">04</span><img src="logo-physiosync.jpg" alt="PhysioSync" loading="lazy"></div>
         <div>
           <div class="level-top"><span class="cleared">CLEARED</span><span class="klass">HEALTH TECH</span></div>
-          <h3>PhysioSync</h3>
+          <h3><a class="level-link" href="https://physiosync-pk.vercel.app/" target="_blank" rel="noopener noreferrer">PhysioSync</a></h3>
           <p>Pick a region on a 3D body model and it maps the conditions behind the pain — cervical spondylosis, whiplash, forward head posture — then prescribes the exercise that treats it. Patient accounts, a personal dashboard, and every routine signed off by a physiotherapist.</p>
           <div class="loadout"><span>HTML</span><span>CSS</span><span>JAVASCRIPT</span><span>GSAP</span><span>SKETCHFAB 3D</span></div>
         </div>
-        <span class="play">PLAY &#9654;</span>
-      </a>
+        <div class="acts">
+          <a class="play" href="https://physiosync-pk.vercel.app/" target="_blank" rel="noopener noreferrer">PLAY &#9654;</a>
+        </div>
+      </article>
 
-      <a class="level panel rv" href="https://zaikaekarachi.vercel.app/" target="_blank" rel="noopener noreferrer">
-        <div class="level-art"><span class="level-no">05</span><img src="logo-zaika.png" alt="Zaika-e-Karachi" loading="lazy"></div>
+      <article class="level panel rv" data-live="https://zaikaekarachi.vercel.app/">
+        <div class="level-art"><span class="level-no">05</span><img src="logo-zaika.jpg" alt="Zaika-e-Karachi" loading="lazy"></div>
         <div>
           <div class="level-top"><span class="cleared">CLEARED</span><span class="klass">RESTAURANT</span></div>
-          <h3>Zaika-e-Karachi</h3>
+          <h3><a class="level-link" href="https://zaikaekarachi.vercel.app/" target="_blank" rel="noopener noreferrer">Zaika-e-Karachi</a></h3>
           <p>A scroll-told history of a Karachi kitchen, from partition-era handwritten recipes to the bun kabab stalls of Burns Road. Set bilingually in English and Urdu, with the menu, the chefs and table reservations.</p>
           <div class="loadout"><span>HTML5</span><span>CSS3</span><span>JAVASCRIPT</span><span>GSAP</span></div>
         </div>
-        <span class="play">PLAY &#9654;</span>
-      </a>
+        <div class="acts">
+          <a class="play" href="https://zaikaekarachi.vercel.app/" target="_blank" rel="noopener noreferrer">PLAY &#9654;</a>
+        </div>
+      </article>
 
     </div>
   </div>

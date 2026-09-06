@@ -675,19 +675,40 @@ h1, h2, h3, h4 {
 .card-head .src i { width: 6px; height: 6px; border-radius: 50%; background: var(--blue); }
 .card-head .host { margin-left: auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .shot {
-  display: grid; place-items: center; padding: 1.4rem;
+  position: relative; overflow: hidden; padding: 0;
   border-bottom: 1px solid var(--line); background: var(--bg);
 }
-.shot img {
-  width: clamp(96px, 30%, 148px); aspect-ratio: 1; object-fit: cover;
-  border-radius: 6px; border: 1px solid var(--line);
-  transition: transform .4s cubic-bezier(.2,.7,.3,1), box-shadow .4s;
+/* a hairline of browser chrome so it reads as a real site, not a picture */
+.shot::before {
+  content: ''; position: absolute; inset: 0 0 auto 0; height: 22px; z-index: 2;
+  background: linear-gradient(180deg, rgba(0,0,0,.55), transparent);
+  pointer-events: none;
 }
-.card:hover .shot img { transform: scale(1.06) rotate(-1.2deg); box-shadow: 0 16px 32px -16px rgba(0,0,0,.8); }
+.shot img {
+  width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top center;
+  border-radius: 0; border: 0; display: block;
+  transition: transform .5s cubic-bezier(.2,.7,.3,1);
+}
+.card:hover .shot img { transform: scale(1.035); }
 .card-body { padding: 1rem 1.05rem 1.15rem; display: flex; flex-direction: column; flex: 1; }
 .card-body h3 { font-size: 1rem; margin-bottom: .5rem; display: flex; gap: .5rem; align-items: baseline; }
+.acts { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: .9rem; }
+.acts a {
+  font-family: 'JetBrains Mono', monospace; font-size: .72rem; text-decoration: none;
+  border: 1px solid var(--line); border-radius: 6px; padding: .42rem .7rem;
+  color: var(--fg); background: var(--bg-2);
+  transition: border-color .2s, color .2s, background .2s, transform .18s;
+}
+.acts a:hover { transform: translateY(-2px); }
+.acts a.open:hover { border-color: var(--amber); color: var(--amber); }
+.acts a.src { background: transparent; color: var(--dim); }
+.acts a.src:hover { border-color: var(--cyan); color: var(--cyan); }
+.tlink { color: inherit; text-decoration: none; }
+.tlink:hover { color: var(--amber); }
 .card-body h3 svg { width: 13px; height: 13px; fill: none; stroke: var(--dim); stroke-width: 2.4; flex-shrink: 0; transition: stroke .25s, transform .25s cubic-bezier(.2,.7,.3,1); }
 .card:hover h3 svg { stroke: var(--amber); transform: translate(3px, -3px); }
+.hard { font-size: .82rem; color: var(--dim); border-left: 2px solid var(--amber); padding-left: .7rem; margin-bottom: .9rem; }
+.hard b { color: var(--fg); font-weight: 600; }
 .card-body p { font-size: .875rem; color: var(--fg); margin-bottom: .9rem; }
 .tags { display: flex; flex-wrap: wrap; gap: .3rem; margin-top: auto; }
 .tags span {
@@ -700,7 +721,7 @@ h1, h2, h3, h4 {
   .card.lead { display: grid; grid-template-columns: 1fr 1fr; grid-template-areas: "h h" "s b"; }
   .card.lead .card-head { grid-area: h; }
   .card.lead .shot { grid-area: s; border-bottom: none; border-right: 1px solid var(--line); }
-  .card.lead .shot img { width: clamp(120px, 40%, 190px); }
+  .card.lead .shot img { aspect-ratio: auto; height: 100%; min-height: 260px; }
   .card.lead .card-body { grid-area: b; }
   .card.lead .card-body h3 { font-size: 1.2rem; }
 }
@@ -1126,8 +1147,6 @@ h1, h2, h3, h4 {
             <div class="cl"><span class="cc">  <span class="t-key">"workflow"</span><span class="t-punc">: [</span></span></div>
             <div class="cl"><span class="cc">    <span class="chips">
               <span class="chip"><svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#181717"/><g transform="translate(3.5,3.5) scale(0.71)"><path fill="#fff" d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.39 7.86 10.91.57.1.78-.25.78-.55 0-.27-.01-1.16-.02-2.11-3.2.7-3.88-1.36-3.88-1.36-.52-1.34-1.28-1.69-1.28-1.69-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.7 5.39-5.26 5.68.41.36.78 1.07.78 2.15 0 1.55-.01 2.8-.01 3.18 0 .3.2.66.79.55A10.52 10.52 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5z"/></g></svg>Git &amp; GitHub</span>
-              <span class="chip"><svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#007ACC"/><path d="M7 8l4 4-4 4" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 16h4" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>VS Code</span>
-              <span class="chip"><svg data-s viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 9 9h-9V3Z"/><path d="M3.5 8h11"/></svg>DevTools</span>
               <span class="chip"><svg viewBox="0 0 24 24"><rect width="24" height="24" rx="4" fill="#000"/><path d="M12 6l6.5 11.5h-13z" fill="#fff"/></svg>Vercel</span>
             </span></span></div>
             <div class="cl"><span class="cc">  <span class="t-punc">]</span></span></div>
@@ -1149,82 +1168,101 @@ h1, h2, h3, h4 {
 
         <div class="work-grid">
 
-          <a class="card lead rv" id="p-pathseeker" href="https://careerpassporttw.vercel.app/" target="_blank" rel="noopener noreferrer">
+          <article class="card lead rv" id="p-pathseeker" data-live="https://careerpassporttw.vercel.app/">
             <div class="card-head">
               <span class="live"><i></i>live</span><span class="sep">·</span>career tech
               <span class="host">careerpassporttw.vercel.app</span>
             </div>
-            <div class="shot"><img src="logo-pathseeker.jpg" alt="PathSeeker logo" loading="lazy"></div>
+            <div class="shot"><img src="shot-pathseeker.jpg" alt="Screenshot of PathSeeker" loading="lazy"></div>
             <div class="card-body">
-              <h3>PathSeeker — Career Passport
+              <h3><a class="tlink" href="https://careerpassporttw.vercel.app/" target="_blank" rel="noopener noreferrer">PathSeeker — Career Passport</a>
                 <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg>
               </h3>
               <p>Ten honest questions, matched against 38 real careers. Every result shows its reasoning and its trade-offs, then lays out a six-stage route into the job. Staged as a boarding-pass journey, on a MERN stack with a hand-written CSS design system — no UI or animation library.</p>
+              <p class="hard"><b>The hard part:</b> making the match explainable — the scoring is deterministic and defensible, so every result can show its own reasoning rather than a black-box number.</p>
               <div class="tags"><span>React</span><span>Node.js</span><span>Express</span><span>MongoDB</span><span>Custom CSS</span></div>
             </div>
-          </a>
+            <div class="acts">
+              <a class="open" href="https://careerpassporttw.vercel.app/" target="_blank" rel="noopener noreferrer">open live &#8599;</a>
+              <a class="src" href="https://github.com/hamzaharoonk07-cloud/careerpassport" target="_blank" rel="noopener noreferrer">&lt;/&gt; code</a>
+            </div>
+          </article>
 
-          <a class="card rv" id="p-care" href="https://care-pk.infinityfreeapp.com/" target="_blank" rel="noopener noreferrer">
+          <article class="card rv" id="p-care" data-live="https://care-pk.infinityfreeapp.com/">
             <div class="card-head">
               <span class="live"><i></i>live</span><span class="sep">·</span>healthcare · full stack
               <span class="host">care-pk.infinityfreeapp.com</span>
             </div>
-            <div class="shot"><img src="logo-care.jpg" alt="CARE Group logo" loading="lazy"></div>
+            <div class="shot"><img src="shot-care.jpg" alt="Screenshot of CARE Group" loading="lazy"></div>
             <div class="card-body">
-              <h3>CARE Group — Appointment Portal
+              <h3><a class="tlink" href="https://care-pk.infinityfreeapp.com/" target="_blank" rel="noopener noreferrer">CARE Group — Appointment Portal</a>
                 <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg>
               </h3>
               <p>A three-role portal built on PHP and MySQL. Patients search specialists by city and book from a doctor's live availability grid; doctors run their sittings, leave and appointment book; an admin maintains doctors, cities, logins and the public site's own content. Localised for Pakistan — ten cities, fees in rupees, Rescue 1122 — with a Perl script for the management report.</p>
+              <p class="hard"><b>The hard part:</b> the availability grid — a doctor's recurring weekly sitting, slot length, and one-off leave all resolve into real bookable times, and a cancelled slot returns to the pool immediately.</p>
               <div class="tags"><span>PHP 8</span><span>MySQL</span><span>PDO</span><span>Apache</span><span>Perl</span><span>JavaScript</span></div>
             </div>
-          </a>
+            <div class="acts">
+              <a class="open" href="https://care-pk.infinityfreeapp.com/" target="_blank" rel="noopener noreferrer">open live &#8599;</a>
+              <a class="src" href="https://github.com/hamzaharoonk07-cloud/care" target="_blank" rel="noopener noreferrer">&lt;/&gt; code</a>
+            </div>
+          </article>
 
-          <a class="card rv" id="p-shopxtra" href="https://www.shopxtra.store/" target="_blank" rel="noopener noreferrer">
+          <article class="card rv" id="p-shopxtra" data-live="https://www.shopxtra.store/">
             <div class="card-head">
               <span class="live"><i></i>live</span><span class="sep">·</span>e-commerce
               <span class="host">shopxtra.store</span>
             </div>
-            <div class="shot"><img src="logo-shopxtra.jpg" alt="ShopXtra logo" loading="lazy"></div>
+            <div class="shot"><img src="shot-shopxtra.jpg" alt="Screenshot of ShopXtra" loading="lazy"></div>
             <div class="card-body">
-              <h3>ShopXtra
+              <h3><a class="tlink" href="https://www.shopxtra.store/" target="_blank" rel="noopener noreferrer">ShopXtra</a>
                 <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg>
               </h3>
               <p>A working organic grocery and personal-care shop on its own domain — electrolytes, coffee, shampoo, home care and cosmetics. Category browsing, search, promo codes and a running cart, with cash on delivery nationwide.</p>
               <div class="tags"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>Bootstrap</span><span>GSAP</span></div>
             </div>
-          </a>
+            <div class="acts">
+              <a class="open" href="https://www.shopxtra.store/" target="_blank" rel="noopener noreferrer">open live &#8599;</a>
+            </div>
+          </article>
 
-          <a class="card rv" id="p-physiosync" href="https://physiosync-pk.vercel.app/" target="_blank" rel="noopener noreferrer">
+          <article class="card rv" id="p-physiosync" data-live="https://physiosync-pk.vercel.app/">
             <div class="card-head">
               <span class="live"><i></i>live</span><span class="sep">·</span>health tech
               <span class="host">physiosync-pk.vercel.app</span>
             </div>
-            <div class="shot"><img src="logo-physiosync.jpg" alt="PhysioSync logo" loading="lazy"></div>
+            <div class="shot"><img src="shot-physiosync.jpg" alt="Screenshot of PhysioSync" loading="lazy"></div>
             <div class="card-body">
-              <h3>PhysioSync
+              <h3><a class="tlink" href="https://physiosync-pk.vercel.app/" target="_blank" rel="noopener noreferrer">PhysioSync</a>
                 <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg>
               </h3>
               <p>Pick a region on a 3D body model and it maps the conditions behind the pain — cervical spondylosis, whiplash, forward head posture — then prescribes the exercise that treats it. Patient accounts, a personal dashboard, and every routine signed off by a physiotherapist.</p>
               <div class="tags"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>GSAP</span><span>Sketchfab 3D</span></div>
             </div>
-          </a>
+            <div class="acts">
+              <a class="open" href="https://physiosync-pk.vercel.app/" target="_blank" rel="noopener noreferrer">open live &#8599;</a>
+            </div>
+          </article>
 
           
 
-          <a class="card rv" id="p-zaika" href="https://zaikaekarachi.vercel.app/" target="_blank" rel="noopener noreferrer">
+          <article class="card rv" id="p-zaika" data-live="https://zaikaekarachi.vercel.app/">
             <div class="card-head">
               <span class="live"><i></i>live</span><span class="sep">·</span>restaurant
               <span class="host">zaikaekarachi.vercel.app</span>
             </div>
-            <div class="shot"><img src="logo-zaika.jpg" alt="Zaika-e-Karachi logo" loading="lazy"></div>
+            <div class="shot"><img src="shot-zaika.jpg" alt="Screenshot of Zaika-e-Karachi" loading="lazy"></div>
             <div class="card-body">
-              <h3>Zaika-e-Karachi
+              <h3><a class="tlink" href="https://zaikaekarachi.vercel.app/" target="_blank" rel="noopener noreferrer">Zaika-e-Karachi</a>
                 <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg>
               </h3>
               <p>A scroll-told history of a Karachi kitchen, from partition-era handwritten recipes to the bun kabab stalls of Burns Road. Set bilingually in English and Urdu, with the menu, the chefs and table reservations.</p>
               <div class="tags"><span>HTML5</span><span>CSS3</span><span>JavaScript</span><span>GSAP</span></div>
             </div>
-          </a>
+            <div class="acts">
+              <a class="open" href="https://zaikaekarachi.vercel.app/" target="_blank" rel="noopener noreferrer">open live &#8599;</a>
+            </div>
+          </article>
 
         </div>
       </div>

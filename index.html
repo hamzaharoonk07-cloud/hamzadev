@@ -675,21 +675,15 @@ h1, h2, h3, h4 {
 .card-head .src i { width: 6px; height: 6px; border-radius: 50%; background: var(--blue); }
 .card-head .host { margin-left: auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .shot {
-  position: relative; overflow: hidden; padding: 0;
+  display: grid; place-items: center; padding: 1.4rem;
   border-bottom: 1px solid var(--line); background: var(--bg);
 }
-/* a hairline of browser chrome so it reads as a real site, not a picture */
-.shot::before {
-  content: ''; position: absolute; inset: 0 0 auto 0; height: 22px; z-index: 2;
-  background: linear-gradient(180deg, rgba(0,0,0,.55), transparent);
-  pointer-events: none;
-}
 .shot img {
-  width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top center;
-  border-radius: 0; border: 0; display: block;
-  transition: transform .5s cubic-bezier(.2,.7,.3,1);
+  width: clamp(96px, 30%, 148px); aspect-ratio: 1; object-fit: cover;
+  border-radius: 6px; border: 1px solid var(--line);
+  transition: transform .4s cubic-bezier(.2,.7,.3,1), box-shadow .4s;
 }
-.card:hover .shot img { transform: scale(1.035); }
+.card:hover .shot img { transform: scale(1.06) rotate(-1.2deg); box-shadow: 0 16px 32px -16px rgba(0,0,0,.8); }
 .card-body { padding: 1rem 1.05rem 1.15rem; display: flex; flex-direction: column; flex: 1; }
 .card-body h3 { font-size: 1rem; margin-bottom: .5rem; display: flex; gap: .5rem; align-items: baseline; }
 .acts { display: flex; flex-wrap: wrap; gap: .45rem; margin-top: .9rem; }
@@ -721,7 +715,7 @@ h1, h2, h3, h4 {
   .card.lead { display: grid; grid-template-columns: 1fr 1fr; grid-template-areas: "h h" "s b"; }
   .card.lead .card-head { grid-area: h; }
   .card.lead .shot { grid-area: s; border-bottom: none; border-right: 1px solid var(--line); }
-  .card.lead .shot img { aspect-ratio: auto; height: 100%; min-height: 260px; }
+  .card.lead .shot img { width: clamp(120px, 40%, 190px); }
   .card.lead .card-body { grid-area: b; }
   .card.lead .card-body h3 { font-size: 1.2rem; }
 }
@@ -1173,7 +1167,7 @@ h1, h2, h3, h4 {
               <span class="live"><i></i>live</span><span class="sep">·</span>career tech
               <span class="host">careerpassporttw.vercel.app</span>
             </div>
-            <div class="shot"><img src="shot-pathseeker.jpg" alt="Screenshot of PathSeeker" loading="lazy"></div>
+            <div class="shot"><img src="logo-pathseeker.jpg" alt="PathSeeker logo" loading="lazy"></div>
             <div class="card-body">
               <h3><a class="tlink" href="https://careerpassporttw.vercel.app/" target="_blank" rel="noopener noreferrer">PathSeeker — Career Passport</a>
                 <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg>
@@ -1193,7 +1187,7 @@ h1, h2, h3, h4 {
               <span class="live"><i></i>live</span><span class="sep">·</span>healthcare · full stack
               <span class="host">care-pk.infinityfreeapp.com</span>
             </div>
-            <div class="shot"><img src="shot-care.jpg" alt="Screenshot of CARE Group" loading="lazy"></div>
+            <div class="shot"><img src="logo-care.jpg" alt="CARE Group logo" loading="lazy"></div>
             <div class="card-body">
               <h3><a class="tlink" href="https://care-pk.infinityfreeapp.com/" target="_blank" rel="noopener noreferrer">CARE Group — Appointment Portal</a>
                 <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg>
@@ -1213,7 +1207,7 @@ h1, h2, h3, h4 {
               <span class="live"><i></i>live</span><span class="sep">·</span>e-commerce
               <span class="host">shopxtra.store</span>
             </div>
-            <div class="shot"><img src="shot-shopxtra.jpg" alt="Screenshot of ShopXtra" loading="lazy"></div>
+            <div class="shot"><img src="logo-shopxtra.jpg" alt="ShopXtra logo" loading="lazy"></div>
             <div class="card-body">
               <h3><a class="tlink" href="https://www.shopxtra.store/" target="_blank" rel="noopener noreferrer">ShopXtra</a>
                 <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg>
@@ -1231,7 +1225,7 @@ h1, h2, h3, h4 {
               <span class="live"><i></i>live</span><span class="sep">·</span>health tech
               <span class="host">physiosync-pk.vercel.app</span>
             </div>
-            <div class="shot"><img src="shot-physiosync.jpg" alt="Screenshot of PhysioSync" loading="lazy"></div>
+            <div class="shot"><img src="logo-physiosync.jpg" alt="PhysioSync logo" loading="lazy"></div>
             <div class="card-body">
               <h3><a class="tlink" href="https://physiosync-pk.vercel.app/" target="_blank" rel="noopener noreferrer">PhysioSync</a>
                 <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg>
@@ -1251,7 +1245,7 @@ h1, h2, h3, h4 {
               <span class="live"><i></i>live</span><span class="sep">·</span>restaurant
               <span class="host">zaikaekarachi.vercel.app</span>
             </div>
-            <div class="shot"><img src="shot-zaika.jpg" alt="Screenshot of Zaika-e-Karachi" loading="lazy"></div>
+            <div class="shot"><img src="logo-zaika.jpg" alt="Zaika-e-Karachi logo" loading="lazy"></div>
             <div class="card-body">
               <h3><a class="tlink" href="https://zaikaekarachi.vercel.app/" target="_blank" rel="noopener noreferrer">Zaika-e-Karachi</a>
                 <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg>

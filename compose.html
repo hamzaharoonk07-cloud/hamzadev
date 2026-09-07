@@ -1,31 +1,51 @@
 <!doctype html>
 <meta charset="utf-8">
 <style>
-  html,body{ margin:0; padding:0; width:1920px; height:1200px; overflow:hidden; background:#f1f0ee }
-  .stage{ position:relative; width:1920px; height:1200px;
-    background:#f1f0ee url(hero-base.svg) center center / cover no-repeat }
-  .stage.reveal{ background-image:url(hero-reveal.svg); background-color:#ecebe9 }
+  html,body{ margin:0; padding:0; width:1920px; height:1200px; overflow:hidden; background:#e8e7e4 }
+  .stage{ position:relative; width:1920px; height:1200px; overflow:hidden }
+  .stage.dark{ background:#0b0b0c }
 
-  /* the photo is placed whole and centred, so every cover-crop keeps all of it */
-  .frame{ position:absolute; left:50%; top:50%; width:580px; height:580px; transform:translate(-50%,-50%);
-    border-radius:34px; overflow:hidden; box-shadow:0 40px 90px -30px rgba(17,17,17,.45), 0 0 0 1px rgba(17,17,17,.06) }
-  .frame img{ width:100%; height:100%; object-fit:cover; display:block;
-    filter:grayscale(1) brightness(1.1) contrast(.95); opacity:.85 }
-  .stage.reveal .frame img{ filter:saturate(1.05) contrast(1.04); opacity:1 }
-  .stage.reveal .frame{ box-shadow:0 40px 90px -30px rgba(17,17,17,.5), 0 0 0 1px rgba(177,95,44,.25) }
+  /* the sides are the photo itself, blown up and blurred, so the frame fills edge to edge */
+  .fill{ position:absolute; inset:-80px; width:calc(100% + 160px); height:calc(100% + 160px);
+    object-fit:cover; filter:blur(48px) grayscale(1) brightness(1.24) saturate(0); transform:scale(1.12) }
+  .stage.reveal .fill{ filter:blur(48px) brightness(1.06) saturate(1.1) }
+  .stage.dark .fill{ filter:blur(48px) grayscale(1) brightness(.34) saturate(0) }
+  .stage.dark.reveal .fill{ filter:blur(48px) brightness(.55) saturate(1.05) }
 
+  /* the photo itself: full height, uncropped, feathered into the fill at the sides */
+  .shot{ position:absolute; left:50%; top:0; height:1200px; width:1200px; transform:translateX(-50%);
+    object-fit:contain;
+    -webkit-mask-image:linear-gradient(to right, rgba(0,0,0,0) 0, #000 11%, #000 89%, rgba(0,0,0,0) 100%);
+    mask-image:linear-gradient(to right, rgba(0,0,0,0) 0, #000 11%, #000 89%, rgba(0,0,0,0) 100%);
+    filter:grayscale(1) brightness(1.1) contrast(.96) }
+  .stage.reveal .shot{ filter:saturate(1.06) contrast(1.04) }
+  .stage.dark .shot{ filter:grayscale(1) brightness(.62) contrast(1.06) }
+  .stage.dark.reveal .shot{ filter:saturate(1.04) contrast(1.02) brightness(.92) }
+
+  /* legibility for the headline on the left, and a light lift on the base frame */
   .wash{ position:absolute; inset:0;
-    background:linear-gradient(to right, rgba(241,240,238,.92) 0%, rgba(241,240,238,.55) 20%, rgba(241,240,238,0) 33%) }
+    background:linear-gradient(to right, rgba(241,240,238,.90) 0%, rgba(241,240,238,.55) 22%, rgba(241,240,238,.06) 42%, rgba(241,240,238,0) 55%) }
   .stage.reveal .wash{
-    background:linear-gradient(to right, rgba(236,235,233,.88) 0%, rgba(236,235,233,.48) 20%, rgba(236,235,233,0) 33%) }
-  .veil{ position:absolute; inset:0; background:rgba(241,240,238,.16) }
+    background:linear-gradient(to right, rgba(236,235,233,.84) 0%, rgba(236,235,233,.45) 22%, rgba(236,235,233,.04) 42%, rgba(236,235,233,0) 55%) }
+  .stage.dark .wash{
+    background:linear-gradient(to right, rgba(11,11,12,.92) 0%, rgba(11,11,12,.6) 22%, rgba(11,11,12,.08) 42%, rgba(11,11,12,0) 55%) }
+  .stage.dark.reveal .wash{
+    background:linear-gradient(to right, rgba(11,11,12,.86) 0%, rgba(11,11,12,.5) 22%, rgba(11,11,12,.05) 42%, rgba(11,11,12,0) 55%) }
+
+  .veil{ position:absolute; inset:0; background:rgba(241,240,238,.22) }
   .stage.reveal .veil{ background:transparent }
+  .stage.dark .veil{ background:rgba(11,11,12,.34) }
+  .stage.dark.reveal .veil{ background:transparent }
 </style>
 <div class="stage" id="stage">
+  <img class="fill" src="profile.jpg" alt="">
+  <img class="shot" src="profile.jpg" alt="">
   <div class="wash"></div>
-  <div class="frame"><img src="profile.jpg" alt=""></div>
   <div class="veil"></div>
 </div>
 <script>
-  if (location.search.indexOf('reveal') > -1) document.getElementById('stage').classList.add('reveal');
+  var q = location.search;
+  var st = document.getElementById('stage');
+  if (q.indexOf('reveal') > -1) st.classList.add('reveal');
+  if (q.indexOf('dark') > -1) st.classList.add('dark');
 </script>

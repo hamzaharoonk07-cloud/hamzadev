@@ -120,6 +120,54 @@ html.is-booting body { overflow: hidden; }
 .hdr__pips { display: flex; gap: 4px; }
 .hdr__pips i { width: 4px; height: 4px; background: var(--ink); display: block; }
 
+/* ══════════ OPENING SEQUENCE ══════════
+   Beats overlap on purpose - the letters are still resolving when the
+   welcome strip drops, and the chips are still sliding when the arrows
+   tick in. That overlap is what separates a title sequence from a queue
+   of fades. Timings mirror the reference: figure 0.30, letters 2.10
+   (centre outward, 0.145 stagger), welcome 2.90, chips 3.18/3.32,
+   arrows 3.46, dots 3.62, header 4.45, settled 6.25. */
+:root { --eout: cubic-bezier(.16,1,.3,1); --eback: cubic-bezier(.34,1.56,.64,1); }
+
+html.cine .stage__fig { opacity: 0; transform: translateX(-50%) translateY(4.5%) scale(.885); }
+html.cine .ltr { opacity: 0; transform: translateY(.34em); display: inline-block; }
+html.cine .welcome { opacity: 0; transform: translateX(-50%) translateY(-140%); }
+html.cine .chip--l { opacity: 0; transform: translateX(-40px); }
+html.cine .chip--r { opacity: 0; transform: translateX(40px); }
+html.cine .arrows, html.cine .dots-grid { opacity: 0; }
+html.cine .hdr { opacity: 0; }
+html.cine .hdr::after { transform: scaleX(0); transform-origin: left; }
+
+html.play .stage__fig { animation: figIn 2.05s var(--eout) .30s forwards; }
+html.play .ltr { animation: ltrIn 1.65s var(--eout) forwards; animation-delay: var(--d); }
+html.play .welcome { animation: dropIn .9s var(--eback) 2.90s forwards; }
+html.play .chip--l { animation: slideIn .8s var(--eout) 3.18s forwards; }
+html.play .chip--r { animation: slideIn .8s var(--eout) 3.32s forwards; }
+html.play .arrows { animation: fadeIn .7s var(--eout) 3.46s forwards; }
+html.play .dots-grid { animation: fadeIn .7s var(--eout) 3.62s forwards; }
+html.play .hdr { animation: fadeIn .9s var(--eout) 4.45s forwards; }
+html.play .hdr::after { animation: ruleIn 1.1s var(--eout) 4.45s forwards; }
+
+@keyframes figIn { to { opacity: .82; transform: translateX(-50%) translateY(0) scale(1); } }
+@keyframes ltrIn { to { opacity: 1; transform: none; } }
+@keyframes dropIn { to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+@keyframes slideIn { to { opacity: 1; transform: none; } }
+@keyframes fadeIn { to { opacity: 1; } }
+@keyframes ruleIn { to { transform: scaleX(1); } }
+
+/* one soft pulse as the wordmark lands - light, not a strobe */
+.flash { position: fixed; inset: 0; z-index: 85; pointer-events: none; background: #fff; opacity: 0; }
+html.play .flash { animation: pulse 1.1s ease-out 2.35s; }
+@keyframes pulse { 0%,100% { opacity: 0; } 40% { opacity: .07; } }
+
+/* settled: whatever the animation did, everything is visible */
+html.settled .stage__fig { opacity: .82; transform: translateX(-50%); }
+html.settled .ltr { opacity: 1; transform: none; }
+html.settled .welcome { opacity: 1; transform: translateX(-50%); }
+html.settled .chip--l, html.settled .chip--r { opacity: 1; transform: none; }
+html.settled .arrows, html.settled .dots-grid, html.settled .hdr { opacity: 1; }
+html.settled .hdr::after { transform: scaleX(1); }
+
 /* ══════════ HERO STAGE ══════════ */
 .stage {
   position: fixed; inset: 0; z-index: 1; overflow: hidden; background: #000;
@@ -324,6 +372,7 @@ html.is-booting body { overflow: hidden; }
 <a href="#main" class="skip">Skip to content</a>
 <h1 class="sr-only">Hamza Haroon — full stack developer and graphic designer, Karachi. Five live projects.</h1>
 
+<div class="flash" aria-hidden="true"></div>
 <div class="grain" aria-hidden="true"></div>
 <div class="vig" aria-hidden="true"></div>
 
@@ -542,9 +591,28 @@ html.is-booting body { overflow: hidden; }
   var lab  = document.getElementById('bootLab');
   var enter = document.getElementById('bootEnter');
 
+  var opened = false;
   function openSite() {
+    if (opened) return;
+    opened = true;
     boot.classList.add('done');
     root.classList.remove('is-booting');
+    // the title sequence starts on entry, never behind the boot screen
+    if (!root.classList.contains('cine')) { root.classList.add('settled'); return; }
+    requestAnimationFrame(function () { root.classList.add('play'); });
+
+    // If CSS animations are not actually advancing - a stalled compositor,
+    // a throttled background tab - the wordmark would sit invisible. Check
+    // once, early, and settle immediately rather than waiting out the run.
+    setTimeout(function () {
+      var first = document.querySelector('.ltr');
+      if (first && parseFloat(getComputedStyle(first).opacity) < .05) {
+        root.classList.add('settled');
+      }
+    }, 1400);
+
+    // and a hard floor just after the sequence's own settle beat (6.25s)
+    setTimeout(function () { root.classList.add('settled'); }, 7000);
   }
   var pct = 0;
   var t = setInterval(function () {
@@ -559,6 +627,47 @@ html.is-booting body { overflow: hidden; }
   enter.addEventListener('click', openSite);
   /* never trap the visitor behind the boot screen */
   setTimeout(function () { if (root.classList.contains('is-booting')) openSite(); }, 4200);
+
+  /* ---------- opening sequence ----------
+     Letters reveal centre-outward so the wordmark grows around the figure,
+     exactly as the reference does. Start states live behind html.cine, which
+     is only added if this runs, so a script failure renders the hero plainly
+     rather than blank. A settled class fires regardless at 8s. */
+  function buildWordmark() {
+    var word = document.querySelector('.stage__word');
+    if (!word) return;
+    var lines = [].slice.call(word.querySelectorAll('span'));
+    var all = [];
+    lines.forEach(function (line) {
+      var txt = line.textContent, frag = document.createDocumentFragment();
+      for (var i = 0; i < txt.length; i++) {
+        var sp = document.createElement('span');
+        sp.className = 'ltr';
+        sp.textContent = txt[i];
+        frag.appendChild(sp);
+        all.push(sp);
+      }
+      line.textContent = '';
+      line.appendChild(frag);
+    });
+    // rank by distance from the centre of its own line
+    lines.forEach(function (line) {
+      var ls = [].slice.call(line.querySelectorAll('.ltr'));
+      var mid = (ls.length - 1) / 2;
+      ls.map(function (el, i) { return { el: el, d: Math.abs(i - mid) }; })
+        .sort(function (a, b) { return a.d - b.d; })
+        .forEach(function (o, rank) {
+          o.el.style.setProperty('--d', (2.10 + rank * 0.145).toFixed(3) + 's');
+        });
+    });
+    return all.length;
+  }
+
+  if (!reduced && buildWordmark()) {
+    root.classList.add('cine');   // start states only; openSite() plays it
+  } else {
+    root.classList.add('settled');
+  }
 
   /* ---------- dot grid ---------- */
   var dg = document.querySelector('.dots-grid');

@@ -587,6 +587,69 @@ img{ display:block }
   .modal-panel{ padding:2rem }
   .modal-title{ font-size:1.875rem }
 }
+
+/* ============================================================
+   COLOUR & LIFE
+   ============================================================ */
+.eyebrow .dot{ background:var(--accent) }
+.eyebrow.light .dot{ background:var(--accent-from) }
+
+/* stack chips wear their own brand */
+.chip{ transition:background .25s ease, border-color .25s ease, transform .25s cubic-bezier(.2,.8,.2,1) }
+.chip .ic{ color:var(--c, rgba(var(--fg-rgb),.55)); transition:color .25s ease }
+.chip:hover{ transform:translateY(-2px);
+  background:color-mix(in srgb, var(--c, #b15f2c) 16%, transparent);
+  border-color:color-mix(in srgb, var(--c, #b15f2c) 50%, transparent) }
+
+/* social chips fill with their brand */
+.social-chip{ transition:background .25s ease, color .25s ease, transform .25s ease }
+.social-chip:hover{ background:var(--c, var(--accent)); color:#fff; transform:translateY(-2px) }
+:root[data-theme="dark"] .social-chip:hover{ color:var(--background) }
+
+/* work cards stop reading as flat rectangles */
+.pf-card{ background-image:linear-gradient(158deg, rgba(255,255,255,.07), rgba(255,255,255,0) 46%);
+  transition:box-shadow .4s ease }
+.pf-card:hover{
+  box-shadow:0 0 0 1px color-mix(in srgb, var(--pf-c, #b15f2c) 50%, transparent),
+             0 34px 70px -34px color-mix(in srgb, var(--pf-c, #b15f2c) 75%, transparent) }
+.pf-wm .ic{ color:color-mix(in srgb, var(--pf-c, #ffffff) 26%, transparent); transition:color .4s ease }
+.pf-card:hover .pf-wm .ic{ color:var(--pf-c, #fff) }
+.pf-badge{ transition:background .3s ease, box-shadow .3s ease }
+.pf-card:hover .pf-badge{ background:var(--pf-c, var(--accent)); color:#0a0a0a;
+  box-shadow:0 0 0 1px rgba(255,255,255,.28) }
+.tag-code:hover{ background:var(--pf-c, #fff); color:#0a0a0a; border-color:transparent }
+
+/* service rows answer the cursor */
+.svc-idx, .svc-title, .svc-mark{ transition:color .3s ease }
+.svc:hover .svc-idx{ color:var(--accent) }
+.svc:hover .svc-mark{ color:var(--accent) }
+.svc-badge{ transition:background .3s ease, color .3s ease }
+.svc:hover .svc-badge{ background:var(--accent); color:#fff }
+
+/* nav links draw a line */
+.nav-primary button > span{ position:relative }
+.nav-primary button > span::after{ content:''; position:absolute; left:0; right:100%; bottom:-.375rem;
+  height:1px; background:var(--accent); transition:right .35s cubic-bezier(.2,.8,.2,1) }
+.nav-primary li:hover button > span::after{ right:0 }
+
+/* the numbers get their colour back */
+.stat-suffix{ font-style:normal; color:var(--accent-from) }
+.stats-panel{ background-image:linear-gradient(155deg, rgba(207,128,71,.14), rgba(255,255,255,0) 42%) }
+
+/* light in the black */
+#works, .stats, #services{ position:relative; isolation:isolate }
+#works > .shell, .stats > .shell, #services > .shell{ position:relative; z-index:1 }
+.glow{ position:absolute; z-index:0; pointer-events:none; border-radius:9999px;
+  background:radial-gradient(closest-side, rgba(177,95,44,.22), rgba(177,95,44,0) 72%) }
+.glow-works{ top:2rem; left:50%; width:56rem; height:28rem; transform:translateX(-50%) }
+.glow-stats{ right:-8rem; bottom:-6rem; width:40rem; height:26rem }
+.glow-footer{ top:-6rem; left:12%; width:48rem; height:24rem;
+  background:radial-gradient(closest-side, rgba(207,128,71,.20), rgba(207,128,71,0) 72%) }
+:root[data-theme="light"] .glow{ opacity:.55 }
+
+/* sections stop butting into each other */
+.band, #works, #services{ border-top:1px solid transparent;
+  border-image:linear-gradient(to right, transparent, var(--line), transparent) 1 }
 </style>
 </head>
 <body>
@@ -767,15 +830,15 @@ img{ display:block }
         <div class="stack-groups">
           <div class="stack-group">
             <p class="stack-label">Front end</p>
-            <ul class="stack-chips"><li><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-b-react"/></svg>React</span></li><li><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-b-js"/></svg>JavaScript</span></li><li><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-b-html5"/></svg>HTML5</span></li><li><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-b-css3"/></svg>CSS3</span></li><li><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-b-bootstrap"/></svg>Bootstrap</span></li><li><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-b-jquery"/></svg>jQuery</span></li></ul>
+            <ul class="stack-chips"><li><span class="chip" style="--c:#61DAFB"><svg class="ic" aria-hidden="true"><use href="#i-b-react"/></svg>React</span></li><li><span class="chip" style="--c:#F7DF1E"><svg class="ic" aria-hidden="true"><use href="#i-b-js"/></svg>JavaScript</span></li><li><span class="chip" style="--c:#E34F26"><svg class="ic" aria-hidden="true"><use href="#i-b-html5"/></svg>HTML5</span></li><li><span class="chip" style="--c:#1572B6"><svg class="ic" aria-hidden="true"><use href="#i-b-css3"/></svg>CSS3</span></li><li><span class="chip" style="--c:#7952B3"><svg class="ic" aria-hidden="true"><use href="#i-b-bootstrap"/></svg>Bootstrap</span></li><li><span class="chip" style="--c:#0769AD"><svg class="ic" aria-hidden="true"><use href="#i-b-jquery"/></svg>jQuery</span></li></ul>
           </div>
           <div class="stack-group">
             <p class="stack-label">Back end</p>
-            <ul class="stack-chips"><li><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-b-php"/></svg>PHP</span></li><li><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-b-mysql"/></svg>MySQL</span></li><li><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-b-node"/></svg>Node</span></li><li><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-b-express"/></svg>Express</span></li><li><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-b-mongodb"/></svg>MongoDB</span></li></ul>
+            <ul class="stack-chips"><li><span class="chip" style="--c:#777BB4"><svg class="ic" aria-hidden="true"><use href="#i-b-php"/></svg>PHP</span></li><li><span class="chip" style="--c:#4479A1"><svg class="ic" aria-hidden="true"><use href="#i-b-mysql"/></svg>MySQL</span></li><li><span class="chip" style="--c:#5FA04E"><svg class="ic" aria-hidden="true"><use href="#i-b-node"/></svg>Node</span></li><li><span class="chip" style="--c:var(--foreground)"><svg class="ic" aria-hidden="true"><use href="#i-b-express"/></svg>Express</span></li><li><span class="chip" style="--c:#47A248"><svg class="ic" aria-hidden="true"><use href="#i-b-mongodb"/></svg>MongoDB</span></li></ul>
           </div>
           <div class="stack-group">
             <p class="stack-label">Design &amp; workflow</p>
-            <ul class="stack-chips"><li><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-b-photoshop"/></svg>Photoshop</span></li><li><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-b-gsap"/></svg>GSAP</span></li><li><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-b-git"/></svg>Git</span></li><li><span class="chip"><svg class="ic" aria-hidden="true"><use href="#i-b-vercel"/></svg>Vercel</span></li></ul>
+            <ul class="stack-chips"><li><span class="chip" style="--c:#31A8FF"><svg class="ic" aria-hidden="true"><use href="#i-b-photoshop"/></svg>Photoshop</span></li><li><span class="chip" style="--c:#88CE02"><svg class="ic" aria-hidden="true"><use href="#i-b-gsap"/></svg>GSAP</span></li><li><span class="chip" style="--c:#F05032"><svg class="ic" aria-hidden="true"><use href="#i-b-git"/></svg>Git</span></li><li><span class="chip" style="--c:var(--foreground)"><svg class="ic" aria-hidden="true"><use href="#i-b-vercel"/></svg>Vercel</span></li></ul>
           </div>
         </div>
       </div>
@@ -813,9 +876,9 @@ img{ display:block }
         <div>
           <p class="about-social-label">Find me online</p>
           <div class="about-socials">
-            <a class="social-chip accent" href="https://github.com/hamzaharoonk07-cloud" target="_blank" rel="noopener" aria-label="GitHub"><svg class="ic" data-hs-scale="1.18" data-hs-cfg="320,16" data-hs-trigger="closest:.social-chip"><use href="#i-b-github"/></svg></a>
-            <a class="social-chip" href="https://www.linkedin.com/in/hamza-haroon-91532b281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg class="ic" data-hs-scale="1.18" data-hs-cfg="320,16" data-hs-trigger="closest:.social-chip"><use href="#i-b-linkedin"/></svg></a>
-            <a class="social-chip" href="mailto:hamzaharoonk07@gmail.com" aria-label="Email"><svg class="ic" data-hs-scale="1.18" data-hs-cfg="320,16" data-hs-trigger="closest:.social-chip"><use href="#i-mail"/></svg></a>
+            <a class="social-chip accent" href="https://github.com/hamzaharoonk07-cloud" target="_blank" rel="noopener" aria-label="GitHub" style="--c:var(--foreground)"><svg class="ic" data-hs-scale="1.18" data-hs-cfg="320,16" data-hs-trigger="closest:.social-chip"><use href="#i-b-github"/></svg></a>
+            <a class="social-chip" href="https://www.linkedin.com/in/hamza-haroon-91532b281/" target="_blank" rel="noopener" aria-label="LinkedIn" style="--c:#0A66C2"><svg class="ic" data-hs-scale="1.18" data-hs-cfg="320,16" data-hs-trigger="closest:.social-chip"><use href="#i-b-linkedin"/></svg></a>
+            <a class="social-chip" href="mailto:hamzaharoonk07@gmail.com" aria-label="Email" style="--c:var(--accent)"><svg class="ic" data-hs-scale="1.18" data-hs-cfg="320,16" data-hs-trigger="closest:.social-chip"><use href="#i-mail"/></svg></a>
           </div>
         </div>
         <a class="pill outline has-arrow" href="resume.pdf" target="_blank" rel="noopener">
@@ -841,6 +904,7 @@ img{ display:block }
 
 <!-- ============================ PORTFOLIO ============================ -->
 <section id="works">
+  <span class="glow glow-works" aria-hidden="true"></span>
   <div class="shell works-inner">
     <div class="works-head">
       <div class="reveal" style="--rv-y:12px">
@@ -854,7 +918,7 @@ img{ display:block }
     <ul class="works-grid">
       <li class="reveal" style="--rv-y:48px;--rv-d:0ms">
         <a href="https://careerpassporttw.vercel.app/" target="_blank" rel="noopener" aria-label="PathSeeker - Career Passport — open the live site">
-          <article class="pf-card" data-hs-ty="-8" data-hs-scale="1.012" data-hs-cfg="260,22">
+          <article class="pf-card" style="--pf-c:#61DAFB" data-hs-ty="-8" data-hs-scale="1.012" data-hs-cfg="260,22">
             <div class="pf-meta">
               <span>React &amp; Node — Live</span>
               <span class="pf-badge" data-hs-rot="45" data-hs-scale="1.08" data-hs-cfg="280,18" data-hs-trigger="closest:.pf-card"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
@@ -870,7 +934,7 @@ img{ display:block }
       </li>
       <li class="reveal" style="--rv-y:48px;--rv-d:90ms">
         <a href="https://care-pk.infinityfreeapp.com/" target="_blank" rel="noopener" aria-label="CARE Group - Appointment Portal — open the live site">
-          <article class="pf-card" data-hs-ty="-8" data-hs-scale="1.012" data-hs-cfg="260,22">
+          <article class="pf-card" style="--pf-c:#777BB4" data-hs-ty="-8" data-hs-scale="1.012" data-hs-cfg="260,22">
             <div class="pf-meta">
               <span>PHP &amp; MySQL — Live</span>
               <span class="pf-badge" data-hs-rot="45" data-hs-scale="1.08" data-hs-cfg="280,18" data-hs-trigger="closest:.pf-card"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
@@ -886,7 +950,7 @@ img{ display:block }
       </li>
       <li class="reveal" style="--rv-y:48px;--rv-d:180ms">
         <a href="https://www.shopxtra.store/" target="_blank" rel="noopener" aria-label="ShopXtra — open the live site">
-          <article class="pf-card" data-hs-ty="-8" data-hs-scale="1.012" data-hs-cfg="260,22">
+          <article class="pf-card" style="--pf-c:#cf8047" data-hs-ty="-8" data-hs-scale="1.012" data-hs-cfg="260,22">
             <div class="pf-meta">
               <span>Commerce — Live</span>
               <span class="pf-badge" data-hs-rot="45" data-hs-scale="1.08" data-hs-cfg="280,18" data-hs-trigger="closest:.pf-card"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
@@ -902,7 +966,7 @@ img{ display:block }
       </li>
       <li class="reveal" style="--rv-y:48px;--rv-d:270ms">
         <a href="https://physiosync-pk.vercel.app/" target="_blank" rel="noopener" aria-label="PhysioSync — open the live site">
-          <article class="pf-card" data-hs-ty="-8" data-hs-scale="1.012" data-hs-cfg="260,22">
+          <article class="pf-card" style="--pf-c:#47A248" data-hs-ty="-8" data-hs-scale="1.012" data-hs-cfg="260,22">
             <div class="pf-meta">
               <span>Health — Live</span>
               <span class="pf-badge" data-hs-rot="45" data-hs-scale="1.08" data-hs-cfg="280,18" data-hs-trigger="closest:.pf-card"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
@@ -918,7 +982,7 @@ img{ display:block }
       </li>
       <li class="reveal" style="--rv-y:48px;--rv-d:360ms">
         <a href="https://zaikaekarachi.vercel.app/" target="_blank" rel="noopener" aria-label="Zaika-e-Karachi — open the live site">
-          <article class="pf-card" data-hs-ty="-8" data-hs-scale="1.012" data-hs-cfg="260,22">
+          <article class="pf-card" style="--pf-c:#d9a441" data-hs-ty="-8" data-hs-scale="1.012" data-hs-cfg="260,22">
             <div class="pf-meta">
               <span>Culture — Live</span>
               <span class="pf-badge" data-hs-rot="45" data-hs-scale="1.08" data-hs-cfg="280,18" data-hs-trigger="closest:.pf-card"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
@@ -994,6 +1058,7 @@ img{ display:block }
 <!-- ============================ STATS ============================ -->
 <section class="stats" aria-label="By the numbers">
   <div class="shell stats-inner">
+    <span class="glow glow-stats" aria-hidden="true"></span>
     <div class="stats-panel reveal" style="--rv-y:40px;--rv-s0:.99">
       <span class="eyebrow light"><span class="dot"></span>By the numbers</span>
       <h2 class="stats-h2 lines" style="--d:120ms">
@@ -1024,6 +1089,7 @@ img{ display:block }
 
 <!-- ============================ FOOTER ============================ -->
 <footer class="site-footer">
+  <span class="glow glow-footer" aria-hidden="true"></span>
   <div class="shell footer-inner">
     <div class="footer-cta">
       <h2 class="footer-h2 lines" style="--st:100ms">
@@ -1552,9 +1618,9 @@ document.querySelectorAll('.reveal, .lines, .words').forEach((el) => revealObser
    ============================================================ */
 (function initHeroCard(){
   const items = [
-    { caption: 'Front end', title: 'React, JS, CSS.', icon: '#i-b-react' },
-    { caption: 'Back end', title: 'PHP, MySQL, Node.', icon: '#i-b-php' },
-    { caption: 'Design', title: 'Identity systems.', icon: '#i-brush' }
+    { caption: 'Front end', title: 'React, JS, CSS.', icon: '#i-b-react', colour: '#61DAFB' },
+    { caption: 'Back end', title: 'PHP, MySQL, Node.', icon: '#i-b-php', colour: '#777BB4' },
+    { caption: 'Design', title: 'Identity systems.', icon: '#i-brush', colour: '#cf8047' }
   ];
   const slot = document.getElementById('hero-card-slot');
   const dotsEl = document.getElementById('hero-dots');
@@ -1591,7 +1657,10 @@ document.querySelectorAll('.reveal, .lines, .words').forEach((el) => revealObser
     }
     current = next;
     const tileUse = document.getElementById('hero-tile-use');
-    if (tileUse) tileUse.setAttribute('href', items[i].icon);
+    if (tileUse){
+      tileUse.setAttribute('href', items[i].icon);
+      tileUse.parentNode.style.color = items[i].colour;
+    }
     Array.from(dotsEl.children).forEach((d, di) => d.classList.toggle('active', di === i));
   }
 

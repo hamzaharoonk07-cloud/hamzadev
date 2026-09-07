@@ -330,8 +330,7 @@ img{ display:block }
   font-size:1rem; flex:none; will-change:transform }
 .pf-wm{ position:absolute; inset:0; display:grid; place-items:center; pointer-events:none }
 .pf-wm-in{ display:flex; align-items:flex-start; gap:.25rem }
-.pf-wm .ic{ font-size:4.5rem; color:rgba(255,255,255,.9) }
-.pf-wm sup{ font-size:.75rem; color:rgba(255,255,255,.6) }
+.pf-wm .ic{ font-size:5.5rem; color:rgba(255,255,255,.16) }
 .pf-bottom{ position:absolute; inset-inline:1.5rem; bottom:1.5rem }
 .pf-bottom h3{ font-size:1.5rem; font-weight:500; letter-spacing:-.01em }
 .pf-bottom p{ margin-top:.5rem; max-width:28rem; font-size:.875rem; color:rgba(255,255,255,.55) }
@@ -359,6 +358,7 @@ img{ display:block }
 .services-list > li{ border-top:1px solid var(--line) }
 .services-list > li:first-child{ border-top:0 }
 .svc-idx{ width:1.75rem; font-size:.875rem; font-weight:500; color:rgba(17,17,17,.4); flex:none }
+.svc-mark{ display:none; font-size:1.5rem; color:rgba(17,17,17,.35); flex:none }
 .svc-title{ flex:1; font-size:1.5rem; font-weight:500; letter-spacing:-.01em; min-width:0 }
 .svc-desc{ display:none; max-width:20rem; font-size:.875rem; color:rgba(17,17,17,.55) }
 .svc-badge{ width:2.5rem; height:2.5rem; display:grid; place-items:center; border-radius:var(--radius-pill);
@@ -375,6 +375,7 @@ img{ display:block }
 @media (min-width:1024px){
   .services-inner{ padding-top:7rem; padding-bottom:7rem }
   .svc-desc{ display:block }
+  .svc-mark{ display:block }
 }
 
 /* ============================================================
@@ -520,6 +521,22 @@ img{ display:block }
   <symbol id="i-x" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 4l16 16M20 4 4 20"/></symbol>
   <symbol id="i-circledot" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="3.2" fill="currentColor"/></symbol>
   <symbol id="i-grid" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></symbol>
+  <symbol id="i-react" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2.1" fill="currentColor" stroke="none"/><ellipse cx="12" cy="12" rx="10" ry="4"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"/></g></symbol>
+  <symbol id="i-node" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.4 20.6 7.2v9.6L12 21.6 3.4 16.8V7.2z"/></g></symbol>
+  <symbol id="i-server" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><circle cx="7" cy="7.5" r="1" fill="currentColor" stroke="none"/><circle cx="7" cy="16.5" r="1" fill="currentColor" stroke="none"/></g></symbol>
+  <symbol id="i-db" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="8" ry="3.2"/><path d="M4 6v12c0 1.8 3.6 3.2 8 3.2s8-1.4 8-3.2V6"/><path d="M4 12c0 1.8 3.6 3.2 8 3.2s8-1.4 8-3.2"/></g></symbol>
+  <symbol id="i-leaf" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21.5c0-6.5 4.4-9.2 4.4-13.4A4.4 4.4 0 0 0 12 3.7a4.4 4.4 0 0 0-4.4 4.4c0 4.2 4.4 6.9 4.4 13.4z"/><path d="M12 8.5v10"/></g></symbol>
+  <symbol id="i-grid4" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/></g></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13.5 2.5 4.5 13.5h6l-.5 8 9-11h-6z"/></g></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7.5 4.5 12 9 16.5M15 7.5 19.5 12 15 16.5M13.6 4.5l-3.2 15"/></g></symbol>
+  <symbol id="i-brush" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M19.4 4.6a2.2 2.2 0 0 0-3.1 0L8.8 12l3.2 3.2 7.4-7.5a2.2 2.2 0 0 0 0-3.1z"/><path d="M8.8 12c-2 .4-3.3 1.8-3.7 3.8-.2 1.2-.7 2.2-1.6 3 1.6.6 3.5.6 5-.2 1.6-.9 2.4-2.3 2.5-3.9z"/></g></symbol>
+  <symbol id="i-cart" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9.5" cy="19.5" r="1.5"/><circle cx="17.5" cy="19.5" r="1.5"/><path d="M2.5 3.5h2.6l2.5 11.2h11l2.4-8.2H6.4"/></g></symbol>
+  <symbol id="i-pulse" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12.5h4l2-5 3.5 10 2.5-7 1.8 2h5.2"/></g></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.8C10.4 5.3 8.2 4.6 5 4.6v13c3.2 0 5.4.7 7 2.2 1.6-1.5 3.8-2.2 7-2.2v-13c-3.2 0-5.4.7-7 2.2z"/><path d="M12 6.8v12.9"/></g></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.6" y="5" width="18.8" height="14" rx="2.4"/><path d="m3.4 6.6 8.6 6.3 8.6-6.3"/></g></symbol>
+  <symbol id="i-linkedin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3.2"/><circle cx="8" cy="8.4" r="1.15" fill="currentColor" stroke="none"/><path d="M8 11.4v6M12 17.4v-3.6a2.2 2.2 0 0 1 4.4 0v3.6M12 11.4v.6"/></g></symbol>
+  <symbol id="i-branch" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="5.5" r="2.3"/><circle cx="7" cy="18.5" r="2.3"/><circle cx="17.5" cy="8.5" r="2.3"/><path d="M7 7.8v8.4M17.5 10.8c0 3.4-3 4.4-6.2 4.9"/></g></symbol>
+  <symbol id="i-layers" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 4.6-9 4.6-9-4.6z"/><path d="m3.6 12 8.4 4.3 8.4-4.3"/><path d="m3.6 16.4 8.4 4.3 8.4-4.3"/></g></symbol>
 </svg>
 
 <a class="skip-link" href="#main">Skip to content</a>
@@ -580,7 +597,7 @@ img{ display:block }
 <section id="home">
   <div class="hero-media">
     <div class="lq-wrap" id="lq-wrap">
-      <img class="lq-base" id="lq-base" alt="Hamza Haroon" fetchpriority="high" src="hero-base.jpg" />
+      <img class="lq-base" id="lq-base" alt="" aria-hidden="true" fetchpriority="high" src="hero-base.svg" />
       <canvas class="lq-canvas" id="lq-canvas" aria-hidden="true"></canvas>
     </div>
   </div>
@@ -622,7 +639,7 @@ img{ display:block }
     <div class="hero-right">
       <div class="hero-card reveal" data-gate="ready" style="--rv-y:16px;--rv-s0:.96;--rv-d:400ms">
         <div class="hero-card-row" id="hero-card-row" role="button" tabindex="0" aria-label="Next highlight">
-          <div class="hero-card-tile"><svg class="ic" aria-hidden="true"><use href="#i-logo"/></svg></div>
+          <div class="hero-card-tile"><svg class="ic" aria-hidden="true"><use href="#i-code" id="hero-tile-use"/></svg></div>
           <div class="hero-card-panel">
             <div class="hero-card-slot" id="hero-card-slot"></div>
             <div class="hero-card-bottom">
@@ -639,13 +656,13 @@ img{ display:block }
       <div class="partners reveal" data-gate="ready" style="--rv-y:14px;--rv-d:550ms">
         <p class="partners-label">Built with</p>
         <ul class="partners-grid">
-          <li><span class="partner" data-hs-ty="-2" data-hs-op="0.7,1" data-hs-cfg="320,20"><svg class="ic"><use href="#i-circledot"/></svg>React</span></li>
-          <li><span class="partner" data-hs-ty="-2" data-hs-op="0.7,1" data-hs-cfg="320,20"><svg class="ic"><use href="#i-circledot"/></svg>Node</span></li>
-          <li><span class="partner" data-hs-ty="-2" data-hs-op="0.7,1" data-hs-cfg="320,20"><svg class="ic"><use href="#i-circledot"/></svg>PHP</span></li>
-          <li><span class="partner" data-hs-ty="-2" data-hs-op="0.7,1" data-hs-cfg="320,20"><svg class="ic"><use href="#i-circledot"/></svg>MySQL</span></li>
-          <li><span class="partner" data-hs-ty="-2" data-hs-op="0.7,1" data-hs-cfg="320,20"><svg class="ic"><use href="#i-circledot"/></svg>MongoDB</span></li>
-          <li><span class="partner" data-hs-ty="-2" data-hs-op="0.7,1" data-hs-cfg="320,20"><svg class="ic"><use href="#i-circledot"/></svg>Bootstrap</span></li>
-          <li><span class="partner" data-hs-ty="-2" data-hs-op="0.7,1" data-hs-cfg="320,20"><svg class="ic"><use href="#i-circledot"/></svg>GSAP</span></li>
+          <li><span class="partner" data-hs-ty="-2" data-hs-op="0.7,1" data-hs-cfg="320,20"><svg class="ic"><use href="#i-react"/></svg>React</span></li>
+          <li><span class="partner" data-hs-ty="-2" data-hs-op="0.7,1" data-hs-cfg="320,20"><svg class="ic"><use href="#i-node"/></svg>Node</span></li>
+          <li><span class="partner" data-hs-ty="-2" data-hs-op="0.7,1" data-hs-cfg="320,20"><svg class="ic"><use href="#i-server"/></svg>PHP</span></li>
+          <li><span class="partner" data-hs-ty="-2" data-hs-op="0.7,1" data-hs-cfg="320,20"><svg class="ic"><use href="#i-db"/></svg>MySQL</span></li>
+          <li><span class="partner" data-hs-ty="-2" data-hs-op="0.7,1" data-hs-cfg="320,20"><svg class="ic"><use href="#i-leaf"/></svg>MongoDB</span></li>
+          <li><span class="partner" data-hs-ty="-2" data-hs-op="0.7,1" data-hs-cfg="320,20"><svg class="ic"><use href="#i-grid4"/></svg>Bootstrap</span></li>
+          <li><span class="partner" data-hs-ty="-2" data-hs-op="0.7,1" data-hs-cfg="320,20"><svg class="ic"><use href="#i-bolt"/></svg>GSAP</span></li>
         </ul>
       </div>
     </div>
@@ -677,9 +694,9 @@ img{ display:block }
         <div>
           <p class="about-social-label">Find me online</p>
           <div class="about-socials">
-            <a class="social-chip accent" href="https://github.com/hamzaharoonk07-cloud" target="_blank" rel="noopener" aria-label="GitHub"><svg class="ic" data-hs-scale="1.18" data-hs-cfg="320,16" data-hs-trigger="closest:.social-chip"><use href="#i-circledot"/></svg></a>
-            <a class="social-chip" href="https://www.linkedin.com/in/hamza-haroon-91532b281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg class="ic" data-hs-scale="1.18" data-hs-cfg="320,16" data-hs-trigger="closest:.social-chip"><use href="#i-circledot"/></svg></a>
-            <a class="social-chip" href="mailto:hamzaharoonk07@gmail.com" aria-label="Email"><svg class="ic" data-hs-scale="1.18" data-hs-cfg="320,16" data-hs-trigger="closest:.social-chip"><use href="#i-globe"/></svg></a>
+            <a class="social-chip accent" href="https://github.com/hamzaharoonk07-cloud" target="_blank" rel="noopener" aria-label="GitHub"><svg class="ic" data-hs-scale="1.18" data-hs-cfg="320,16" data-hs-trigger="closest:.social-chip"><use href="#i-branch"/></svg></a>
+            <a class="social-chip" href="https://www.linkedin.com/in/hamza-haroon-91532b281/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg class="ic" data-hs-scale="1.18" data-hs-cfg="320,16" data-hs-trigger="closest:.social-chip"><use href="#i-linkedin"/></svg></a>
+            <a class="social-chip" href="mailto:hamzaharoonk07@gmail.com" aria-label="Email"><svg class="ic" data-hs-scale="1.18" data-hs-cfg="320,16" data-hs-trigger="closest:.social-chip"><use href="#i-mail"/></svg></a>
           </div>
         </div>
         <a class="pill outline has-arrow" href="resume.pdf" target="_blank" rel="noopener">
@@ -723,7 +740,7 @@ img{ display:block }
               <span>React &amp; Node — Live</span>
               <span class="pf-badge" data-hs-rot="45" data-hs-scale="1.08" data-hs-cfg="280,18" data-hs-trigger="closest:.pf-card"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
             </div>
-            <div class="pf-wm" aria-hidden="true"><span class="pf-wm-in"><svg class="ic"><use href="#i-logo"/></svg><sup>&reg;</sup></span></div>
+            <div class="pf-wm" aria-hidden="true"><span class="pf-wm-in"><svg class="ic"><use href="#i-react"/></svg></span></div>
             <div class="pf-bottom">
               <h3>PathSeeker — Career Passport</h3>
               <p>Ten honest questions, matched against 38 real careers. Every result shows its reasoning and its trade-offs, then lays out a six-stage route into the job.</p>
@@ -739,7 +756,7 @@ img{ display:block }
               <span>PHP &amp; MySQL — Live</span>
               <span class="pf-badge" data-hs-rot="45" data-hs-scale="1.08" data-hs-cfg="280,18" data-hs-trigger="closest:.pf-card"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
             </div>
-            <div class="pf-wm" aria-hidden="true"><span class="pf-wm-in"><svg class="ic"><use href="#i-logo"/></svg><sup>&reg;</sup></span></div>
+            <div class="pf-wm" aria-hidden="true"><span class="pf-wm-in"><svg class="ic"><use href="#i-server"/></svg></span></div>
             <div class="pf-bottom">
               <h3>CARE Group — Appointment Portal</h3>
               <p>A three-role portal on PHP and MySQL. Patients book from a doctor&rsquo;s live availability; doctors run their sittings; an admin maintains doctors, cities, logins and content.</p>
@@ -755,7 +772,7 @@ img{ display:block }
               <span>Commerce — Live</span>
               <span class="pf-badge" data-hs-rot="45" data-hs-scale="1.08" data-hs-cfg="280,18" data-hs-trigger="closest:.pf-card"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
             </div>
-            <div class="pf-wm" aria-hidden="true"><span class="pf-wm-in"><svg class="ic"><use href="#i-logo"/></svg><sup>&reg;</sup></span></div>
+            <div class="pf-wm" aria-hidden="true"><span class="pf-wm-in"><svg class="ic"><use href="#i-cart"/></svg></span></div>
             <div class="pf-bottom">
               <h3>ShopXtra</h3>
               <p>A working organic grocery and personal-care shop on its own domain. Category browsing, search, promo codes and a running cart, with cash on delivery nationwide.</p>
@@ -771,7 +788,7 @@ img{ display:block }
               <span>Health — Live</span>
               <span class="pf-badge" data-hs-rot="45" data-hs-scale="1.08" data-hs-cfg="280,18" data-hs-trigger="closest:.pf-card"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
             </div>
-            <div class="pf-wm" aria-hidden="true"><span class="pf-wm-in"><svg class="ic"><use href="#i-logo"/></svg><sup>&reg;</sup></span></div>
+            <div class="pf-wm" aria-hidden="true"><span class="pf-wm-in"><svg class="ic"><use href="#i-pulse"/></svg></span></div>
             <div class="pf-bottom">
               <h3>PhysioSync</h3>
               <p>Pick a region on a 3D body model and it maps the conditions behind the pain, then prescribes the exercise that treats it — with accounts and a dashboard.</p>
@@ -787,7 +804,7 @@ img{ display:block }
               <span>Culture — Live</span>
               <span class="pf-badge" data-hs-rot="45" data-hs-scale="1.08" data-hs-cfg="280,18" data-hs-trigger="closest:.pf-card"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
             </div>
-            <div class="pf-wm" aria-hidden="true"><span class="pf-wm-in"><svg class="ic"><use href="#i-logo"/></svg><sup>&reg;</sup></span></div>
+            <div class="pf-wm" aria-hidden="true"><span class="pf-wm-in"><svg class="ic"><use href="#i-book"/></svg></span></div>
             <div class="pf-bottom">
               <h3>Zaika-e-Karachi</h3>
               <p>A scroll-told history of a Karachi kitchen, from partition-era recipes to the bun kabab stalls of Burns Road. Set bilingually in English and Urdu.</p>
@@ -815,7 +832,7 @@ img{ display:block }
         <a class="svc" href="#services">
           <div class="svc-in">
             <span class="svc-idx">01</span>
-            <h3 class="svc-title">Websites</h3>
+            <span class="svc-mark" aria-hidden="true"><svg class="ic"><use href="#i-code"/></svg></span><h3 class="svc-title">Websites</h3>
             <p class="svc-desc">Marketing sites and landing pages, hand-built so they stay fast.</p>
             <span class="svc-badge" data-hs-tx="5" data-hs-cfg="300,18" data-hs-trigger="closest:.svc"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
           </div>
@@ -825,7 +842,7 @@ img{ display:block }
         <a class="svc" href="#services">
           <div class="svc-in">
             <span class="svc-idx">02</span>
-            <h3 class="svc-title">Web Apps</h3>
+            <span class="svc-mark" aria-hidden="true"><svg class="ic"><use href="#i-db"/></svg></span><h3 class="svc-title">Web Apps</h3>
             <p class="svc-desc">PHP &amp; MySQL or Node &amp; MongoDB — accounts, bookings, dashboards.</p>
             <span class="svc-badge" data-hs-tx="5" data-hs-cfg="300,18" data-hs-trigger="closest:.svc"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
           </div>
@@ -835,7 +852,7 @@ img{ display:block }
         <a class="svc" href="#services">
           <div class="svc-in">
             <span class="svc-idx">03</span>
-            <h3 class="svc-title">Brand Identity</h3>
+            <span class="svc-mark" aria-hidden="true"><svg class="ic"><use href="#i-brush"/></svg></span><h3 class="svc-title">Brand Identity</h3>
             <p class="svc-desc">Logos, colour and type systems, and the assets that keep them consistent.</p>
             <span class="svc-badge" data-hs-tx="5" data-hs-cfg="300,18" data-hs-trigger="closest:.svc"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
           </div>
@@ -845,7 +862,7 @@ img{ display:block }
         <a class="svc" href="#services">
           <div class="svc-in">
             <span class="svc-idx">04</span>
-            <h3 class="svc-title">Deploy &amp; Maintain</h3>
+            <span class="svc-mark" aria-hidden="true"><svg class="ic"><use href="#i-layers"/></svg></span><h3 class="svc-title">Deploy &amp; Maintain</h3>
             <p class="svc-desc">Shipped to a real domain, then kept running and easy to change.</p>
             <span class="svc-badge" data-hs-tx="5" data-hs-cfg="300,18" data-hs-trigger="closest:.svc"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
           </div>
@@ -1023,8 +1040,8 @@ img{ display:block }
 /* ============================================================
    0. CONSTANTS
    ============================================================ */
-const BEFORE_SRC = 'hero-base.jpg';    // always-shown base image (the washed portrait)
-const AFTER_SRC  = 'hero-reveal.jpg';  // painted in along the cursor trail (full colour)
+const BEFORE_SRC = 'hero-base.svg';    // always-shown base field of stack icons
+const AFTER_SRC  = 'hero-reveal.svg';  // warm field painted in along the cursor trail
 const FONT_BASE = 16, GRID_BASE_WIDTH = 1920, GRID_COEF = 0.6666;
 const FILL_MS = 1300;
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1397,9 +1414,9 @@ document.querySelectorAll('.reveal, .lines, .words').forEach((el) => revealObser
    ============================================================ */
 (function initHeroCard(){
   const items = [
-    { caption: 'Front end', title: 'React, JS, CSS.' },
-    { caption: 'Back end', title: 'PHP, MySQL, Node.' },
-    { caption: 'Design', title: 'Identity systems.' }
+    { caption: 'Front end', title: 'React, JS, CSS.', icon: '#i-code' },
+    { caption: 'Back end', title: 'PHP, MySQL, Node.', icon: '#i-db' },
+    { caption: 'Design', title: 'Identity systems.', icon: '#i-brush' }
   ];
   const slot = document.getElementById('hero-card-slot');
   const dotsEl = document.getElementById('hero-dots');
@@ -1435,6 +1452,8 @@ document.querySelectorAll('.reveal, .lines, .words').forEach((el) => revealObser
       setTimeout(() => out.remove(), 460);
     }
     current = next;
+    const tileUse = document.getElementById('hero-tile-use');
+    if (tileUse) tileUse.setAttribute('href', items[i].icon);
     Array.from(dotsEl.children).forEach((d, di) => d.classList.toggle('active', di === i));
   }
 

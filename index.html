@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Hamza Haroon — Full Stack Developer &amp; Graphic Designer</title>
-<meta name="description" content="Hamza Haroon is a full stack developer and graphic designer in Karachi. Five live projects across React, Node, PHP and MySQL — designed properly, then built properly." />
+<title>HAMZA HAROON — Full Stack Developer &middot; Graphic Designer</title>
+<meta name="description" content="Hamza Haroon — full stack developer and graphic designer in Karachi. Five live projects built with PHP, MySQL, React, Node and MongoDB." />
 <meta name="theme-color" content="#0a0a0a" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -90,8 +90,10 @@ img{ display:block }
 .pill.dark .badge{ background:#fff; color:var(--ink) }
 
 /* --- TagChip --- */
-.tag{ display:inline-flex; border:1px solid rgba(255,255,255,.25); color:#fff;
+.tag{ display:inline-flex; align-items:center; gap:.5rem; border:1px solid rgba(255,255,255,.25); color:#fff;
   border-radius:var(--radius-pill); padding:.5rem 1rem; font-size:.875rem }
+.tag-code{ cursor:pointer; border-color:rgba(255,255,255,.5); transition:background .25s, color .25s }
+.tag-code:hover{ background:#fff; color:var(--ink) }
 
 /* --- AnimatedLink --- */
 .alink{ display:inline-flex }
@@ -193,7 +195,7 @@ img{ display:block }
   border-radius:0 0 var(--radius-card) var(--radius-card); background:var(--hero-to) }
 .hero-media{ position:absolute; inset:0; z-index:0 }
 .lq-wrap{ position:relative; width:100%; height:100% }
-.lq-base{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:66% center }
+.lq-base{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center }
 .lq-canvas{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none }
 .hero-vignette{ position:absolute; inset:0; z-index:1; pointer-events:none;
   background:linear-gradient(to bottom, rgba(255,255,255,.35), transparent, rgba(255,255,255,.35)) }
@@ -263,12 +265,20 @@ img{ display:block }
    ============================================================ */
 #about{ background:var(--background) }
 .about-grid{ display:grid; grid-template-columns:1fr; align-items:center; gap:3rem; padding:5rem 1.25rem }
-.about-left{ position:relative; min-height:14rem }
+.about-left{ position:relative; min-height:14rem; display:flex; flex-direction:column;
+  align-items:flex-start; gap:1.75rem }
+.journey{ position:relative; display:flex; flex-direction:column; width:100%; max-width:22rem }
+.journey li{ display:flex; gap:1rem; border-top:1px solid var(--line); padding:.875rem 0 }
+.journey li:first-child{ border-top:0 }
+.j-year{ width:6.5rem; flex:none; font-size:.75rem; font-weight:500; text-transform:uppercase;
+  letter-spacing:.025em; color:rgba(17,17,17,.45); padding-top:.125rem }
+.j-what{ font-size:.875rem; font-weight:500; line-height:1.4 }
+.j-what em{ display:block; font-style:normal; font-weight:400; color:rgba(17,17,17,.5) }
 .about-globe-bg{ position:absolute; left:-1rem; top:50%; transform:translateY(-50%);
   font-size:12rem; color:rgba(17,17,17,.1); pointer-events:none }
 .about-left .eyebrow{ position:relative }
-.about-note{ position:absolute; left:0; bottom:0; display:flex; align-items:center; gap:.75rem;
-  font-size:.875rem; color:rgba(17,17,17,.7) }
+.about-note{ position:relative; display:flex; align-items:center; gap:.75rem;
+  margin-top:auto; font-size:.875rem; color:rgba(17,17,17,.7) }
 .about-note .ic{ font-size:1.5rem; color:var(--foreground) }
 .about-note span.txt{ max-width:14rem; display:block }
 .about-right{ display:flex; flex-direction:column; gap:2.5rem }
@@ -622,7 +632,7 @@ img{ display:block }
   <div class="shell hero-grid">
     <div class="hero-left">
       <div class="reveal" data-gate="ready" style="--rv-y:10px;--rv-d:200ms">
-        <span class="eyebrow"><span class="dot"></span>Karachi, Pakistan</span>
+        <span class="eyebrow"><span class="dot"></span>Full stack developer &amp; graphic designer</span>
       </div>
 
       <h1 class="hero-h1 lines" data-gate="ready" style="--d:250ms;--st:120ms">
@@ -669,7 +679,7 @@ img{ display:block }
       </div>
 
       <div class="partners reveal" data-gate="ready" style="--rv-y:14px;--rv-d:550ms">
-        <p class="partners-label">Built with</p>
+        <p class="partners-label">The stack</p>
         <ul class="partners-grid">
           <li><span class="partner" data-hs-ty="-2" data-hs-op="0.7,1" data-hs-cfg="320,20"><svg class="ic"><use href="#i-b-react"/></svg>React</span></li>
           <li><span class="partner" data-hs-ty="-2" data-hs-op="0.7,1" data-hs-cfg="320,20"><svg class="ic"><use href="#i-b-node"/></svg>Node</span></li>
@@ -678,6 +688,12 @@ img{ display:block }
           <li><span class="partner" data-hs-ty="-2" data-hs-op="0.7,1" data-hs-cfg="320,20"><svg class="ic"><use href="#i-b-mongodb"/></svg>MongoDB</span></li>
           <li><span class="partner" data-hs-ty="-2" data-hs-op="0.7,1" data-hs-cfg="320,20"><svg class="ic"><use href="#i-b-bootstrap"/></svg>Bootstrap</span></li>
           <li><span class="partner" data-hs-ty="-2" data-hs-op="0.7,1" data-hs-cfg="320,20"><svg class="ic"><use href="#i-b-gsap"/></svg>GSAP</span></li>
+          <li><span class="partner" data-hs-ty="-2" data-hs-op="0.7,1" data-hs-cfg="320,20"><svg class="ic"><use href="#i-b-html5"/></svg>HTML5</span></li>
+          <li><span class="partner" data-hs-ty="-2" data-hs-op="0.7,1" data-hs-cfg="320,20"><svg class="ic"><use href="#i-b-css3"/></svg>CSS3</span></li>
+          <li><span class="partner" data-hs-ty="-2" data-hs-op="0.7,1" data-hs-cfg="320,20"><svg class="ic"><use href="#i-b-js"/></svg>JavaScript</span></li>
+          <li><span class="partner" data-hs-ty="-2" data-hs-op="0.7,1" data-hs-cfg="320,20"><svg class="ic"><use href="#i-b-jquery"/></svg>jQuery</span></li>
+          <li><span class="partner" data-hs-ty="-2" data-hs-op="0.7,1" data-hs-cfg="320,20"><svg class="ic"><use href="#i-b-express"/></svg>Express</span></li>
+          <li><span class="partner" data-hs-ty="-2" data-hs-op="0.7,1" data-hs-cfg="320,20"><svg class="ic"><use href="#i-b-git"/></svg>Git</span></li>
         </ul>
       </div>
     </div>
@@ -685,7 +701,7 @@ img{ display:block }
 
   <div class="shell hero-status reveal" data-gate="ready" style="--rv-y:0px;--rv-d:900ms">
     <span>Building since 2022</span>
-    <span class="mid">Karachi &mdash; working remotely</span>
+    <span class="mid">Karachi, PK &mdash; open to work</span>
     <span class="end">Scroll to explore <span aria-hidden="true">&darr;</span></span>
   </div>
 </section>
@@ -696,7 +712,12 @@ img{ display:block }
     <div class="about-left">
       <svg class="ic about-globe-bg" aria-hidden="true"><use href="#i-globe"/></svg>
       <span class="eyebrow"><span class="dot"></span>The Developer</span>
-      <div class="about-note reveal" style="--rv-y:12px">
+      <ul class="journey reveal" style="--rv-y:14px;--rv-d:120ms">
+        <li><span class="j-year">2023 &mdash; now</span><span class="j-what">ADSE, Software Engineering<em>Aptech Computer Education</em></span></li>
+        <li><span class="j-year">2024 &mdash; now</span><span class="j-what">Intermediate, Pre-Engineering<em>Ziauddin Examination Board</em></span></li>
+        <li><span class="j-year">2022</span><span class="j-what">Matriculation, Science<em>Ziauddin Examination Board</em></span></li>
+      </ul>
+      <div class="about-note reveal" style="--rv-y:12px;--rv-d:200ms">
         <svg class="ic" aria-hidden="true"><use href="#i-globe"/></svg>
         <span class="txt">Based in Karachi, building for clients in any time zone.</span>
       </div>
@@ -759,7 +780,7 @@ img{ display:block }
             <div class="pf-bottom">
               <h3>PathSeeker — Career Passport</h3>
               <p>Ten honest questions, matched against 38 real careers. Every result shows its reasoning and its trade-offs, then lays out a six-stage route into the job.</p>
-              <div class="pf-tags"><span class="tag">React</span><span class="tag">Node</span><span class="tag">Express</span><span class="tag">MongoDB</span></div>
+              <div class="pf-tags"><span class="tag">React</span><span class="tag">Node</span><span class="tag">Express</span><span class="tag">MongoDB</span><span class="tag tag-code" data-href="https://github.com/hamzaharoonk07-cloud/careerpassport">Code <svg class="ic"><use href="#i-b-github"/></svg></span></div>
             </div>
           </article>
         </a>
@@ -775,7 +796,7 @@ img{ display:block }
             <div class="pf-bottom">
               <h3>CARE Group — Appointment Portal</h3>
               <p>A three-role portal on PHP and MySQL. Patients book from a doctor&rsquo;s live availability; doctors run their sittings; an admin maintains doctors, cities, logins and content.</p>
-              <div class="pf-tags"><span class="tag">PHP 8</span><span class="tag">MySQL</span><span class="tag">PDO</span></div>
+              <div class="pf-tags"><span class="tag">PHP 8</span><span class="tag">MySQL</span><span class="tag">PDO</span><span class="tag tag-code" data-href="https://github.com/hamzaharoonk07-cloud/care">Code <svg class="ic"><use href="#i-b-github"/></svg></span></div>
             </div>
           </article>
         </a>
@@ -1057,7 +1078,7 @@ img{ display:block }
    ============================================================ */
 const BEFORE_SRC = 'hero-base.jpg';    // always-shown frame: skills wall + washed photo
 const AFTER_SRC  = 'hero-reveal.jpg';  // warm wall + full-colour photo, painted in on the trail
-const COVER_X = 0.66;                  // horizontal anchor, matched by .lq-base object-position
+const COVER_X = 0.5;                   // centred, so every crop keeps the whole photo
 const FONT_BASE = 16, GRID_BASE_WIDTH = 1920, GRID_COEF = 0.6666;
 const FILL_MS = 1300;
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1624,6 +1645,13 @@ document.querySelectorAll('[data-nav]').forEach((btn) => {
     if (navOpen){ closeMenu(); setTimeout(() => scrollToId(id), 220); }
     else scrollToId(id);
   });
+});
+document.querySelectorAll('.tag-code').forEach((chip) => {
+  chip.setAttribute('role', 'link');
+  chip.setAttribute('tabindex', '0');
+  const open = (e) => { e.preventDefault(); e.stopPropagation(); window.open(chip.dataset.href, '_blank', 'noopener'); };
+  chip.addEventListener('click', open);
+  chip.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') open(e); });
 });
 document.querySelectorAll('[data-modal-open]').forEach((btn) => {
   btn.addEventListener('click', () => {

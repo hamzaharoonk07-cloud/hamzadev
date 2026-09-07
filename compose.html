@@ -1,0 +1,32 @@
+<!doctype html>
+<meta charset="utf-8">
+<style>
+  html,body{ margin:0; padding:0; width:1920px; height:1200px; overflow:hidden; background:#f1f0ee }
+  .stage{ position:relative; width:1920px; height:1200px; background:#f1f0ee url(hero-base.svg) center center / cover no-repeat }
+  .stage.reveal{ background-image:url(hero-reveal.svg); background-color:#ecebe9 }
+  .photo{
+    position:absolute; right:0; top:0; height:1200px; width:1180px; object-fit:cover; object-position:center;
+    -webkit-mask-image:linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 26%, rgba(0,0,0,1) 100%);
+    mask-image:linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 26%, rgba(0,0,0,1) 100%);
+    filter:grayscale(1) brightness(1.16) contrast(.92); opacity:.62;
+  }
+  .stage.reveal .photo{ filter:saturate(1.05) contrast(1.04); opacity:1 }
+  .wash{ position:absolute; inset:0;
+    background:linear-gradient(to right, rgba(241,240,238,.94) 0%, rgba(241,240,238,.72) 30%, rgba(241,240,238,.12) 56%, rgba(241,240,238,0) 72%) }
+  .stage.reveal .wash{
+    background:linear-gradient(to right, rgba(236,235,233,.90) 0%, rgba(236,235,233,.62) 30%, rgba(236,235,233,.08) 56%, rgba(236,235,233,0) 72%) }
+  .veil{ position:absolute; inset:0; background:rgba(241,240,238,.20) }
+  .stage.reveal .veil{ background:transparent }
+  .floor{ position:absolute; inset:auto 0 0 0; height:180px;
+    background:linear-gradient(to top, rgba(241,240,238,.85), rgba(241,240,238,0)) }
+  .stage.reveal .floor{ background:linear-gradient(to top, rgba(236,235,233,.8), rgba(236,235,233,0)) }
+</style>
+<div class="stage" id="stage">
+  <img class="photo" src="profile.jpg" alt="">
+  <div class="wash"></div>
+  <div class="floor"></div>
+  <div class="veil"></div>
+</div>
+<script>
+  if (location.search.indexOf('reveal') > -1) document.getElementById('stage').classList.add('reveal');
+</script>

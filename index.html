@@ -130,7 +130,7 @@ html.is-booting body { overflow: hidden; }
 :root { --eout: cubic-bezier(.16,1,.3,1); --eback: cubic-bezier(.34,1.56,.64,1); }
 
 html.cine .stage__fig { opacity: 0; transform: translateX(-50%) translateY(4.5%) scale(.885); }
-html.cine .ltr { opacity: 0; transform: translateY(.34em); display: inline-block; }
+html.cine .ltr { opacity: 0; transform: translateY(.42em); display: inline-block; filter: blur(14px); }
 html.cine .welcome { opacity: 0; transform: translateX(-50%) translateY(-140%); }
 html.cine .chip--l { opacity: 0; transform: translateX(-40px); }
 html.cine .chip--r { opacity: 0; transform: translateX(40px); }
@@ -149,7 +149,11 @@ html.play .hdr { animation: fadeIn .9s var(--eout) 4.45s forwards; }
 html.play .hdr::after { animation: ruleIn 1.1s var(--eout) 4.45s forwards; }
 
 @keyframes figIn { to { opacity: .82; transform: translateX(-50%) translateY(0) scale(1); } }
-@keyframes ltrIn { to { opacity: 1; transform: none; } }
+/* dissolve resolves slightly ahead of the transform settling */
+@keyframes ltrIn {
+  60%  { filter: blur(1.5px); }
+  to   { opacity: 1; transform: none; filter: blur(0); }
+}
 @keyframes dropIn { to { opacity: 1; transform: translateX(-50%) translateY(0); } }
 @keyframes slideIn { to { opacity: 1; transform: none; } }
 @keyframes fadeIn { to { opacity: 1; } }
@@ -162,7 +166,7 @@ html.play .flash { animation: pulse 1.1s ease-out 2.35s; }
 
 /* settled: whatever the animation did, everything is visible */
 html.settled .stage__fig { opacity: .82; transform: translateX(-50%); }
-html.settled .ltr { opacity: 1; transform: none; }
+html.settled .ltr { opacity: 1; transform: none; filter: none; }
 html.settled .welcome { opacity: 1; transform: translateX(-50%); }
 html.settled .chip--l, html.settled .chip--r { opacity: 1; transform: none; }
 html.settled .arrows, html.settled .dots-grid, html.settled .hdr { opacity: 1; }
@@ -237,6 +241,14 @@ html.settled .hdr::after { transform: scaleX(1); }
 @media (max-width: 700px) { .arrows, .dots-grid { display: none; } }
 
 .hero-spacer { height: 100svh; }
+
+/* subtle continuous life once settled, and pointer parallax */
+html.settled .stage__word { animation: breathe 9s ease-in-out infinite; }
+html.settled .stage__fig  { animation: breatheFig 11s ease-in-out infinite; }
+@keyframes breathe { 50% { transform: translateY(-6px); } }
+@keyframes breatheFig { 50% { transform: translateX(-50%) translateY(-9px); } }
+.stage__word, .stage__fig, .stage__glow { will-change: transform; }
+.par { transition: transform .5s cubic-bezier(.16,1,.3,1); }
 
 /* ══════════ SCENES ══════════ */
 .flow { position: relative; z-index: 5; }
@@ -668,6 +680,29 @@ html.settled .hdr::after { transform: scaleX(1); }
   } else {
     root.classList.add('settled');
   }
+
+  /* ---------- pointer parallax: the settled hero responds, gently ---------- */
+  (function () {
+    if (reduced || !window.matchMedia('(hover: hover)').matches) return;
+    var word = document.querySelector('.stage__word');
+    var fig  = document.querySelector('.stage__fig');
+    var glow = document.querySelector('.stage__glow');
+    if (!word) return;
+    var tx = 0, ty = 0, cx = 0, cy = 0;
+    document.addEventListener('mousemove', function (e) {
+      tx = (e.clientX / window.innerWidth - .5) * 2;
+      ty = (e.clientY / window.innerHeight - .5) * 2;
+    }, { passive: true });
+    (function loop() {
+      cx += (tx - cx) * .045; cy += (ty - cy) * .045;
+      if (root.classList.contains('settled')) {
+        word.style.translate = (cx * -14) + 'px ' + (cy * -8) + 'px';
+        if (fig)  fig.style.translate  = (cx * 9) + 'px ' + (cy * 5) + 'px';
+        if (glow) glow.style.translate = (cx * 22) + 'px ' + (cy * 14) + 'px';
+      }
+      requestAnimationFrame(loop);
+    })();
+  })();
 
   /* ---------- dot grid ---------- */
   var dg = document.querySelector('.dots-grid');

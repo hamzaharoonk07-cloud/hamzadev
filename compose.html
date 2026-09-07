@@ -1,25 +1,25 @@
 <!doctype html>
 <meta charset="utf-8">
 <style>
-  html,body{ margin:0; padding:0; width:1920px; height:1200px; overflow:hidden; background:#e8e7e4 }
-  .stage{ position:relative; width:1920px; height:1200px; overflow:hidden }
+  html,body{ margin:0; padding:0; width:1400px; height:875px; overflow:hidden; background:#e8e7e4 }
+  .stage{ position:relative; width:1400px; height:875px; overflow:hidden }
   .stage.dark{ background:#0b0b0c }
 
   /* the sides are the photo itself, blown up and blurred, so the frame fills edge to edge */
   .fill{ position:absolute; inset:-80px; width:calc(100% + 160px); height:calc(100% + 160px);
-    object-fit:cover; filter:blur(48px) grayscale(1) brightness(1.24) saturate(0); transform:scale(1.12) }
+    object-fit:cover; filter:blur(44px) grayscale(1) brightness(1.16) saturate(0); transform:scale(1.12) }
   .stage.reveal .fill{ filter:blur(48px) brightness(1.06) saturate(1.1) }
-  .stage.dark .fill{ filter:blur(48px) grayscale(1) brightness(.34) saturate(0) }
+  .stage.dark .fill{ filter:blur(44px) grayscale(1) brightness(.52) saturate(0) }
   .stage.dark.reveal .fill{ filter:blur(48px) brightness(.55) saturate(1.05) }
 
   /* the photo itself: full height, uncropped, feathered into the fill at the sides */
-  .shot{ position:absolute; left:50%; top:0; height:1200px; width:1200px; transform:translateX(-50%);
+  .shot{ position:absolute; left:50%; top:50%; height:820px; width:820px; transform:translate(-50%,-50%);
     object-fit:contain;
-    -webkit-mask-image:linear-gradient(to right, rgba(0,0,0,0) 0, #000 11%, #000 89%, rgba(0,0,0,0) 100%);
-    mask-image:linear-gradient(to right, rgba(0,0,0,0) 0, #000 11%, #000 89%, rgba(0,0,0,0) 100%);
+    -webkit-mask-image:radial-gradient(120% 120% at 50% 50%, #000 40%, rgba(0,0,0,0) 86%);
+    mask-image:radial-gradient(120% 120% at 50% 50%, #000 40%, rgba(0,0,0,0) 86%);
     filter:grayscale(1) brightness(1.1) contrast(.96) }
   .stage.reveal .shot{ filter:saturate(1.06) contrast(1.04) }
-  .stage.dark .shot{ filter:grayscale(1) brightness(.62) contrast(1.06) }
+  .stage.dark .shot{ filter:grayscale(1) brightness(.58) contrast(1.05) }
   .stage.dark.reveal .shot{ filter:saturate(1.04) contrast(1.02) brightness(.92) }
 
   /* legibility for the headline on the left, and a light lift on the base frame */
@@ -39,7 +39,7 @@
 </style>
 <div class="stage" id="stage">
   <img class="fill" src="profile.jpg" alt="">
-  <img class="shot" src="profile.jpg" alt="">
+  <img class="shot" src="photo-hero.jpg" alt="">
   <div class="wash"></div>
   <div class="veil"></div>
 </div>

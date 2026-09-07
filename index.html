@@ -173,26 +173,39 @@ img{ display:block }
    ============================================================ */
 #loader{
   position:fixed; inset:0; z-index:120;
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2rem;
-  background:var(--card); color:#fff;
+  display:flex; background:#0a0a0a; color:#fff;
   border-radius:0 0 var(--radius-card) var(--radius-card);
   transform:translateY(0%);
 }
+.loader-inner{ display:flex; flex-direction:column; justify-content:space-between; width:100%;
+  padding:1.75rem 1.25rem 1.5rem }
+.loader-top{ display:flex; align-items:center; justify-content:space-between;
+  font-size:.75rem; font-weight:500; text-transform:uppercase; letter-spacing:.06em; color:rgba(255,255,255,.45) }
+.loader-mark{ font-size:1.5rem; color:var(--accent-from) }
+.loader-mid{ display:flex; flex-direction:column; gap:.75rem; padding-block:2rem }
+.loader-role{ font-size:.8125rem; font-weight:500; text-transform:uppercase; letter-spacing:.14em;
+  color:rgba(255,255,255,.4) }
+.loader-name{ font-size:3.25rem; font-weight:700; line-height:.9; letter-spacing:-.035em }
+.loader-name span{ display:block; color:rgba(255,255,255,.32) }
+.loader-bottom{ display:flex; flex-direction:column; gap:1rem }
 #loader.exiting{ transform:translateY(-100%); transition:transform .7s cubic-bezier(.22,1,.36,1) }
-.loader-center{ display:flex; flex-direction:column; align-items:center; gap:1.25rem; text-align:center;
-  opacity:1; transform:translateY(0) }
-#loader.exiting .loader-center{ opacity:0; transform:translateY(-12px);
+#loader.exiting .loader-mid, #loader.exiting .loader-top{ opacity:0; transform:translateY(-12px);
   transition:opacity .55s cubic-bezier(.22,1,.36,1), transform .55s cubic-bezier(.22,1,.36,1) }
-.loader-brand{ display:flex; align-items:center; gap:.5rem; font-weight:600; font-size:1.5rem }
-.loader-brand .ic{ font-size:1.875rem; color:var(--accent-from) }
-.loader-tag{ max-width:24ch; font-size:.875rem; color:rgba(255,255,255,.55) }
-.loader-progress{ width:min(22rem,72vw); display:flex; flex-direction:column; gap:.75rem }
-.loader-track{ height:1px; width:100%; background:rgba(255,255,255,.15); overflow:hidden }
-.loader-fill{ height:100%; background:var(--accent-from); width:0%; transition:width .1s ease-out }
-.loader-meta{ display:flex; align-items:center; justify-content:space-between;
-  font-size:.75rem; font-weight:500; text-transform:uppercase; letter-spacing:.05em; color:rgba(255,255,255,.45) }
-.loader-count{ color:rgba(255,255,255,.8) }
-@media (min-width:640px){ .loader-brand{ font-size:1.875rem } }
+.loader-tag{ font-size:.75rem; color:rgba(255,255,255,.5) }
+.loader-track{ height:2px; width:100%; background:rgba(255,255,255,.14); overflow:hidden; border-radius:2px }
+.loader-fill{ display:block; height:100%; background:var(--accent-from); width:0%; transition:width .12s linear }
+.loader-meta{ display:flex; align-items:flex-end; justify-content:space-between; gap:1.5rem }
+.loader-count{ font-size:2.5rem; font-weight:600; line-height:1; letter-spacing:-.02em; color:#fff }
+@media (min-width:640px){
+  .loader-inner{ padding:2.5rem 2rem 2rem }
+  .loader-name{ font-size:6rem }
+  .loader-count{ font-size:4rem }
+  .loader-tag{ font-size:.875rem }
+}
+@media (min-width:1024px){
+  .loader-name{ font-size:8.5rem }
+  .loader-count{ font-size:5.5rem }
+}
 
 /* ============================================================
    HEADER
@@ -306,18 +319,17 @@ img{ display:block }
    ABOUT
    ============================================================ */
 #about{ background:var(--background) }
-.about-grid{ display:grid; grid-template-columns:1fr; align-items:center; gap:3rem; padding:5rem 1.25rem }
-.about-left{ position:relative; min-height:14rem; display:flex; flex-direction:column;
-  align-items:flex-start; gap:1.75rem }
-.journey{ position:relative; display:flex; flex-direction:column; width:100%; max-width:22rem }
+.about-grid{ display:grid; grid-template-columns:1fr; align-items:start; gap:3rem; padding:5rem 1.25rem }
+.about-left{ position:relative; display:flex; flex-direction:column; align-items:flex-start; gap:1.75rem }
+.about-now{ max-width:30rem; font-size:1rem; line-height:1.65; color:rgba(var(--fg-rgb),.62) }
+.about-now b{ font-weight:600; color:rgba(var(--fg-rgb),.9) }
+.journey{ position:relative; display:flex; flex-direction:column; width:100%; max-width:30rem }
 .journey li{ display:flex; gap:1rem; border-top:1px solid var(--line); padding:.875rem 0 }
 .journey li:first-child{ border-top:0 }
 .j-year{ width:6.5rem; flex:none; font-size:.75rem; font-weight:500; text-transform:uppercase;
   letter-spacing:.025em; color:rgba(var(--fg-rgb),.45); padding-top:.125rem }
 .j-what{ font-size:.875rem; font-weight:500; line-height:1.4 }
 .j-what em{ display:block; font-style:normal; font-weight:400; color:rgba(var(--fg-rgb),.5) }
-.about-globe-bg{ position:absolute; left:-1rem; top:50%; transform:translateY(-50%);
-  font-size:12rem; color:rgba(var(--fg-rgb),.1); pointer-events:none }
 .about-left .eyebrow{ position:relative }
 .about-note{ position:relative; display:flex; align-items:center; gap:.75rem;
   margin-top:auto; font-size:.875rem; color:rgba(var(--fg-rgb),.7) }
@@ -336,13 +348,10 @@ img{ display:block }
 .social-chip .ic{ will-change:transform }
 @media (min-width:640px){
   .about-grid{ padding-left:2rem; padding-right:2rem }
-  .about-globe-bg{ font-size:16rem }
   .about-statement{ font-size:1.875rem }
 }
 @media (min-width:1024px){
-  .about-grid{ grid-template-columns:1fr 1fr; padding-top:7rem; padding-bottom:7rem }
-  .about-left{ min-height:20rem }
-  .about-globe-bg{ left:-1.5rem; font-size:20rem }
+  .about-grid{ grid-template-columns:0.9fr 1.1fr; gap:4rem; padding-top:7rem; padding-bottom:7rem }
 }
 
 /* ============================================================
@@ -565,7 +574,7 @@ img{ display:block }
 <body>
 
 <svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true" focusable="false">
-  <symbol id="i-logo" viewBox="0 0 48 48"><path fill="currentColor" d="M24 2c2.2 13.8 7.9 19.6 22 22-14.1 2.4-19.8 8.2-22 22-2.2-13.8-7.9-19.6-22-22 14.1-2.4 19.8-8.2 22-22Z"/></symbol>
+  <symbol id="i-logo" viewBox="0 0 24 24"><rect x="2.1" y="2.1" width="19.8" height="19.8" rx="5.8" fill="none" stroke="currentColor" stroke-width="1.7"/><path fill="currentColor" d="M7.9 6.7H10v3.9h4V6.7h2.1v10.6H14v-4.5h-4v4.5H7.9z"/></symbol>
   <symbol id="i-arrow-right" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></symbol>
   <symbol id="i-arrow-ur" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M7 17 17 7M8 7h9v9"/></symbol>
   <symbol id="i-star" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.5l2.9 5.88 6.49.94-4.7 4.58 1.11 6.46L12 17.9l-5.8 3.05 1.1-6.46-4.69-4.58 6.49-.94L12 2.5z"/></symbol>
@@ -612,15 +621,21 @@ img{ display:block }
 
 <!-- ============================ PAGE LOADER ============================ -->
 <div id="loader" role="status" aria-live="polite">
-  <div class="loader-center">
-    <div class="loader-brand"><svg class="ic" aria-hidden="true"><use href="#i-logo"/></svg><span>Hamza Haroon</span></div>
-    <p class="loader-tag">Designed properly, then built properly.</p>
-  </div>
-  <div class="loader-progress">
-    <div class="loader-track"><div class="loader-fill" id="loader-fill"></div></div>
-    <div class="loader-meta">
-      <span>Loading</span>
-      <span class="loader-count tabular" id="loader-count">000</span>
+  <div class="shell loader-inner">
+    <div class="loader-top">
+      <svg class="ic loader-mark" aria-hidden="true"><use href="#i-logo"/></svg>
+      <span class="loader-place">Karachi, PK</span>
+    </div>
+    <div class="loader-mid">
+      <p class="loader-role">Full stack developer &amp; graphic designer</p>
+      <p class="loader-name">Hamza<span>Haroon</span></p>
+    </div>
+    <div class="loader-bottom">
+      <div class="loader-track"><div class="loader-fill" id="loader-fill"></div></div>
+      <div class="loader-meta">
+        <span class="loader-tag">Designed properly, then built properly.</span>
+        <span class="loader-count tabular" id="loader-count">000</span>
+      </div>
     </div>
   </div>
 </div>
@@ -759,8 +774,8 @@ img{ display:block }
 <section id="about">
   <div class="shell about-grid">
     <div class="about-left">
-      <svg class="ic about-globe-bg" aria-hidden="true"><use href="#i-globe"/></svg>
-      <span class="eyebrow"><span class="dot"></span>The Developer</span>
+      <span class="eyebrow"><span class="dot"></span>About</span>
+      <p class="about-now reveal" style="--rv-y:12px">Studying for an Advanced Diploma in Software Engineering at Aptech alongside my Intermediate, and going deeper into advanced JavaScript, relational database design and modern design systems. <b>Open to freelance work.</b></p>
       <ul class="journey reveal" style="--rv-y:14px;--rv-d:120ms">
         <li><span class="j-year">2023 &mdash; now</span><span class="j-what">ADSE, Software Engineering<em>Aptech Computer Education</em></span></li>
         <li><span class="j-year">2024 &mdash; now</span><span class="j-what">Intermediate, Pre-Engineering<em>Ziauddin Examination Board</em></span></li>

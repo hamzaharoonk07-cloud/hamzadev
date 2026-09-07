@@ -54,7 +54,6 @@
 .pill.dark .badge{ background:var(--background); color:var(--foreground) }
 .band-tile.dark{ background:var(--foreground); color:var(--background) }
 .svc-badge{ background:var(--foreground); color:var(--background) }
-.modal-success-badge{ background:var(--surface-2) }
 .pf-card{ box-shadow:0 0 0 1px rgba(255,255,255,.09) }
 .hero-card-tile{ box-shadow:0 0 0 1px rgba(255,255,255,.09) }
 
@@ -432,13 +431,17 @@ img{ display:block }
 .pf-badge{ width:2.75rem; height:2.75rem; display:grid; place-items:center; border-radius:var(--radius-pill);
   background:rgba(255,255,255,.1); color:#fff; box-shadow:0 0 0 1px rgba(255,255,255,.15);
   font-size:1rem; flex:none; will-change:transform }
-.pf-shot{ position:absolute; inset:0; z-index:0; overflow:hidden; border-radius:inherit }
-.pf-shot img{ width:100%; height:100%; object-fit:cover; opacity:.42; transform:scale(1.04);
-  filter:grayscale(.45) contrast(1.03);
-  transition:transform .7s cubic-bezier(.2,.8,.2,1), opacity .5s ease, filter .5s ease }
-.pf-shot::after{ content:''; position:absolute; inset:0; background:linear-gradient(180deg,
-  rgba(10,10,12,.62) 0%, rgba(10,10,12,.34) 30%, rgba(10,10,12,.88) 72%, rgba(10,10,12,.97) 100%) }
-.pf-card:hover .pf-shot img{ transform:scale(1.09); opacity:.72; filter:grayscale(0) contrast(1.05) }
+.pf-logo{ position:absolute; inset:0; z-index:1; display:grid; place-items:center; pointer-events:none }
+.pf-logo img{ width:8rem; height:8rem; object-fit:cover; border-radius:1.75rem; opacity:.9;
+  box-shadow:0 0 0 1px rgba(255,255,255,.1), 0 30px 60px -30px #000;
+  transform:translateY(-.5rem) scale(1);
+  transition:transform .55s cubic-bezier(.2,.8,.2,1), box-shadow .45s ease, opacity .45s ease }
+.pf-logo::before{ content:''; position:absolute; width:16rem; height:16rem; border-radius:9999px;
+  background:radial-gradient(closest-side, color-mix(in srgb, var(--pf-c, #b15f2c) 30%, transparent), transparent 72%);
+  opacity:.5; transition:opacity .5s ease, transform .6s cubic-bezier(.2,.8,.2,1) }
+.pf-card:hover .pf-logo img{ transform:translateY(-1rem) scale(1.07); opacity:1;
+  box-shadow:0 0 0 1px color-mix(in srgb, var(--pf-c, #fff) 55%, transparent), 0 34px 60px -28px #000 }
+.pf-card:hover .pf-logo::before{ opacity:1; transform:scale(1.12) }
 .pf-meta, .pf-bottom{ position:relative; z-index:2 }
 .pf-tech{ display:inline-block; vertical-align:-.15em; margin-right:.5rem; font-size:1rem;
   color:var(--pf-c, #fff); opacity:.9 }
@@ -611,27 +614,60 @@ img{ display:block }
 .modal-kicker{ display:inline-flex; align-items:center; gap:.5rem; font-size:.875rem; font-weight:500; color:rgba(var(--fg-rgb),.6) }
 .modal-kicker .dot{ width:.375rem; height:.375rem; border-radius:var(--radius-pill); background:var(--accent) }
 .modal-title{ font-size:1.5rem; font-weight:600; letter-spacing:-.01em }
-.modal-form{ display:flex; flex-direction:column; gap:1rem }
-.modal-form label{ display:flex; flex-direction:column; gap:.5rem }
-.field-cap{ font-size:.75rem; font-weight:500; text-transform:uppercase; letter-spacing:.025em; color:rgba(var(--fg-rgb),.5) }
-.modal-form input, .modal-form textarea{ width:100%; border:1px solid var(--line); background:rgba(var(--surface-rgb),.5);
-  border-radius:var(--radius-control); padding:.75rem 1rem; font-size:.875rem; font-family:inherit; color:inherit;
-  outline:none; transition:border-color .2s, background .2s }
-.modal-form textarea{ resize:none }
-.modal-form input:focus, .modal-form textarea:focus{ border-color:rgba(var(--fg-rgb),.3); background:var(--raised) }
-.modal-bottom{ margin-top:.5rem; display:flex; align-items:center; justify-content:space-between; gap:1rem }
-.modal-note{ font-size:.75rem; color:rgba(var(--fg-rgb),.45) }
-.modal-success{ display:flex; flex-direction:column; align-items:center; text-align:center; gap:1rem;
-  padding-top:2rem; padding-bottom:2rem }
-.modal-success-badge{ width:3.5rem; height:3.5rem; display:grid; place-items:center; border-radius:var(--radius-pill);
-  background:var(--card); color:var(--accent-from); font-size:1.5rem }
-.modal-success h2{ font-size:1.5rem; font-weight:600 }
-.modal-success p{ max-width:32ch; font-size:.875rem; color:rgba(var(--fg-rgb),.6) }
 @media (min-width:640px){
   #modal{ align-items:center }
   .modal-panel{ padding:2rem }
   .modal-title{ font-size:1.875rem }
 }
+
+/* --- the contact panel --- */
+.mail-row{ display:flex; align-items:center; gap:1rem; border:1px solid var(--line);
+  background:rgba(var(--surface-rgb),.55); border-radius:var(--radius-card-sm); padding:1rem;
+  transition:border-color .3s ease, background .3s ease, transform .3s cubic-bezier(.2,.8,.2,1) }
+.mail-row:hover{ border-color:rgba(var(--amb-rgb),.55); background:rgba(var(--surface-rgb),.9); transform:translateY(-2px) }
+.mail-icon{ width:2.75rem; height:2.75rem; flex:none; display:grid; place-items:center;
+  border-radius:var(--radius-control); background:rgb(var(--amb-rgb)); color:#0a0a0a; font-size:1.125rem }
+.mail-text{ display:flex; flex-direction:column; gap:.125rem; min-width:0 }
+.mail-label{ font-size:.6875rem; font-weight:600; text-transform:uppercase; letter-spacing:.12em;
+  color:rgba(var(--fg-rgb),.45) }
+.mail-value{ font-size:1rem; font-weight:500; letter-spacing:-.01em; overflow-wrap:anywhere }
+.mail-go{ margin-left:auto; color:rgba(var(--fg-rgb),.45); font-size:1rem; transition:color .3s ease, transform .3s ease }
+.mail-row:hover .mail-go{ color:rgb(var(--amb-rgb)); transform:translate(2px,-2px) }
+.mail-actions{ margin-top:1rem; display:flex; flex-wrap:wrap; gap:.75rem }
+.mail-note{ margin-top:1.25rem; font-size:.8125rem; line-height:1.6; color:rgba(var(--fg-rgb),.5) }
+.mail-else{ margin-top:1.25rem; padding-top:1.25rem; border-top:1px solid var(--line);
+  display:flex; flex-wrap:wrap; gap:.5rem }
+.mail-alt{ display:inline-flex; align-items:center; gap:.5rem; border:1px solid var(--line);
+  border-radius:var(--radius-pill); padding:.4375rem .875rem; font-size:.8125rem; font-weight:500;
+  color:rgba(var(--fg-rgb),.8); transition:border-color .25s ease, background .25s ease, transform .25s ease }
+.mail-alt .ic{ font-size:.9375rem; color:var(--c, currentColor) }
+.mail-alt:hover{ transform:translateY(-2px); border-color:color-mix(in srgb, var(--c, #b15f2c) 55%, transparent);
+  background:color-mix(in srgb, var(--c, #b15f2c) 12%, transparent) }
+@media (min-width:640px){ .mail-value{ font-size:1.125rem } }
+
+/* --- more hover --- */
+/* a light sweeps across a work card */
+.pf-card::after{ content:''; position:absolute; inset:0; z-index:3; pointer-events:none; border-radius:inherit;
+  background:linear-gradient(115deg, transparent 38%, rgba(255,255,255,.09) 48%, transparent 58%);
+  transform:translateX(-120%); transition:transform .9s cubic-bezier(.2,.8,.2,1) }
+.pf-card:hover::after{ transform:translateX(120%) }
+/* the service title steps toward the cursor */
+.svc-title{ transition:color .3s ease, transform .45s cubic-bezier(.2,.8,.2,1) }
+.svc:hover .svc-title{ transform:translateX(.5rem) }
+/* the outline pill fills from the left */
+.pill.outline .pill-in{ position:relative; overflow:hidden; z-index:0 }
+.pill.outline .pill-in::before{ content:''; position:absolute; inset:0; z-index:-1;
+  background:rgba(var(--fg-rgb),.1); transform:scaleX(0); transform-origin:left;
+  transition:transform .45s cubic-bezier(.2,.8,.2,1) }
+.pill.outline:hover .pill-in::before{ transform:scaleX(1) }
+/* the two hero panels drift with the pointer */
+.hero-card, .stack-panel{ transition:transform .5s cubic-bezier(.2,.8,.2,1) }
+/* the brand mark turns a little as you approach it */
+.brand .ic{ transition:transform .5s cubic-bezier(.2,.8,.2,1) }
+.brand-btn:hover .ic{ transform:rotate(-8deg) scale(1.08) }
+/* footer links pick up the ambient colour */
+.footer-col a:hover span{ color:rgb(var(--amb-rgb)) }
+.navmenu-item:hover .navmenu-num{ color:rgb(var(--amb-rgb)) }
 
 /* ============================================================
    COLOUR & LIFE
@@ -963,12 +999,12 @@ img{ display:block }
       <li class="reveal" style="--rv-y:64px;--rv-s0:.97;--rv-d:0ms">
         <a href="https://careerpassporttw.vercel.app/" target="_blank" rel="noopener" aria-label="PathSeeker - Career Passport — open the live site">
           <article class="pf-card" style="--pf-c:#61DAFB" data-hs-ty="-8" data-hs-scale="1.012" data-hs-cfg="260,22">
-            <div class="pf-shot"><img src="shot-pathseeker.jpg" alt="PathSeeker — Career Passport" loading="lazy" decoding="async"></div>
             <div class="pf-meta">
               <span class="pf-meta-left"><span class="pf-brand"><img src="logo-pathseeker.jpg" alt="" loading="lazy" decoding="async"></span>
               <span><svg class="ic pf-tech" aria-hidden="true"><use href="#i-b-react"/></svg>React &amp; Node — Live</span></span>
               <span class="pf-badge" data-hs-rot="45" data-hs-scale="1.08" data-hs-cfg="280,18" data-hs-trigger="closest:.pf-card"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
             </div>
+            <div class="pf-logo" aria-hidden="true"><img src="logo-pathseeker.jpg" alt="" loading="lazy" decoding="async"></div>
             
             <div class="pf-bottom">
               <h3>PathSeeker — Career Passport</h3>
@@ -981,12 +1017,12 @@ img{ display:block }
       <li class="reveal" style="--rv-y:64px;--rv-s0:.97;--rv-d:90ms">
         <a href="https://care-pk.infinityfreeapp.com/" target="_blank" rel="noopener" aria-label="CARE Group - Appointment Portal — open the live site">
           <article class="pf-card" style="--pf-c:#777BB4" data-hs-ty="-8" data-hs-scale="1.012" data-hs-cfg="260,22">
-            <div class="pf-shot"><img src="shot-care.jpg" alt="CARE Group — Appointment Portal" loading="lazy" decoding="async"></div>
             <div class="pf-meta">
               <span class="pf-meta-left"><span class="pf-brand"><img src="logo-care.jpg" alt="" loading="lazy" decoding="async"></span>
               <span><svg class="ic pf-tech" aria-hidden="true"><use href="#i-b-php"/></svg>PHP &amp; MySQL — Live</span></span>
               <span class="pf-badge" data-hs-rot="45" data-hs-scale="1.08" data-hs-cfg="280,18" data-hs-trigger="closest:.pf-card"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
             </div>
+            <div class="pf-logo" aria-hidden="true"><img src="logo-care.jpg" alt="" loading="lazy" decoding="async"></div>
             
             <div class="pf-bottom">
               <h3>CARE Group — Appointment Portal</h3>
@@ -999,12 +1035,12 @@ img{ display:block }
       <li class="reveal" style="--rv-y:64px;--rv-s0:.97;--rv-d:180ms">
         <a href="https://www.shopxtra.store/" target="_blank" rel="noopener" aria-label="ShopXtra — open the live site">
           <article class="pf-card" style="--pf-c:#cf8047" data-hs-ty="-8" data-hs-scale="1.012" data-hs-cfg="260,22">
-            <div class="pf-shot"><img src="shot-shopxtra.jpg" alt="ShopXtra" loading="lazy" decoding="async"></div>
             <div class="pf-meta">
               <span class="pf-meta-left"><span class="pf-brand"><img src="logo-shopxtra.jpg" alt="" loading="lazy" decoding="async"></span>
               <span><svg class="ic pf-tech" aria-hidden="true"><use href="#i-cart"/></svg>Commerce — Live</span></span>
               <span class="pf-badge" data-hs-rot="45" data-hs-scale="1.08" data-hs-cfg="280,18" data-hs-trigger="closest:.pf-card"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
             </div>
+            <div class="pf-logo" aria-hidden="true"><img src="logo-shopxtra.jpg" alt="" loading="lazy" decoding="async"></div>
             
             <div class="pf-bottom">
               <h3>ShopXtra</h3>
@@ -1017,12 +1053,12 @@ img{ display:block }
       <li class="reveal" style="--rv-y:64px;--rv-s0:.97;--rv-d:270ms">
         <a href="https://physiosync-pk.vercel.app/" target="_blank" rel="noopener" aria-label="PhysioSync — open the live site">
           <article class="pf-card" style="--pf-c:#47A248" data-hs-ty="-8" data-hs-scale="1.012" data-hs-cfg="260,22">
-            <div class="pf-shot"><img src="shot-physiosync.jpg" alt="PhysioSync" loading="lazy" decoding="async"></div>
             <div class="pf-meta">
               <span class="pf-meta-left"><span class="pf-brand"><img src="logo-physiosync.jpg" alt="" loading="lazy" decoding="async"></span>
               <span><svg class="ic pf-tech" aria-hidden="true"><use href="#i-pulse"/></svg>Health — Live</span></span>
               <span class="pf-badge" data-hs-rot="45" data-hs-scale="1.08" data-hs-cfg="280,18" data-hs-trigger="closest:.pf-card"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
             </div>
+            <div class="pf-logo" aria-hidden="true"><img src="logo-physiosync.jpg" alt="" loading="lazy" decoding="async"></div>
             
             <div class="pf-bottom">
               <h3>PhysioSync</h3>
@@ -1035,12 +1071,12 @@ img{ display:block }
       <li class="reveal" style="--rv-y:64px;--rv-s0:.97;--rv-d:360ms">
         <a href="https://zaikaekarachi.vercel.app/" target="_blank" rel="noopener" aria-label="Zaika-e-Karachi — open the live site">
           <article class="pf-card" style="--pf-c:#d9a441" data-hs-ty="-8" data-hs-scale="1.012" data-hs-cfg="260,22">
-            <div class="pf-shot"><img src="shot-zaika.jpg" alt="Zaika-e-Karachi" loading="lazy" decoding="async"></div>
             <div class="pf-meta">
               <span class="pf-meta-left"><span class="pf-brand"><img src="logo-zaika.jpg" alt="" loading="lazy" decoding="async"></span>
               <span><svg class="ic pf-tech" aria-hidden="true"><use href="#i-book"/></svg>Culture — Live</span></span>
               <span class="pf-badge" data-hs-rot="45" data-hs-scale="1.08" data-hs-cfg="280,18" data-hs-trigger="closest:.pf-card"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
             </div>
+            <div class="pf-logo" aria-hidden="true"><img src="logo-zaika.jpg" alt="" loading="lazy" decoding="async"></div>
             
             <div class="pf-bottom">
               <h3>Zaika-e-Karachi</h3>
@@ -1236,41 +1272,44 @@ img{ display:block }
 
     <div id="modal-default">
       <div class="modal-head">
-        <span class="modal-kicker"><span class="dot"></span>Start a project</span>
-        <h2 class="modal-title" id="modal-title">Tell me what you&rsquo;re building.</h2>
+        <span class="modal-kicker"><span class="dot"></span>Get in touch</span>
+        <h2 class="modal-title" id="modal-title">Write to me directly.</h2>
       </div>
-      <form class="modal-form" id="modal-form" novalidate>
-        <label>
-          <span class="field-cap">Name</span>
-          <input type="text" name="name" required placeholder="Your name" autocomplete="name" />
-        </label>
-        <label>
-          <span class="field-cap">Email</span>
-          <input type="email" name="email" required placeholder="you@company.com" autocomplete="email" />
-        </label>
-        <label>
-          <span class="field-cap">Project</span>
-          <textarea name="project" rows="4" required placeholder="A few words about your project, timeline, and budget."></textarea>
-        </label>
-        <div class="modal-bottom">
-          <span class="modal-note">I reply within one business day.</span>
-          <button class="pill dark has-arrow" type="submit">
-            <span class="pill-in" data-hs-scale="1.04" data-hs-cfg="320,18" data-hs-trigger="closest:.pill">
-              <span id="submit-label">Send request</span>
-              <span class="badge"><svg class="ic" data-hs-tx="2" data-hs-ty="-2" data-hs-cfg="320,18" data-hs-trigger="closest:.pill"><use href="#i-arrow-ur"/></svg></span>
-            </span>
-          </button>
-        </div>
-      </form>
-    </div>
 
-    <div class="modal-success" id="modal-success" hidden>
-      <div class="modal-success-badge"><svg class="ic" aria-hidden="true"><use href="#i-logo"/></svg></div>
-      <h2>Request sent</h2>
-      <p id="success-note">It landed in my inbox &mdash; I reply within one business day.</p>
-      <button class="pill dark" type="button" id="success-close">
-        <span class="pill-in" data-hs-scale="1.04" data-hs-cfg="320,18" data-hs-trigger="closest:.pill">Close</span>
-      </button>
+      <a class="mail-row" href="mailto:hamzaharoonk07@gmail.com">
+        <span class="mail-icon"><svg class="ic" aria-hidden="true"><use href="#i-mail"/></svg></span>
+        <span class="mail-text">
+          <span class="mail-label">Email</span>
+          <span class="mail-value">hamzaharoonk07@gmail.com</span>
+        </span>
+        <span class="mail-go"><svg class="ic" aria-hidden="true"><use href="#i-arrow-ur"/></svg></span>
+      </a>
+
+      <div class="mail-actions">
+        <button class="pill dark has-arrow" type="button" id="mail-compose">
+          <span class="pill-in" data-hs-scale="1.04" data-hs-cfg="320,18" data-hs-trigger="closest:.pill">
+            <span>Open mail app</span>
+            <span class="badge"><svg class="ic" data-hs-tx="2" data-hs-ty="-2" data-hs-cfg="320,18" data-hs-trigger="closest:.pill"><use href="#i-arrow-ur"/></svg></span>
+          </span>
+        </button>
+        <button class="pill outline" type="button" id="mail-copy">
+          <span class="pill-in" data-hs-scale="1.04" data-hs-cfg="320,18" data-hs-trigger="closest:.pill"><span id="copy-label">Copy address</span></span>
+        </button>
+      </div>
+
+      <p class="mail-note">I reply within one business day. Karachi, PK &mdash; working with clients in any time zone.</p>
+
+      <div class="mail-else">
+        <a class="mail-alt" href="https://www.linkedin.com/in/hamza-haroon-91532b281/" target="_blank" rel="noopener" style="--c:#0A66C2">
+          <svg class="ic" aria-hidden="true"><use href="#i-b-linkedin"/></svg><span>LinkedIn</span>
+        </a>
+        <a class="mail-alt" href="https://github.com/hamzaharoonk07-cloud" target="_blank" rel="noopener" style="--c:var(--foreground)">
+          <svg class="ic" aria-hidden="true"><use href="#i-b-github"/></svg><span>GitHub</span>
+        </a>
+        <a class="mail-alt" href="resume.pdf" target="_blank" rel="noopener" style="--c:var(--accent-from)">
+          <svg class="ic" aria-hidden="true"><use href="#i-layers"/></svg><span>R&eacute;sum&eacute;</span>
+        </a>
+      </div>
     </div>
   </div>
 </div>
@@ -1787,11 +1826,6 @@ document.getElementById('menu-close').addEventListener('click', () => closeMenu(
    ============================================================ */
 const modal = document.getElementById('modal');
 const modalPanel = document.getElementById('modal-panel');
-const modalDefault = document.getElementById('modal-default');
-const modalSuccess = document.getElementById('modal-success');
-const modalForm = document.getElementById('modal-form');
-const submitLabel = document.getElementById('submit-label');
-const successNote = document.getElementById('success-note');
 let modalOpen = false;
 
 const modalSpring = new Spring(260, 30, (x) => {
@@ -1813,7 +1847,7 @@ function openModal(){
   void modalPanel.offsetHeight;
   modalSpring.set(1);
   document.addEventListener('keydown', onModalKey);
-  setTimeout(() => { const f = modalForm.querySelector('input'); if (f && modalSuccess.hidden) f.focus(); }, 320);
+  setTimeout(() => { const f = document.getElementById('mail-copy'); if (f) f.focus(); }, 320);
 }
 function closeModal(){
   if (!modalOpen) return;
@@ -1821,63 +1855,96 @@ function closeModal(){
   modalSpring.set(0);
   document.removeEventListener('keydown', onModalKey);
   startScroll();
-  setTimeout(() => {
-    modalForm.reset();
-    modalDefault.hidden = false;
-    modalSuccess.hidden = true;
-    submitLabel.textContent = 'Send request';
-  }, 300);
+  setTimeout(() => { if (copyLabel) copyLabel.textContent = 'Copy address'; }, 300);
 }
 function onModalKey(e){ if (e.key === 'Escape') closeModal(); }
 
 modal.addEventListener('click', closeModal);
 modalPanel.addEventListener('click', (e) => e.stopPropagation());
 document.getElementById('modal-close').addEventListener('click', closeModal);
-document.getElementById('success-close').addEventListener('click', closeModal);
 
-const FORM_ENDPOINT = 'https://formsubmit.co/ajax/hamzaharoonk07@gmail.com';
+/* the address: copy it, or hand it to the mail app */
+const copyLabel = document.getElementById('copy-label');
+const mailCopy = document.getElementById('mail-copy');
+const mailCompose = document.getElementById('mail-compose');
+const EMAIL = 'hamzaharoonk07@gmail.com';
 
-modalForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const data = new FormData(modalForm);
-  const name = String(data.get('name') || '').trim();
-  const email = String(data.get('email') || '').trim();
-  const project = String(data.get('project') || '').trim();
-  if (!name || !email || !project){
-    submitLabel.textContent = 'Fill it in first';
-    setTimeout(() => { submitLabel.textContent = 'Send request'; }, 1600);
-    return;
-  }
-  submitLabel.textContent = 'Sending…';
-  const done = () => { modalDefault.hidden = true; modalSuccess.hidden = false; };
-  const fallback = () => {
-    // the request never left: hand it to their mail client instead of losing it
-    const body = ['Name: ' + name, 'Email: ' + email, '', project].join('\n');
-    window.location.href = 'mailto:hamzaharoonk07@gmail.com?subject=' + encodeURIComponent('Project enquiry from ' + name) +
-      '&body=' + encodeURIComponent(body);
-    successNote.textContent = 'Your mail app is open with the details — send it and it reaches me.';
-    done();
-  };
+if (mailCompose) mailCompose.addEventListener('click', () => {
+  window.location.href = 'mailto:' + EMAIL + '?subject=' + encodeURIComponent('Project enquiry');
+});
+
+if (mailCopy) mailCopy.addEventListener('click', async () => {
+  let ok = false;
   try {
-    const res = await fetch(FORM_ENDPOINT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({
-        name: name, email: email, message: project,
-        _subject: 'Portfolio enquiry from ' + name,
-        _template: 'table', _captcha: 'false'
-      })
-    });
-    if (!res.ok) throw new Error('rejected');
-    successNote.textContent = 'It landed in my inbox — I reply within one business day.';
-    done();
+    // some contexts leave the clipboard promise pending: don't hang on it
+    await Promise.race([
+      navigator.clipboard.writeText(EMAIL),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 600))
+    ]);
+    ok = true;
   } catch (err) {
-    fallback();
+    // clipboard refused (insecure context or permission): fall back to a selection copy
+    const field = document.createElement('textarea');
+    field.value = EMAIL;
+    field.setAttribute('readonly', '');
+    field.style.cssText = 'position:fixed;opacity:0;pointer-events:none';
+    document.body.appendChild(field);
+    field.select();
+    try { ok = document.execCommand('copy'); } catch (e2) { ok = false; }
+    field.remove();
   }
+  copyLabel.textContent = ok ? 'Copied' : EMAIL;
+  setTimeout(() => { copyLabel.textContent = 'Copy address'; }, 1800);
 });
 
 /* ============================================================
-   12. AMBIENT COLOUR ON SCROLL
+   12. POINTER MOTION
+   ============================================================ */
+if (CAN_HOVER && !REDUCED){
+  // the hero panels drift against the pointer, a couple of pixels
+  const drifters = document.querySelectorAll('.hero-card, .stack-panel');
+  const hero = document.getElementById('home');
+  if (hero && drifters.length){
+    hero.addEventListener('pointermove', (e) => {
+      const r = hero.getBoundingClientRect();
+      const dx = (e.clientX - r.left) / r.width - 0.5;
+      const dy = (e.clientY - r.top) / r.height - 0.5;
+      drifters.forEach((el, i) => {
+        const depth = 6 + i * 4;
+        el.style.transform = 'translate3d(' + (-dx * depth) + 'px,' + (-dy * depth) + 'px,0)';
+      });
+    });
+    hero.addEventListener('pointerleave', () => {
+      drifters.forEach((el) => { el.style.transform = 'translate3d(0,0,0)'; });
+    });
+  }
+
+  // the primary pills lean toward the cursor
+  document.querySelectorAll('.pill.dark, .pill.light').forEach((pill) => {
+    const inner = pill.querySelector('.pill-in');
+    if (!inner) return;
+    let raf = 0, tx = 0, ty = 0, cx = 0, cy = 0;
+    const run = () => {
+      cx += (tx - cx) * 0.18; cy += (ty - cy) * 0.18;
+      inner.style.translate = cx.toFixed(2) + 'px ' + cy.toFixed(2) + 'px';
+      if (Math.abs(tx - cx) > 0.05 || Math.abs(ty - cy) > 0.05) raf = requestAnimationFrame(run);
+      else raf = 0;
+    };
+    pill.addEventListener('pointermove', (e) => {
+      const r = pill.getBoundingClientRect();
+      tx = ((e.clientX - r.left) / r.width - 0.5) * 10;
+      ty = ((e.clientY - r.top) / r.height - 0.5) * 6;
+      if (!raf) raf = requestAnimationFrame(run);
+    });
+    pill.addEventListener('pointerleave', () => {
+      tx = 0; ty = 0;
+      if (!raf) raf = requestAnimationFrame(run);
+    });
+  });
+}
+
+/* ============================================================
+   13. AMBIENT COLOUR ON SCROLL
    ============================================================ */
 (function initAmbient(){
   const STOPS = [
@@ -1950,7 +2017,7 @@ modalForm.addEventListener('submit', async (e) => {
 })();
 
 /* ============================================================
-   13. ROUTING
+   14. ROUTING
    ============================================================ */
 document.querySelectorAll('[data-nav]').forEach((btn) => {
   btn.addEventListener('click', () => {

@@ -71,6 +71,28 @@ body{ color:var(--foreground); font-family:'Onest',sans-serif; overflow-x:hidden
     radial-gradient(1000px 600px at 60% 104%, rgba(var(--amb-rgb),.13), transparent 70%),
     linear-gradient(180deg, #10141b 0%, #0a0d12 52%, #0c0f15 100%);
   background-attachment:fixed; background-repeat:repeat, repeat, no-repeat, no-repeat, no-repeat, no-repeat }
+/* the opening: the hero image pulls back into place and the veil lifts */
+#intro{ position:fixed; inset:0; z-index:150; overflow:hidden; background:#0a0d12 }
+.intro-shot{ position:absolute; inset:0; background:url(hero-base.jpg) 50% 50% / cover no-repeat;
+  transform:scale(1.32); filter:brightness(.78) saturate(.9);
+  transition:transform 1.15s cubic-bezier(.65,0,.2,1), filter 1.15s ease }
+.intro-veil{ position:absolute; inset:0;
+  background:radial-gradient(120% 90% at 50% 45%, rgba(10,13,18,.34), rgba(10,13,18,.86) 78%) }
+.intro-mid{ position:absolute; inset:auto 0 3.5rem 0; display:flex; flex-direction:column;
+  align-items:center; gap:1rem; color:#fff }
+.intro-mark{ font-size:2rem; color:var(--accent-from) }
+.intro-wm{ display:inline-flex; align-items:baseline; gap:.375rem; font-size:1.125rem; font-weight:700;
+  letter-spacing:-.02em }
+.intro-bar{ width:min(16rem,60vw); height:2px; border-radius:2px; background:rgba(255,255,255,.14);
+  overflow:hidden }
+.intro-bar span{ display:block; height:100%; width:0%; border-radius:2px;
+  background:linear-gradient(90deg, var(--accent), var(--accent-from)); transition:width .12s linear }
+#intro.done{ opacity:0; pointer-events:none; transition:opacity .7s ease .12s }
+#intro.done .intro-shot{ transform:scale(1); filter:brightness(1) saturate(1) }
+#intro.done .intro-mid{ opacity:0; transform:translateY(-10px);
+  transition:opacity .4s ease, transform .5s cubic-bezier(.22,1,.36,1) }
+@media (prefers-reduced-motion: reduce){ #intro{ display:none } }
+
 /* slow-drifting light behind everything, tinted by the scroll colour */
 .bg-drift{ position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden }
 .blob{ position:absolute; border-radius:9999px; filter:blur(90px); opacity:.5;
@@ -189,6 +211,7 @@ img{ display:block }
 .header-inner{ display:flex; align-items:center; justify-content:space-between; gap:1.5rem; padding:1.25rem }
 .brand{ display:flex; align-items:center; gap:.5rem; font-size:1.125rem; font-weight:600; letter-spacing:-.01em;
   transform-origin:left center; will-change:transform }
+.mark{ font-size:1.375rem; color:rgb(var(--amb-rgb)); flex:none }
 .wm{ display:inline-flex; align-items:baseline; gap:.375rem; font-weight:700; letter-spacing:-.02em }
 .wm-thin{ font-weight:400; color:rgba(var(--fg-rgb),.55) }
 .wm-dot{ width:.3125rem; height:.3125rem; border-radius:9999px; background:rgb(var(--amb-rgb));
@@ -276,13 +299,14 @@ img{ display:block }
   background:rgb(var(--amb-rgb)); color:#0a0a0a; font-size:.875rem;
   transition:transform .35s cubic-bezier(.2,.8,.2,1) }
 .hc-cta:hover .hc-go{ transform:translate(2px,-2px) }
-#stack{ position:relative; background:transparent; isolation:isolate; overflow:hidden }
+#stack{ position:relative; background:transparent; isolation:isolate; overflow:hidden;
+  min-height:100lvh; display:flex; align-items:center }
 .stack-media{ position:absolute; inset:0; z-index:0; pointer-events:none }
 .stack-media video, .stack-media img{ width:100%; height:100%; object-fit:cover; display:block;
-  opacity:.72; filter:saturate(1) contrast(1.04) }
+  opacity:.85; filter:saturate(1.05) contrast(1.05) }
 .stack-media::after{ content:''; position:absolute; inset:0; background:
-  linear-gradient(180deg, #0c0f15 0%, rgba(12,15,21,.42) 18%, rgba(12,15,21,.5) 74%, #0c0f15 100%),
-  linear-gradient(90deg, rgba(12,15,21,.92) 0%, rgba(12,15,21,.5) 40%, rgba(12,15,21,0) 92%) }
+  linear-gradient(180deg, #0c0f15 0%, rgba(12,15,21,.30) 16%, rgba(12,15,21,.40) 76%, #0c0f15 100%),
+  linear-gradient(90deg, rgba(12,15,21,.90) 0%, rgba(12,15,21,.42) 42%, rgba(12,15,21,0) 94%) }
 #stack > .shell{ position:relative; z-index:1 }
 /* the chips need their own ground now that there is film behind them */
 #stack .chip{ background:rgba(12,15,21,.62); border-color:rgba(255,255,255,.14);
@@ -290,7 +314,7 @@ img{ display:block }
 #stack .chip:hover{ background:color-mix(in srgb, var(--c, #b15f2c) 22%, rgba(12,15,21,.7));
   border-color:color-mix(in srgb, var(--c, #b15f2c) 60%, transparent) }
 .stack-label{ text-shadow:0 1px 12px rgba(0,0,0,.6) }
-.stack-inner{ padding:5rem 1.25rem }
+.stack-inner{ width:100%; padding:6rem 1.25rem }
 .stack-h2{ margin:1.25rem 0 3rem; max-width:18ch; font-size:2.25rem; font-weight:600; letter-spacing:-.02em }
 .stack-grid{ display:grid; grid-template-columns:1fr; gap:2.5rem }
 .stack-label{ margin-bottom:1.125rem; padding-bottom:.75rem; border-bottom:1px solid var(--line);
@@ -310,7 +334,7 @@ img{ display:block }
   .stack-h2{ margin-bottom:3.5rem; font-size:3rem }
 }
 @media (min-width:1024px){
-  .stack-inner{ padding-top:7rem; padding-bottom:7rem }
+  .stack-inner{ padding-top:8rem; padding-bottom:8rem }
   .stack-grid{ grid-template-columns:repeat(3,1fr); gap:3rem }
 }
 .partners{ width:100%; max-width:24rem }
@@ -566,7 +590,11 @@ img{ display:block }
 .svc-card h3{ font-size:1.375rem; font-weight:500; letter-spacing:-.01em }
 .svc-card p{ margin-top:.625rem; max-width:34ch; font-size:.9375rem; line-height:1.6;
   color:rgba(var(--fg-rgb),.55) }
-@media (min-width:640px){ .svc-card{ padding:1.875rem; min-height:14rem } }
+.svc-list{ margin-top:1.125rem; display:flex; flex-direction:column; gap:.5rem }
+.svc-list li{ position:relative; padding-left:1.375rem; font-size:.875rem; color:rgba(var(--fg-rgb),.72) }
+.svc-list li::before{ content:''; position:absolute; left:0; top:.5rem; width:.5rem; height:.5rem;
+  border-radius:9999px; background:var(--sc); opacity:.85 }
+@media (min-width:640px){ .svc-card{ padding:1.875rem; min-height:17rem } }
 @media (min-width:768px){ .svc-grid{ grid-template-columns:1fr 1fr; gap:1.25rem } }
 
 /* ============================================================
@@ -811,7 +839,7 @@ img{ display:block }
 <body>
 
 <svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true" focusable="false">
-  <symbol id="i-logo" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M4.6 3.6v16.8"/><path d="M19.4 3.6v16.8"/><path d="M6.6 13.9 17.4 10.1"/></g></symbol>
+  <symbol id="i-logo" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M3.4 3.8v16.4"/><path d="M12 3.8v16.4"/><path d="M20.6 3.8v16.4"/><path d="M3.4 9.6h8.6"/><path d="M12 14.4h8.6"/></g></symbol>
   <symbol id="i-arrow-right" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></symbol>
   <symbol id="i-arrow-ur" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M7 17 17 7M8 7h9v9"/></symbol>
   <symbol id="i-star" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.5l2.9 5.88 6.49.94-4.7 4.58 1.11 6.46L12 17.9l-5.8 3.05 1.1-6.46-4.69-4.58 6.49-.94L12 2.5z"/></symbol>
@@ -858,6 +886,15 @@ img{ display:block }
 </svg>
 
 <div id="scroll-bar" aria-hidden="true"></div>
+<div id="intro" aria-hidden="true">
+  <div class="intro-shot"></div>
+  <div class="intro-veil"></div>
+  <div class="intro-mid">
+    <svg class="ic intro-mark" aria-hidden="true"><use href="#i-logo"/></svg>
+    <span class="intro-wm">Hamza<span class="wm-thin">Haroon</span></span>
+    <div class="intro-bar"><span id="intro-fill"></span></div>
+  </div>
+</div>
 <div class="bg-drift" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
 
 <!-- ============================ PAGE LOADER ============================ -->
@@ -866,7 +903,7 @@ img{ display:block }
   <div class="shell header-inner">
     <button class="brand-btn" type="button" data-nav="home" aria-label="Hamza Haroon — back to top">
       <span class="brand" data-hs-scale="1.04" data-hs-cfg="320,18" data-hs-trigger="closest:.brand-btn">
-        <span class="wm">Hamza<span class="wm-thin">Haroon</span><i class="wm-dot"></i></span>
+        <svg class="ic mark" aria-hidden="true"><use href="#i-logo"/></svg><span class="wm">Hamza<span class="wm-thin">Haroon</span></span>
       </span>
     </button>
 
@@ -1202,6 +1239,7 @@ img{ display:block }
           <span class="svc-ic"><svg class="ic" aria-hidden="true"><use href="#i-code"/></svg></span>
           <h3>Websites</h3>
           <p>Marketing sites, portfolios and landing pages, hand-built rather than dragged together in a builder — so they stay fast and easy to change later.</p>
+          <ul class="svc-list"><li>Responsive, phone to desktop</li><li>Bootstrap or hand-written CSS</li><li>Deployed and live</li></ul>
           <span class="svc-more">Start a project <svg class="ic" aria-hidden="true"><use href="#i-arrow-right"/></svg></span>
         </button>
       </li>
@@ -1212,6 +1250,7 @@ img{ display:block }
           <span class="svc-ic"><svg class="ic" aria-hidden="true"><use href="#i-db"/></svg></span>
           <h3>Web Apps</h3>
           <p>PHP and MySQL, or Node and MongoDB, behind the interface — for anything that has to remember something: accounts, bookings, records, dashboards.</p>
+          <ul class="svc-list"><li>Login &amp; user roles</li><li>CRUD and admin panels</li><li>Database schema design</li></ul>
           <span class="svc-more">Start a project <svg class="ic" aria-hidden="true"><use href="#i-arrow-right"/></svg></span>
         </button>
       </li>
@@ -1222,6 +1261,7 @@ img{ display:block }
           <span class="svc-ic"><svg class="ic" aria-hidden="true"><use href="#i-brush"/></svg></span>
           <h3>Brand Identity</h3>
           <p>The design side I started in: logos, colour and type systems, and the digital assets that keep a brand consistent wherever it shows up.</p>
+          <ul class="svc-list"><li>Logo &amp; wordmark</li><li>Colour palettes &amp; type</li><li>Social &amp; digital assets</li></ul>
           <span class="svc-more">Start a project <svg class="ic" aria-hidden="true"><use href="#i-arrow-right"/></svg></span>
         </button>
       </li>
@@ -1232,6 +1272,7 @@ img{ display:block }
           <span class="svc-ic"><svg class="ic" aria-hidden="true"><use href="#i-layers"/></svg></span>
           <h3>Deploy &amp; Maintain</h3>
           <p>Shipped to a real domain and kept running — so the thing you paid for stays live, quick, and simple to change later.</p>
+          <ul class="svc-list"><li>Shipped to your own domain</li><li>Fixes and small changes</li><li>Kept live and quick</li></ul>
           <span class="svc-more">Start a project <svg class="ic" aria-hidden="true"><use href="#i-arrow-right"/></svg></span>
         </button>
       </li>
@@ -1293,7 +1334,7 @@ img{ display:block }
 
     <div class="footer-cols reveal" style="--rv-y:26px">
       <div class="footer-col">
-        <div class="footer-brand"><span class="wm">Hamza<span class="wm-thin">Haroon</span><i class="wm-dot"></i></span></div>
+        <div class="footer-brand"><svg class="ic mark" aria-hidden="true"><use href="#i-logo"/></svg><span class="wm">Hamza<span class="wm-thin">Haroon</span></span></div>
         <p class="footer-tagline">A full stack developer and graphic designer in Karachi, building web apps end to end.</p>
       </div>
       <div class="footer-col">
@@ -1338,7 +1379,7 @@ img{ display:block }
 <!-- ============================ NAV MENU ============================ -->
 <div id="navmenu" role="dialog" aria-modal="true" aria-label="Menu" hidden>
   <div class="shell navmenu-top">
-    <div class="navmenu-brand"><span class="wm">Hamza<span class="wm-thin">Haroon</span><i class="wm-dot"></i></span></div>
+    <div class="navmenu-brand"><svg class="ic mark" aria-hidden="true"><use href="#i-logo"/></svg><span class="wm">Hamza<span class="wm-thin">Haroon</span></span></div>
     <button class="navmenu-close" type="button" id="menu-close"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg><span>Close</span></button>
   </div>
 
@@ -1597,7 +1638,38 @@ const revealObserver = new IntersectionObserver((entries) => {
 document.querySelectorAll('.reveal, .lines, .words').forEach((el) => revealObserver.observe(el));
 
 /* ============================================================
-   6. LIVE CLOCK
+   6. THE OPENING
+   ============================================================ */
+(function initIntro(){
+  const intro = document.getElementById('intro');
+  if (!intro) return;
+  const fill = document.getElementById('intro-fill');
+  if (REDUCED){ intro.remove(); return; }
+  stopScroll();
+  const DURATION = 950;
+  const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  let start = null, finished = false;
+
+  function finish(){
+    if (finished) return;
+    finished = true;
+    intro.classList.add('done');
+    startScroll();
+    setTimeout(() => intro.remove(), 1200);
+  }
+  function frame(ts){
+    if (start === null) start = ts;
+    const t = Math.min((ts - start) / DURATION, 1);
+    if (fill) fill.style.width = Math.round(ease(t) * 100) + '%';
+    if (t < 1) requestAnimationFrame(frame);
+    else finish();
+  }
+  requestAnimationFrame(frame);
+  setTimeout(finish, DURATION + 1400);   // timers are not frame-gated
+})();
+
+/* ============================================================
+   7. LIVE CLOCK
    ============================================================ */
 (function initClock(){
   const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -1618,7 +1690,7 @@ document.querySelectorAll('.reveal, .lines, .words').forEach((el) => revealObser
 })();
 
 /* ============================================================
-   7. LIQUID REVEAL (hero before/after brush)
+   8. LIQUID REVEAL (hero before/after brush)
    ============================================================ */
 (function initLiquidReveal(){
   const wrap = document.getElementById('lq-wrap');

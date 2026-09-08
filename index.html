@@ -245,6 +245,14 @@ img{ display:block }
 .hero-grid{ position:relative; z-index:20; display:flex; flex-direction:column; gap:2rem; padding:7rem 1.25rem 5rem }
 .hero-left{ display:flex; flex-direction:column; gap:1.75rem }
 .hero-h1{ max-width:18ch; font-size:2.25rem; font-weight:600; line-height:.98; letter-spacing:-.02em }
+.hero-typed{ display:flex; align-items:baseline; flex-wrap:wrap; gap:.5rem;
+  font-size:1rem; font-weight:500; color:rgba(var(--fg-rgb),.55); min-height:1.5rem }
+.ht-lead{ color:rgba(var(--fg-rgb),.45) }
+.ht-out{ color:rgb(var(--amb-rgb)); font-weight:600 }
+.ht-caret{ display:inline-block; width:2px; height:1.05em; border-radius:1px; margin-left:-.25rem;
+  background:rgb(var(--amb-rgb)); animation:htBlink 1.05s steps(1) infinite; transform:translateY(.12em) }
+@keyframes htBlink{ 0%,45%{ opacity:1 } 46%,100%{ opacity:0 } }
+@media (min-width:640px){ .hero-typed{ font-size:1.125rem } }
 .hero-rating{ display:flex; align-items:center; gap:.75rem }
 .hero-stars{ display:inline-flex; align-items:center; gap:.125rem; color:var(--accent); font-size:1rem }
 .hero-rating-text{ font-size:.875rem; font-weight:500; color:rgba(var(--fg-rgb),.7) }
@@ -299,6 +307,11 @@ img{ display:block }
   font-size:.6875rem; font-weight:600; text-transform:uppercase; letter-spacing:.12em;
   color:rgba(var(--fg-rgb),.45) }
 .stack-chips{ display:flex; flex-wrap:wrap; gap:.5rem }
+/* translate carries the entrance so transform stays free for the hover lift */
+.stack-col .chip{ opacity:0; translate:0 12px;
+  transition:opacity .5s ease, translate .6s cubic-bezier(.2,.8,.2,1);
+  transition-delay:calc(var(--i,0) * 45ms) }
+.stack-col.in .chip{ opacity:1; translate:0 0 }
 .chip{ display:inline-flex; align-items:center; gap:.5rem; border-radius:var(--radius-pill);
   background:rgba(var(--fg-rgb),.06); border:1px solid rgba(var(--fg-rgb),.08);
   padding:.5rem .875rem; font-size:.875rem; font-weight:500; color:rgba(var(--fg-rgb),.88);
@@ -424,6 +437,7 @@ img{ display:block }
 .works-inner{ padding:2.5rem 1.25rem 5rem }
 .works-head{ display:flex; flex-direction:column; align-items:center; gap:1.25rem; text-align:center; margin-bottom:3rem }
 .works-h2{ font-size:2.25rem; font-weight:600; letter-spacing:-.02em; width:fit-content }
+.works-sub{ max-width:44ch; font-size:.9375rem; line-height:1.6; color:rgba(var(--fg-rgb),.5) }
 .works-grid{ display:grid; grid-template-columns:1fr; gap:1.5rem }
 .pf-card{ position:relative; min-height:25rem; overflow:hidden; border-radius:var(--radius-card);
   background:#141a23; padding:1.5rem; color:#fff; box-shadow:0 0 0 1px rgba(255,255,255,.07), 0 24px 50px -40px #000;
@@ -440,6 +454,27 @@ img{ display:block }
 .pf-badge{ width:2.75rem; height:2.75rem; display:grid; place-items:center; border-radius:var(--radius-pill);
   background:rgba(255,255,255,.1); color:#fff; box-shadow:0 0 0 1px rgba(255,255,255,.15);
   font-size:1rem; flex:none; will-change:transform }
+/* a lit field behind the mark, so the card is not an empty box with a badge in it */
+.pf-field{ position:absolute; inset:0; z-index:0; pointer-events:none; border-radius:inherit; overflow:hidden }
+.pf-field::before{ content:''; position:absolute; left:50%; top:42%; width:22rem; height:22rem;
+  transform:translate(-50%,-50%); border-radius:9999px;
+  background:radial-gradient(closest-side, color-mix(in srgb, var(--pf-c, #b15f2c) 26%, transparent), transparent 70%);
+  opacity:.55; transition:opacity .5s ease, transform .7s cubic-bezier(.2,.8,.2,1) }
+.pf-field::after{ content:''; position:absolute; inset:0;
+  background-image:radial-gradient(rgba(255,255,255,.10) 1px, transparent 1px);
+  background-size:22px 22px;
+  -webkit-mask-image:radial-gradient(closest-side at 50% 42%, #000, transparent 78%);
+  mask-image:radial-gradient(closest-side at 50% 42%, #000, transparent 78%); opacity:.5 }
+.pf-card:hover .pf-field::before{ opacity:1; transform:translate(-50%,-50%) scale(1.08) }
+.pf-index{ position:absolute; right:1.5rem; bottom:1.25rem; z-index:1; pointer-events:none;
+  font-size:4.5rem; font-weight:700; line-height:1; letter-spacing:-.04em;
+  color:rgba(255,255,255,.05); transition:color .5s ease }
+.pf-card:hover .pf-index{ color:color-mix(in srgb, var(--pf-c, #fff) 16%, transparent) }
+.pf-open{ display:inline-flex; align-items:center; gap:.625rem }
+.pf-open-label{ font-size:.6875rem; font-weight:600; text-transform:uppercase; letter-spacing:.12em;
+  color:var(--pf-c, #fff); opacity:0; transform:translateX(.5rem);
+  transition:opacity .35s ease, transform .45s cubic-bezier(.2,.8,.2,1) }
+.pf-card:hover .pf-open-label{ opacity:1; transform:translateX(0) }
 .pf-logo{ position:absolute; inset:0; z-index:1; display:grid; place-items:center; pointer-events:none }
 .pf-logo img{ width:8rem; height:8rem; object-fit:cover; border-radius:1.75rem; opacity:.9;
   box-shadow:0 0 0 1px rgba(255,255,255,.1), 0 30px 60px -30px #000;
@@ -467,10 +502,19 @@ img{ display:block }
 }
 @media (min-width:768px){
   .works-grid{ grid-template-columns:1fr 1fr }
-  /* the fifth card takes the full row rather than leaving a hole */
-  .works-grid > li:nth-child(5){ grid-column:1 / -1 }
-  .works-grid > li:nth-child(5) .pf-card{ min-height:22rem }
-  .works-grid > li:nth-child(5) .pf-logo img{ width:9rem; height:9rem }
+  /* the first project leads the section, the other four sit two by two */
+  .works-grid > li:first-child{ grid-column:1 / -1 }
+  .works-grid > li:first-child .pf-card{ min-height:24rem }
+  .works-grid > li:first-child .pf-logo{ left:52% }
+  .works-grid > li:first-child .pf-logo img{ width:11rem; height:11rem; border-radius:2.25rem }
+  .works-grid > li:first-child .pf-field::before{ left:76%; width:28rem; height:28rem }
+  .works-grid > li:first-child .pf-field::after{
+    -webkit-mask-image:radial-gradient(closest-side at 76% 45%, #000, transparent 76%);
+    mask-image:radial-gradient(closest-side at 76% 45%, #000, transparent 76%) }
+  .works-grid > li:first-child .pf-bottom{ right:50%; bottom:2.5rem }
+  .works-grid > li:first-child .pf-bottom h3{ font-size:2.25rem }
+  .works-grid > li:first-child .pf-bottom p{ font-size:.9375rem }
+  .works-grid > li:first-child .pf-index{ right:2rem; bottom:1.75rem; font-size:6rem }
 }
 @media (min-width:1024px){ .works-inner{ padding-bottom:7rem } }
 
@@ -875,6 +919,11 @@ img{ display:block }
         <span class="ln" style="--i:2"><span>then shipped live</span></span>
       </h1>
 
+      <p class="hero-typed reveal" data-gate="ready" style="--rv-y:10px;--rv-d:560ms">
+        <span class="ht-lead">Currently building</span>
+        <span class="ht-out" id="typed-out"></span><span class="ht-caret" aria-hidden="true"></span>
+      </p>
+
       <div class="hero-rating reveal" data-gate="ready" style="--rv-y:10px;--rv-d:650ms">
         <span class="hero-stars" aria-hidden="true">
           <svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg><svg class="ic"><use href="#i-star"/></svg>
@@ -1019,16 +1068,19 @@ img{ display:block }
       <h2 class="works-h2 lines" style="--d:120ms">
         <span class="ln" style="--i:0"><span>Selected Work</span></span>
       </h2>
+      <p class="works-sub reveal" style="--rv-y:10px;--rv-d:220ms">Five projects, every one of them live &mdash; open any of them and use it.</p>
     </div>
 
     <ul class="works-grid">
       <li class="reveal" style="--rv-y:64px;--rv-s0:.97;--rv-d:0ms">
         <a href="https://careerpassporttw.vercel.app/" target="_blank" rel="noopener" aria-label="PathSeeker - Career Passport — open the live site">
           <article class="pf-card" style="--pf-c:#61DAFB" data-hs-ty="-8" data-hs-scale="1.012" data-hs-cfg="260,22">
+            <span class="pf-index" aria-hidden="true">01</span>
+            <span class="pf-field" aria-hidden="true"></span>
             <div class="pf-meta">
               <span class="pf-meta-left"><span class="pf-brand"><img src="logo-pathseeker.jpg" alt="" loading="lazy" decoding="async"></span>
               <span><svg class="ic pf-tech" aria-hidden="true"><use href="#i-b-react"/></svg>React &amp; Node — Live</span></span>
-              <span class="pf-badge" data-hs-rot="45" data-hs-scale="1.08" data-hs-cfg="280,18" data-hs-trigger="closest:.pf-card"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
+              <span class="pf-open"><span class="pf-open-label">Open site</span><span class="pf-badge" data-hs-rot="45" data-hs-scale="1.08" data-hs-cfg="280,18" data-hs-trigger="closest:.pf-card"><svg class="ic"><use href="#i-arrow-ur"/></svg></span></span>
             </div>
             <div class="pf-logo" aria-hidden="true"><img src="logo-pathseeker.jpg" alt="" loading="lazy" decoding="async"></div>
             
@@ -1043,10 +1095,12 @@ img{ display:block }
       <li class="reveal" style="--rv-y:64px;--rv-s0:.97;--rv-d:90ms">
         <a href="https://care-pk.infinityfreeapp.com/" target="_blank" rel="noopener" aria-label="CARE Group - Appointment Portal — open the live site">
           <article class="pf-card" style="--pf-c:#777BB4" data-hs-ty="-8" data-hs-scale="1.012" data-hs-cfg="260,22">
+            <span class="pf-index" aria-hidden="true">02</span>
+            <span class="pf-field" aria-hidden="true"></span>
             <div class="pf-meta">
               <span class="pf-meta-left"><span class="pf-brand"><img src="logo-care.jpg" alt="" loading="lazy" decoding="async"></span>
               <span><svg class="ic pf-tech" aria-hidden="true"><use href="#i-b-php"/></svg>PHP &amp; MySQL — Live</span></span>
-              <span class="pf-badge" data-hs-rot="45" data-hs-scale="1.08" data-hs-cfg="280,18" data-hs-trigger="closest:.pf-card"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
+              <span class="pf-open"><span class="pf-open-label">Open site</span><span class="pf-badge" data-hs-rot="45" data-hs-scale="1.08" data-hs-cfg="280,18" data-hs-trigger="closest:.pf-card"><svg class="ic"><use href="#i-arrow-ur"/></svg></span></span>
             </div>
             <div class="pf-logo" aria-hidden="true"><img src="logo-care.jpg" alt="" loading="lazy" decoding="async"></div>
             
@@ -1061,10 +1115,12 @@ img{ display:block }
       <li class="reveal" style="--rv-y:64px;--rv-s0:.97;--rv-d:180ms">
         <a href="https://www.shopxtra.store/" target="_blank" rel="noopener" aria-label="ShopXtra — open the live site">
           <article class="pf-card" style="--pf-c:#cf8047" data-hs-ty="-8" data-hs-scale="1.012" data-hs-cfg="260,22">
+            <span class="pf-index" aria-hidden="true">03</span>
+            <span class="pf-field" aria-hidden="true"></span>
             <div class="pf-meta">
               <span class="pf-meta-left"><span class="pf-brand"><img src="logo-shopxtra.jpg" alt="" loading="lazy" decoding="async"></span>
               <span><svg class="ic pf-tech" aria-hidden="true"><use href="#i-cart"/></svg>Commerce — Live</span></span>
-              <span class="pf-badge" data-hs-rot="45" data-hs-scale="1.08" data-hs-cfg="280,18" data-hs-trigger="closest:.pf-card"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
+              <span class="pf-open"><span class="pf-open-label">Open site</span><span class="pf-badge" data-hs-rot="45" data-hs-scale="1.08" data-hs-cfg="280,18" data-hs-trigger="closest:.pf-card"><svg class="ic"><use href="#i-arrow-ur"/></svg></span></span>
             </div>
             <div class="pf-logo" aria-hidden="true"><img src="logo-shopxtra.jpg" alt="" loading="lazy" decoding="async"></div>
             
@@ -1079,10 +1135,12 @@ img{ display:block }
       <li class="reveal" style="--rv-y:64px;--rv-s0:.97;--rv-d:270ms">
         <a href="https://physiosync-pk.vercel.app/" target="_blank" rel="noopener" aria-label="PhysioSync — open the live site">
           <article class="pf-card" style="--pf-c:#47A248" data-hs-ty="-8" data-hs-scale="1.012" data-hs-cfg="260,22">
+            <span class="pf-index" aria-hidden="true">04</span>
+            <span class="pf-field" aria-hidden="true"></span>
             <div class="pf-meta">
               <span class="pf-meta-left"><span class="pf-brand"><img src="logo-physiosync.jpg" alt="" loading="lazy" decoding="async"></span>
               <span><svg class="ic pf-tech" aria-hidden="true"><use href="#i-pulse"/></svg>Health — Live</span></span>
-              <span class="pf-badge" data-hs-rot="45" data-hs-scale="1.08" data-hs-cfg="280,18" data-hs-trigger="closest:.pf-card"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
+              <span class="pf-open"><span class="pf-open-label">Open site</span><span class="pf-badge" data-hs-rot="45" data-hs-scale="1.08" data-hs-cfg="280,18" data-hs-trigger="closest:.pf-card"><svg class="ic"><use href="#i-arrow-ur"/></svg></span></span>
             </div>
             <div class="pf-logo" aria-hidden="true"><img src="logo-physiosync.jpg" alt="" loading="lazy" decoding="async"></div>
             
@@ -1097,10 +1155,12 @@ img{ display:block }
       <li class="reveal" style="--rv-y:64px;--rv-s0:.97;--rv-d:360ms">
         <a href="https://zaikaekarachi.vercel.app/" target="_blank" rel="noopener" aria-label="Zaika-e-Karachi — open the live site">
           <article class="pf-card" style="--pf-c:#d9a441" data-hs-ty="-8" data-hs-scale="1.012" data-hs-cfg="260,22">
+            <span class="pf-index" aria-hidden="true">05</span>
+            <span class="pf-field" aria-hidden="true"></span>
             <div class="pf-meta">
               <span class="pf-meta-left"><span class="pf-brand"><img src="logo-zaika.jpg" alt="" loading="lazy" decoding="async"></span>
               <span><svg class="ic pf-tech" aria-hidden="true"><use href="#i-book"/></svg>Culture — Live</span></span>
-              <span class="pf-badge" data-hs-rot="45" data-hs-scale="1.08" data-hs-cfg="280,18" data-hs-trigger="closest:.pf-card"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
+              <span class="pf-open"><span class="pf-open-label">Open site</span><span class="pf-badge" data-hs-rot="45" data-hs-scale="1.08" data-hs-cfg="280,18" data-hs-trigger="closest:.pf-card"><svg class="ic"><use href="#i-arrow-ur"/></svg></span></span>
             </div>
             <div class="pf-logo" aria-hidden="true"><img src="logo-zaika.jpg" alt="" loading="lazy" decoding="async"></div>
             
@@ -1500,6 +1560,12 @@ function splitWords(root){
   walk(root);
 }
 document.querySelectorAll('.words').forEach(splitWords);
+document.querySelectorAll('.stack-chips').forEach((list) => {
+  Array.from(list.children).forEach((li, i) => {
+    const chip = li.querySelector('.chip');
+    if (chip) chip.style.setProperty('--i', i);
+  });
+});
 
 function showReveal(el){ el.classList.add('in'); }
 function flushGated(){ while (gatedQueue.length) showReveal(gatedQueue.shift()); }
@@ -1835,7 +1901,52 @@ if (mailCopy) mailCopy.addEventListener('click', async () => {
 });
 
 /* ============================================================
-   12. KARACHI WEATHER
+   12. TYPING, AND THE HERO MOVING OFF
+   ============================================================ */
+(function initTyped(){
+  const out = document.getElementById('typed-out');
+  if (!out) return;
+  const PHRASES = ['React & Node apps.', 'PHP & MySQL portals.', 'brand identities.', 'things that ship.'];
+  if (REDUCED){ out.textContent = PHRASES[0]; return; }
+  let phrase = 0, chars = 0, deleting = false;
+  (function step(){
+    const word = PHRASES[phrase];
+    chars += deleting ? -1 : 1;
+    out.textContent = word.slice(0, chars);
+    let wait = deleting ? 28 : 55;
+    if (!deleting && chars === word.length){ deleting = true; wait = 1700; }
+    else if (deleting && chars === 0){ deleting = false; phrase = (phrase + 1) % PHRASES.length; wait = 320; }
+    setTimeout(step, wait);
+  })();
+})();
+
+(function initHeroMotion(){
+  if (REDUCED) return;
+  const left = document.querySelector('.hero-left');
+  const right = document.querySelector('.hero-right');
+  const wm = document.querySelector('.hero-watermark');
+  if (!left) return;
+  let ticking = false;
+  function frame(){
+    ticking = false;
+    const y = window.pageYOffset;
+    const vh = window.innerHeight || 1;
+    if (y > vh * 1.1) return;                 // past the hero, nothing to move
+    const p = Math.min(y / vh, 1);
+    left.style.translate = '0 ' + (y * 0.16).toFixed(1) + 'px';
+    left.style.opacity = String(Math.max(1 - p * 1.25, 0));
+    if (right){
+      right.style.translate = '0 ' + (y * 0.26).toFixed(1) + 'px';
+      right.style.opacity = String(Math.max(1 - p * 1.4, 0));
+    }
+    if (wm) wm.style.translate = '0 ' + (-y * 0.12).toFixed(1) + 'px';
+  }
+  addEventListener('scroll', () => { if (!ticking){ ticking = true; requestAnimationFrame(frame); } }, { passive: true });
+  frame();
+})();
+
+/* ============================================================
+   13. KARACHI WEATHER
    ============================================================ */
 (async function initWeather(){
   const label = document.getElementById('hc-wx-temp');
@@ -1867,7 +1978,7 @@ if (mailCopy) mailCopy.addEventListener('click', async () => {
 })();
 
 /* ============================================================
-   13. THE STACK FILM
+   14. THE STACK FILM
    ============================================================ */
 (function initStackFilm(){
   const video = document.getElementById('stack-video');
@@ -1910,7 +2021,7 @@ if (mailCopy) mailCopy.addEventListener('click', async () => {
 })();
 
 /* ============================================================
-   14. POINTER MOTION
+   15. POINTER MOTION
    ============================================================ */
 if (CAN_HOVER && !REDUCED){
   // the hero panels drift against the pointer, a couple of pixels
@@ -1956,7 +2067,7 @@ if (CAN_HOVER && !REDUCED){
 }
 
 /* ============================================================
-   15. AMBIENT COLOUR ON SCROLL
+   16. AMBIENT COLOUR ON SCROLL
    ============================================================ */
 (function initAmbient(){
   const STOPS = [
@@ -2030,7 +2141,7 @@ if (CAN_HOVER && !REDUCED){
 })();
 
 /* ============================================================
-   16. ROUTING
+   17. ROUTING
    ============================================================ */
 document.querySelectorAll('[data-nav]').forEach((btn) => {
   btn.addEventListener('click', () => {

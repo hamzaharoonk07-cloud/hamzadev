@@ -302,7 +302,20 @@ img{ display:block }
 .hero-nav-btn:hover{ color:var(--foreground) }
 .hero-nav-btn.prev .ic{ transform:rotate(180deg) }
 
-#stack{ background:transparent }
+#stack{ position:relative; background:transparent; isolation:isolate; overflow:hidden }
+.stack-media{ position:absolute; inset:0; z-index:0; pointer-events:none }
+.stack-media video, .stack-media img{ width:100%; height:100%; object-fit:cover; display:block;
+  opacity:.72; filter:saturate(1) contrast(1.04) }
+.stack-media::after{ content:''; position:absolute; inset:0; background:
+  linear-gradient(180deg, #0b0b0c 0%, rgba(11,11,12,.42) 18%, rgba(11,11,12,.5) 74%, #0b0b0c 100%),
+  linear-gradient(90deg, rgba(11,11,12,.92) 0%, rgba(11,11,12,.5) 40%, rgba(11,11,12,0) 92%) }
+#stack > .shell{ position:relative; z-index:1 }
+/* the chips need their own ground now that there is film behind them */
+#stack .chip{ background:rgba(11,11,12,.62); border-color:rgba(255,255,255,.14);
+  backdrop-filter:blur(6px); color:rgba(255,255,255,.92) }
+#stack .chip:hover{ background:color-mix(in srgb, var(--c, #b15f2c) 22%, rgba(11,11,12,.7));
+  border-color:color-mix(in srgb, var(--c, #b15f2c) 60%, transparent) }
+.stack-label{ text-shadow:0 1px 12px rgba(0,0,0,.6) }
 .stack-inner{ padding:5rem 1.25rem }
 .stack-h2{ margin:1.25rem 0 3rem; max-width:18ch; font-size:2.25rem; font-weight:600; letter-spacing:-.02em }
 .stack-grid{ display:grid; grid-template-columns:1fr; gap:2.5rem }
@@ -961,6 +974,11 @@ img{ display:block }
 
 <!-- ============================ STACK ============================ -->
 <section id="stack">
+  <div class="stack-media" aria-hidden="true">
+    <video id="stack-video" muted loop playsinline preload="none" poster="stack-poster.jpg">
+      <source src="stack-loop.mp4" type="video/mp4">
+    </video>
+  </div>
   <div class="shell stack-inner">
     <div class="reveal" style="--rv-y:12px">
       <span class="eyebrow"><span class="dot"></span>The stack</span>
@@ -1910,7 +1928,50 @@ if (mailCopy) mailCopy.addEventListener('click', async () => {
 });
 
 /* ============================================================
-   12. POINTER MOTION
+   12. THE STACK FILM
+   ============================================================ */
+(function initStackFilm(){
+  const video = document.getElementById('stack-video');
+  if (!video) return;
+  if (REDUCED){ video.removeAttribute('loop'); return; }  // the poster frame is enough
+  let loaded = false, playing = false;
+
+  function check(){
+    const r = video.getBoundingClientRect();
+    const inView = r.bottom > -200 && r.top < window.innerHeight + 200;
+    if (inView){
+      if (!loaded){ video.preload = 'auto'; video.load(); loaded = true; }
+      if (!playing){
+        playing = true;
+        const p = video.play();
+        // autoplay refused: leave the poster standing, and let a later pass try again
+        if (p && p.catch) p.catch(() => { playing = false; });
+      }
+    } else if (playing){
+      video.pause();          // nothing to spend frames on off-screen
+      playing = false;
+    }
+  }
+
+  // three ways in, because engines differ on which of these keeps firing
+  if ('IntersectionObserver' in window){
+    new IntersectionObserver(check, { rootMargin: '200px 0px' }).observe(video);
+  }
+  addEventListener('scroll', check, { passive: true });
+  addEventListener('resize', check);
+  let last = 0;
+  (function tick(ts){
+    requestAnimationFrame(tick);
+    const now = typeof ts === 'number' ? ts : performance.now();
+    if (now - last < 300) return;
+    last = now;
+    check();
+  })();
+  check();
+})();
+
+/* ============================================================
+   13. POINTER MOTION
    ============================================================ */
 if (CAN_HOVER && !REDUCED){
   // the hero panels drift against the pointer, a couple of pixels
@@ -1956,7 +2017,7 @@ if (CAN_HOVER && !REDUCED){
 }
 
 /* ============================================================
-   13. AMBIENT COLOUR ON SCROLL
+   14. AMBIENT COLOUR ON SCROLL
    ============================================================ */
 (function initAmbient(){
   const STOPS = [
@@ -2030,7 +2091,7 @@ if (CAN_HOVER && !REDUCED){
 })();
 
 /* ============================================================
-   14. ROUTING
+   15. ROUTING
    ============================================================ */
 document.querySelectorAll('[data-nav]').forEach((btn) => {
   btn.addEventListener('click', () => {

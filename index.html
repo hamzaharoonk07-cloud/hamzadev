@@ -71,6 +71,20 @@ body{ color:var(--foreground); font-family:'Onest',sans-serif; overflow-x:hidden
     radial-gradient(1000px 600px at 60% 104%, rgba(var(--amb-rgb),.13), transparent 70%),
     linear-gradient(180deg, #10141b 0%, #0a0d12 52%, #0c0f15 100%);
   background-attachment:fixed; background-repeat:repeat, repeat, no-repeat, no-repeat, no-repeat, no-repeat }
+/* a cursor that answers what it is over */
+.cursor{ position:fixed; left:0; top:0; z-index:190; pointer-events:none; opacity:0;
+  transition:opacity .3s ease }
+.cursor.on{ opacity:1 }
+.cursor-ring, .cursor-dot{ position:absolute; border-radius:9999px; translate:-50% -50% }
+.cursor-ring{ width:2.25rem; height:2.25rem; border:1px solid rgba(var(--amb-rgb),.7);
+  transition:width .3s cubic-bezier(.2,.8,.2,1), height .3s cubic-bezier(.2,.8,.2,1),
+             background .3s ease, border-color .3s ease }
+.cursor-dot{ width:.3125rem; height:.3125rem; background:rgb(var(--amb-rgb)) }
+.cursor.hot .cursor-ring{ width:3.75rem; height:3.75rem; background:rgba(var(--amb-rgb),.14);
+  border-color:rgba(var(--amb-rgb),.9) }
+.cursor.hot .cursor-dot{ opacity:0 }
+@media (hover:none), (pointer:coarse){ .cursor{ display:none } }
+
 /* slow-drifting light behind everything, tinted by the scroll colour */
 .bg-drift{ position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden }
 .blob{ position:absolute; border-radius:9999px; filter:blur(90px); opacity:.5;
@@ -116,10 +130,6 @@ img{ display:block }
 .ic{ width:1em; height:1em; display:block; flex:none }
 .tabular{ font-variant-numeric:tabular-nums }
 
-.skip-link{ position:fixed; left:1rem; top:1rem; z-index:60; border-radius:var(--radius-control);
-  background:var(--card); padding:.5rem 1rem; font-size:.875rem; color:#fff;
-  transform:translateY(-300%); transition:transform .2s ease }
-.skip-link:focus-visible{ transform:none }
 
 /* --- Eyebrow --- */
 .eyebrow{ display:inline-flex; align-items:center; gap:.5rem; font-size:.875rem; font-weight:500; color:rgba(var(--fg-rgb),.7) }
@@ -819,7 +829,7 @@ img{ display:block }
 <body>
 
 <svg width="0" height="0" style="position:absolute;overflow:hidden" aria-hidden="true" focusable="false">
-  <symbol id="i-logo" viewBox="0 0 24 24"><rect x="2.1" y="2.1" width="19.8" height="19.8" rx="5.8" fill="none" stroke="currentColor" stroke-width="1.7"/><path fill="currentColor" d="M7.9 6.7H10v3.9h4V6.7h2.1v10.6H14v-4.5h-4v4.5H7.9z"/></symbol>
+  <symbol id="i-logo" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M4.6 3.6v16.8"/><path d="M19.4 3.6v16.8"/><path d="M6.6 13.9 17.4 10.1"/></g></symbol>
   <symbol id="i-arrow-right" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M13 6l6 6-6 6"/></symbol>
   <symbol id="i-arrow-ur" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M7 17 17 7M8 7h9v9"/></symbol>
   <symbol id="i-star" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.5l2.9 5.88 6.49.94-4.7 4.58 1.11 6.46L12 17.9l-5.8 3.05 1.1-6.46-4.69-4.58 6.49-.94L12 2.5z"/></symbol>
@@ -865,8 +875,8 @@ img{ display:block }
   <symbol id="i-layers" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 4.6-9 4.6-9-4.6z"/><path d="m3.6 12 8.4 4.3 8.4-4.3"/><path d="m3.6 16.4 8.4 4.3 8.4-4.3"/></g></symbol>
 </svg>
 
-<a class="skip-link" href="#main">Skip to content</a>
 <div id="scroll-bar" aria-hidden="true"></div>
+<div class="cursor" id="cursor" aria-hidden="true"><span class="cursor-ring"></span><span class="cursor-dot"></span></div>
 <div class="bg-drift" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
 
 <!-- ============================ PAGE LOADER ============================ -->
@@ -2108,7 +2118,41 @@ if (mailCopy) mailCopy.addEventListener('click', async () => {
 })();
 
 /* ============================================================
-   16. POINTER MOTION
+   16. THE CURSOR
+   ============================================================ */
+(function initCursor(){
+  const el = document.getElementById('cursor');
+  if (!el || !CAN_HOVER || REDUCED) return;
+  const ring = el.querySelector('.cursor-ring');
+  const dot = el.querySelector('.cursor-dot');
+  let tx = 0, ty = 0, rx = 0, ry = 0, running = false;
+
+  function loop(){
+    rx += (tx - rx) * 0.18;                 // the ring trails, the dot does not
+    ry += (ty - ry) * 0.18;
+    ring.style.translate = 'calc(' + rx.toFixed(1) + 'px - 50%) calc(' + ry.toFixed(1) + 'px - 50%)';
+    dot.style.translate = 'calc(' + tx.toFixed(1) + 'px - 50%) calc(' + ty.toFixed(1) + 'px - 50%)';
+    if (Math.abs(tx - rx) > 0.1 || Math.abs(ty - ry) > 0.1) requestAnimationFrame(loop);
+    else running = false;
+  }
+
+  addEventListener('pointermove', (e) => {
+    if (e.pointerType && e.pointerType !== 'mouse') return;
+    tx = e.clientX; ty = e.clientY;
+    el.classList.add('on');
+    if (!running){ running = true; requestAnimationFrame(loop); }
+    const over = e.target.closest('a, button, .chip, .pf-card, .svc-card, [role="button"], input, textarea');
+    el.classList.toggle('hot', !!over);
+  }, { passive: true });
+
+  addEventListener('pointerdown', () => el.classList.add('hot'));
+  addEventListener('pointerup', () => el.classList.remove('hot'));
+  addEventListener('mouseleave', () => el.classList.remove('on'));
+  addEventListener('blur', () => el.classList.remove('on'));
+})();
+
+/* ============================================================
+   17. POINTER MOTION
    ============================================================ */
 if (CAN_HOVER && !REDUCED){
   // the hero panels drift against the pointer, a couple of pixels
@@ -2154,7 +2198,7 @@ if (CAN_HOVER && !REDUCED){
 }
 
 /* ============================================================
-   17. AMBIENT COLOUR ON SCROLL
+   18. AMBIENT COLOUR ON SCROLL
    ============================================================ */
 (function initAmbient(){
   const STOPS = [
@@ -2229,7 +2273,7 @@ if (CAN_HOVER && !REDUCED){
 })();
 
 /* ============================================================
-   18. ROUTING
+   19. ROUTING
    ============================================================ */
 document.querySelectorAll('[data-nav]').forEach((btn) => {
   btn.addEventListener('click', () => {

@@ -71,20 +71,6 @@ body{ color:var(--foreground); font-family:'Onest',sans-serif; overflow-x:hidden
     radial-gradient(1000px 600px at 60% 104%, rgba(var(--amb-rgb),.13), transparent 70%),
     linear-gradient(180deg, #10141b 0%, #0a0d12 52%, #0c0f15 100%);
   background-attachment:fixed; background-repeat:repeat, repeat, no-repeat, no-repeat, no-repeat, no-repeat }
-/* a cursor that answers what it is over */
-.cursor{ position:fixed; left:0; top:0; z-index:190; pointer-events:none; opacity:0;
-  transition:opacity .3s ease }
-.cursor.on{ opacity:1 }
-.cursor-ring, .cursor-dot{ position:absolute; border-radius:9999px; translate:-50% -50% }
-.cursor-ring{ width:2.25rem; height:2.25rem; border:1px solid rgba(var(--amb-rgb),.7);
-  transition:width .3s cubic-bezier(.2,.8,.2,1), height .3s cubic-bezier(.2,.8,.2,1),
-             background .3s ease, border-color .3s ease }
-.cursor-dot{ width:.3125rem; height:.3125rem; background:rgb(var(--amb-rgb)) }
-.cursor.hot .cursor-ring{ width:3.75rem; height:3.75rem; background:rgba(var(--amb-rgb),.14);
-  border-color:rgba(var(--amb-rgb),.9) }
-.cursor.hot .cursor-dot{ opacity:0 }
-@media (hover:none), (pointer:coarse){ .cursor{ display:none } }
-
 /* slow-drifting light behind everything, tinted by the scroll colour */
 .bg-drift{ position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden }
 .blob{ position:absolute; border-radius:9999px; filter:blur(90px); opacity:.5;
@@ -196,33 +182,6 @@ img{ display:block }
 /* ============================================================
    PAGE LOADER
    ============================================================ */
-#loader{
-  position:fixed; inset:0; z-index:120;
-  display:grid; place-items:center; color:#fff;
-  background:
-    radial-gradient(760px 520px at 50% 12%, rgba(207,128,71,.16), transparent 66%),
-    linear-gradient(180deg, #10141b, #090c11);
-  transform:translateY(0%);
-}
-#loader.exiting{ transform:translateY(-100%); transition:transform .7s cubic-bezier(.22,1,.36,1) }
-.ld-box{ display:flex; flex-direction:column; align-items:center; gap:1.5rem; width:min(17rem,72vw) }
-.ld-mark{ width:3.25rem; height:3.25rem; color:var(--accent-from);
-  filter:drop-shadow(0 8px 24px rgba(207,128,71,.35)) }
-.ld-ring{ stroke-dasharray:100; stroke-dashoffset:100; animation:ldDraw 1s cubic-bezier(.4,0,.2,1) .05s forwards }
-.ld-h{ opacity:0; animation:ldIn .5s ease .55s forwards }
-@keyframes ldDraw{ to{ stroke-dashoffset:0 } }
-@keyframes ldIn{ from{ opacity:0; transform:translateY(2px) } to{ opacity:1; transform:none } }
-.ld-bar{ width:100%; height:2px; border-radius:2px; background:rgba(255,255,255,.12); overflow:hidden }
-.ld-fill{ display:block; height:100%; width:0%; border-radius:2px;
-  background:linear-gradient(90deg, var(--accent), var(--accent-from));
-  transition:width .12s linear }
-.ld-meta{ display:flex; align-items:center; justify-content:space-between; width:100%;
-  font-size:.6875rem; font-weight:500; text-transform:uppercase; letter-spacing:.14em }
-.ld-name{ color:rgba(255,255,255,.5) }
-.ld-count{ color:rgba(255,255,255,.85) }
-#loader.exiting .ld-box{ opacity:0; transform:scale(.97);
-  transition:opacity .4s ease, transform .5s cubic-bezier(.22,1,.36,1) }
-
 /* ============================================================
    HEADER
    ============================================================ */
@@ -230,7 +189,10 @@ img{ display:block }
 .header-inner{ display:flex; align-items:center; justify-content:space-between; gap:1.5rem; padding:1.25rem }
 .brand{ display:flex; align-items:center; gap:.5rem; font-size:1.125rem; font-weight:600; letter-spacing:-.01em;
   transform-origin:left center; will-change:transform }
-.brand .ic{ font-size:1.25rem; color:var(--accent) }
+.wm{ display:inline-flex; align-items:baseline; gap:.375rem; font-weight:700; letter-spacing:-.02em }
+.wm-thin{ font-weight:400; color:rgba(var(--fg-rgb),.55) }
+.wm-dot{ width:.3125rem; height:.3125rem; border-radius:9999px; background:rgb(var(--amb-rgb));
+  align-self:center; margin-left:.0625rem }
 .nav-primary{ display:none }
 .nav-primary ul{ display:flex; align-items:center; gap:2rem; font-size:.875rem; font-weight:500 }
 .nav-primary button > span{ display:inline-flex; align-items:center; gap:.375rem; will-change:transform,opacity }
@@ -486,6 +448,8 @@ img{ display:block }
   opacity:.16; filter:blur(3px) saturate(.7); transform:scale(1.06);
   transition:opacity .6s ease, filter .6s ease, transform .8s cubic-bezier(.2,.8,.2,1) }
 .pf-card:hover .pf-shot{ opacity:.34; filter:blur(1px) saturate(1); transform:scale(1.12) }
+.pf-shot-strong{ opacity:.30; filter:blur(2px) saturate(.85) }
+.pf-card:hover .pf-shot-strong{ opacity:.55; filter:blur(0) saturate(1) }
 .pf-card::before{ content:''; position:absolute; inset:0; z-index:0; border-radius:inherit;
   background:linear-gradient(180deg, rgba(12,15,21,.55) 0%, rgba(12,15,21,.35) 42%,
     rgba(12,15,21,.88) 78%, rgba(12,15,21,.96) 100%) }
@@ -561,11 +525,29 @@ img{ display:block }
 .services-inner{ padding:5rem 1.25rem }
 .services-h2{ margin:1.25rem 0 3rem; max-width:16ch; font-size:2.25rem; font-weight:600; letter-spacing:-.02em }
 .svc-grid{ display:grid; grid-template-columns:1fr; gap:1rem }
-.svc-card{ position:relative; display:block; width:100%; text-align:left; cursor:pointer;
+.svc-card{ position:relative; overflow:hidden; display:block; width:100%; text-align:left; cursor:pointer;
   border-radius:var(--radius-card); padding:1.5rem; min-height:13rem;
   background:linear-gradient(158deg, rgba(255,255,255,.055), rgba(255,255,255,0) 48%), #141a23;
   box-shadow:0 0 0 1px rgba(255,255,255,.07);
   transition:transform .45s cubic-bezier(.2,.8,.2,1), box-shadow .45s ease }
+/* the colour is stated at the top edge and washes in behind on hover */
+.svc-card::before{ content:''; position:absolute; left:0; right:0; top:0; height:2px;
+  background:linear-gradient(90deg, var(--sc), transparent 78%); opacity:.75;
+  transition:opacity .4s ease }
+.svc-card::after{ content:''; position:absolute; right:-6rem; top:-6rem; width:18rem; height:18rem;
+  border-radius:9999px; pointer-events:none;
+  background:radial-gradient(closest-side, color-mix(in srgb, var(--sc) 34%, transparent), transparent 72%);
+  opacity:0; transition:opacity .5s ease, transform .7s cubic-bezier(.2,.8,.2,1) }
+.svc-card:hover::after{ opacity:1; transform:translate(-1.5rem, 1rem) }
+.svc-card:hover::before{ opacity:1 }
+.svc-mark-big{ position:absolute; right:1.25rem; bottom:.75rem; font-size:4.5rem; font-weight:700;
+  line-height:1; letter-spacing:-.04em; color:rgba(255,255,255,.045); pointer-events:none;
+  transition:color .5s ease }
+.svc-card:hover .svc-mark-big{ color:color-mix(in srgb, var(--sc) 18%, transparent) }
+.svc-more{ display:inline-flex; align-items:center; gap:.5rem; margin-top:1.125rem;
+  font-size:.75rem; font-weight:600; text-transform:uppercase; letter-spacing:.12em; color:var(--sc);
+  opacity:0; translate:0 6px; transition:opacity .4s ease, translate .5s cubic-bezier(.2,.8,.2,1) }
+.svc-card:hover .svc-more{ opacity:1; translate:0 0 }
 .svc-card:hover{ transform:translateY(-6px);
   box-shadow:0 0 0 1px color-mix(in srgb, var(--sc) 45%, transparent),
              0 30px 60px -32px color-mix(in srgb, var(--sc) 75%, transparent) }
@@ -876,31 +858,15 @@ img{ display:block }
 </svg>
 
 <div id="scroll-bar" aria-hidden="true"></div>
-<div class="cursor" id="cursor" aria-hidden="true"><span class="cursor-ring"></span><span class="cursor-dot"></span></div>
 <div class="bg-drift" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
 
 <!-- ============================ PAGE LOADER ============================ -->
-<div id="loader" role="status" aria-live="polite">
-  <div class="ld-box">
-    <svg class="ld-mark" viewBox="0 0 24 24" aria-hidden="true">
-      <rect class="ld-ring" x="2.1" y="2.1" width="19.8" height="19.8" rx="5.8" fill="none"
-            stroke="currentColor" stroke-width="1.2" pathLength="100" />
-      <path class="ld-h" fill="currentColor" d="M7.9 6.7H10v3.9h4V6.7h2.1v10.6H14v-4.5h-4v4.5H7.9z" />
-    </svg>
-    <div class="ld-bar"><span class="ld-fill" id="loader-fill"></span></div>
-    <div class="ld-meta">
-      <span class="ld-name">Hamza Haroon</span>
-      <span class="ld-count tabular"><span id="loader-count">000</span></span>
-    </div>
-  </div>
-</div>
-
 <!-- ============================ HEADER ============================ -->
 <header class="site-header reveal" id="site-header" data-gate="ready" style="--rv-y:-14px;--rv-d:150ms">
   <div class="shell header-inner">
     <button class="brand-btn" type="button" data-nav="home" aria-label="Hamza Haroon — back to top">
       <span class="brand" data-hs-scale="1.04" data-hs-cfg="320,18" data-hs-trigger="closest:.brand-btn">
-        <svg class="ic" aria-hidden="true"><use href="#i-logo"/></svg><span>Hamza Haroon</span>
+        <span class="wm">Hamza<span class="wm-thin">Haroon</span><i class="wm-dot"></i></span>
       </span>
     </button>
 
@@ -1058,7 +1024,7 @@ img{ display:block }
 <!-- ============================ STACK ============================ -->
 <section id="stack">
   <div class="stack-media" aria-hidden="true">
-    <video id="stack-video" muted loop playsinline preload="none" poster="stack-poster.jpg">
+    <video id="stack-video" muted playsinline preload="metadata" poster="stack-poster.jpg">
       <source src="stack-loop.mp4" type="video/mp4">
     </video>
   </div>
@@ -1176,7 +1142,7 @@ img{ display:block }
         <a href="https://physiosync-pk.vercel.app/" target="_blank" rel="noopener" aria-label="PhysioSync — open the live site">
           <article class="pf-card" style="--pf-c:#47A248" data-hs-ty="-8" data-hs-scale="1.012" data-hs-cfg="260,22">
             <span class="pf-index" aria-hidden="true">04</span>
-            <span class="pf-shot" aria-hidden="true" style="background-image:url(shot-physiosync.jpg)"></span>
+            <span class="pf-shot pf-shot-strong" aria-hidden="true" style="background-image:url(shot-physiosync.jpg); background-position:60% 45%"></span>
             <span class="pf-field" aria-hidden="true"></span>
             <div class="pf-meta">
               <span class="pf-meta-left"><span class="pf-brand"><img src="logo-physiosync.jpg" alt="" loading="lazy" decoding="async"></span>
@@ -1231,34 +1197,42 @@ img{ display:block }
     <ul class="svc-grid">
       <li class="reveal" style="--rv-y:30px;--rv-d:0ms">
         <button class="svc-card" type="button" data-modal-open style="--sc:#61DAFB">
+          <span class="svc-mark-big" aria-hidden="true">01</span>
           <span class="svc-top"><span class="svc-num">01</span><span class="svc-go"><svg class="ic" aria-hidden="true"><use href="#i-arrow-ur"/></svg></span></span>
           <span class="svc-ic"><svg class="ic" aria-hidden="true"><use href="#i-code"/></svg></span>
           <h3>Websites</h3>
           <p>Marketing sites, portfolios and landing pages, hand-built rather than dragged together in a builder — so they stay fast and easy to change later.</p>
+          <span class="svc-more">Start a project <svg class="ic" aria-hidden="true"><use href="#i-arrow-right"/></svg></span>
         </button>
       </li>
       <li class="reveal" style="--rv-y:30px;--rv-d:80ms">
         <button class="svc-card" type="button" data-modal-open style="--sc:#47A248">
+          <span class="svc-mark-big" aria-hidden="true">02</span>
           <span class="svc-top"><span class="svc-num">02</span><span class="svc-go"><svg class="ic" aria-hidden="true"><use href="#i-arrow-ur"/></svg></span></span>
           <span class="svc-ic"><svg class="ic" aria-hidden="true"><use href="#i-db"/></svg></span>
           <h3>Web Apps</h3>
           <p>PHP and MySQL, or Node and MongoDB, behind the interface — for anything that has to remember something: accounts, bookings, records, dashboards.</p>
+          <span class="svc-more">Start a project <svg class="ic" aria-hidden="true"><use href="#i-arrow-right"/></svg></span>
         </button>
       </li>
       <li class="reveal" style="--rv-y:30px;--rv-d:160ms">
         <button class="svc-card" type="button" data-modal-open style="--sc:#cf8047">
+          <span class="svc-mark-big" aria-hidden="true">03</span>
           <span class="svc-top"><span class="svc-num">03</span><span class="svc-go"><svg class="ic" aria-hidden="true"><use href="#i-arrow-ur"/></svg></span></span>
           <span class="svc-ic"><svg class="ic" aria-hidden="true"><use href="#i-brush"/></svg></span>
           <h3>Brand Identity</h3>
           <p>The design side I started in: logos, colour and type systems, and the digital assets that keep a brand consistent wherever it shows up.</p>
+          <span class="svc-more">Start a project <svg class="ic" aria-hidden="true"><use href="#i-arrow-right"/></svg></span>
         </button>
       </li>
       <li class="reveal" style="--rv-y:30px;--rv-d:240ms">
         <button class="svc-card" type="button" data-modal-open style="--sc:#9578d6">
+          <span class="svc-mark-big" aria-hidden="true">04</span>
           <span class="svc-top"><span class="svc-num">04</span><span class="svc-go"><svg class="ic" aria-hidden="true"><use href="#i-arrow-ur"/></svg></span></span>
           <span class="svc-ic"><svg class="ic" aria-hidden="true"><use href="#i-layers"/></svg></span>
           <h3>Deploy &amp; Maintain</h3>
           <p>Shipped to a real domain and kept running — so the thing you paid for stays live, quick, and simple to change later.</p>
+          <span class="svc-more">Start a project <svg class="ic" aria-hidden="true"><use href="#i-arrow-right"/></svg></span>
         </button>
       </li>
     </ul>
@@ -1319,7 +1293,7 @@ img{ display:block }
 
     <div class="footer-cols reveal" style="--rv-y:26px">
       <div class="footer-col">
-        <div class="footer-brand"><svg class="ic" aria-hidden="true"><use href="#i-logo"/></svg><span>Hamza Haroon</span></div>
+        <div class="footer-brand"><span class="wm">Hamza<span class="wm-thin">Haroon</span><i class="wm-dot"></i></span></div>
         <p class="footer-tagline">A full stack developer and graphic designer in Karachi, building web apps end to end.</p>
       </div>
       <div class="footer-col">
@@ -1364,7 +1338,7 @@ img{ display:block }
 <!-- ============================ NAV MENU ============================ -->
 <div id="navmenu" role="dialog" aria-modal="true" aria-label="Menu" hidden>
   <div class="shell navmenu-top">
-    <div class="navmenu-brand"><svg class="ic" aria-hidden="true"><use href="#i-logo"/></svg><span>Hamza Haroon</span></div>
+    <div class="navmenu-brand"><span class="wm">Hamza<span class="wm-thin">Haroon</span><i class="wm-dot"></i></span></div>
     <button class="navmenu-close" type="button" id="menu-close"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg><span>Close</span></button>
   </div>
 
@@ -1446,7 +1420,6 @@ const BEFORE_SRC = 'hero-base.jpg';    // always-shown frame
 const AFTER_SRC  = 'hero-reveal.jpg';  // painted in along the cursor trail
 const COVER_X = 0.5;                   // centred, so every crop keeps the whole photo
 const FONT_BASE = 16, GRID_BASE_WIDTH = 1920, GRID_COEF = 0.6666;
-const FILL_MS = 1100;
 const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const CAN_HOVER = matchMedia('(hover: hover) and (pointer: fine)').matches;
 
@@ -1492,7 +1465,6 @@ function startScroll(){
   h.style.removeProperty('overflow');
   h.style.removeProperty('height');
 }
-stopScroll(); // the loader owns the page until it leaves
 
 function scrollToId(id){
   const el = document.getElementById(id);
@@ -1574,7 +1546,7 @@ initHoverSprings();
 /* ============================================================
    4. TEXT REVEAL / SCROLL REVEAL
    ============================================================ */
-let ready = false;
+let ready = true;   // no loader to wait for
 const gatedQueue = [];
 
 function splitWords(root){
@@ -1623,52 +1595,6 @@ const revealObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.12, rootMargin: '0px 0px -4% 0px' });
 
 document.querySelectorAll('.reveal, .lines, .words').forEach((el) => revealObserver.observe(el));
-
-/* ============================================================
-   5. PAGE LOADER
-   ============================================================ */
-(function initLoader(){
-  const loaderEl = document.getElementById('loader');
-  const fillEl = document.getElementById('loader-fill');
-  const countEl = document.getElementById('loader-count');
-  const nameEl = document.getElementById('loader-name');   // absent in the compact loader
-  let startTs = null, finished = false, exiting = false;
-
-  const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-
-  function finish(){
-    if (finished) return;
-    finished = true;
-    ready = true;
-    startScroll();
-    loaderEl.remove();
-    flushGated();
-  }
-
-  function exit(){
-    if (exiting) return;
-    exiting = true;
-    loaderEl.classList.add('exiting');
-    loaderEl.addEventListener('transitionend', (e) => {
-      if (e.propertyName === 'transform') finish();
-    });
-    setTimeout(finish, REDUCED ? 60 : 900);
-  }
-
-  function frame(ts){
-    if (startTs === null) startTs = ts;
-    const t = Math.min((ts - startTs) / FILL_MS, 1);
-    const progress = Math.round(easeInOutCubic(t) * 100);
-    fillEl.style.width = progress + '%';
-    countEl.textContent = String(progress).padStart(3, '0');
-    if (nameEl) nameEl.style.setProperty('--p', progress + '%');   // kept for any fill target
-    if (t < 1) requestAnimationFrame(frame);
-    else exit();
-  }
-  requestAnimationFrame(frame);
-  // safety net: if the browser stalls rAF (background tab, throttling), leave anyway
-  setTimeout(exit, FILL_MS + 1200);
-})();
 
 /* ============================================================
    6. LIVE CLOCK
@@ -2025,10 +1951,18 @@ if (mailCopy) mailCopy.addEventListener('click', async () => {
     });
 
     if (media){
-      // the film drifts against the page as the section passes
-      const drift = clamp((vh - r.top) / (vh + r.height)) - 0.5;
-      media.style.translate = '0 ' + (drift * 56).toFixed(1) + 'px';
-      media.style.scale = (1.06 + Math.abs(drift) * 0.04).toFixed(3);
+      // the scroll runs the film: the section's travel is the timeline
+      const through = clamp((vh - r.top) / (vh + r.height));
+      if (media.preload !== 'auto' && r.top < vh * 1.6 && r.bottom > -vh * 0.6){
+        media.preload = 'auto';      // pull the whole clip once the section is near
+        media.load();
+      }
+      if (media.readyState >= 1 && media.duration){
+        const t = through * media.duration;
+        if (Math.abs(media.currentTime - t) > 0.03) media.currentTime = t;
+      }
+      media.style.translate = '0 ' + ((through - 0.5) * 46).toFixed(1) + 'px';
+      media.style.scale = (1.06 + Math.abs(through - 0.5) * 0.04).toFixed(3);
     }
   }
 
@@ -2072,83 +2006,6 @@ if (mailCopy) mailCopy.addEventListener('click', async () => {
     label.textContent = 'Karachi, PK';
     icon.remove();
   }
-})();
-
-/* ============================================================
-   15. THE STACK FILM
-   ============================================================ */
-(function initStackFilm(){
-  const video = document.getElementById('stack-video');
-  if (!video) return;
-  if (REDUCED){ video.removeAttribute('loop'); return; }  // the poster frame is enough
-  let loaded = false, playing = false;
-
-  function check(){
-    const r = video.getBoundingClientRect();
-    const inView = r.bottom > -200 && r.top < window.innerHeight + 200;
-    if (inView){
-      if (!loaded){ video.preload = 'auto'; video.load(); loaded = true; }
-      if (!playing){
-        playing = true;
-        const p = video.play();
-        // autoplay refused: leave the poster standing, and let a later pass try again
-        if (p && p.catch) p.catch(() => { playing = false; });
-      }
-    } else if (playing){
-      video.pause();          // nothing to spend frames on off-screen
-      playing = false;
-    }
-  }
-
-  // three ways in, because engines differ on which of these keeps firing
-  if ('IntersectionObserver' in window){
-    new IntersectionObserver(check, { rootMargin: '200px 0px' }).observe(video);
-  }
-  addEventListener('scroll', check, { passive: true });
-  addEventListener('resize', check);
-  let last = 0;
-  (function tick(ts){
-    requestAnimationFrame(tick);
-    const now = typeof ts === 'number' ? ts : performance.now();
-    if (now - last < 300) return;
-    last = now;
-    check();
-  })();
-  check();
-})();
-
-/* ============================================================
-   16. THE CURSOR
-   ============================================================ */
-(function initCursor(){
-  const el = document.getElementById('cursor');
-  if (!el || !CAN_HOVER || REDUCED) return;
-  const ring = el.querySelector('.cursor-ring');
-  const dot = el.querySelector('.cursor-dot');
-  let tx = 0, ty = 0, rx = 0, ry = 0, running = false;
-
-  function loop(){
-    rx += (tx - rx) * 0.18;                 // the ring trails, the dot does not
-    ry += (ty - ry) * 0.18;
-    ring.style.translate = 'calc(' + rx.toFixed(1) + 'px - 50%) calc(' + ry.toFixed(1) + 'px - 50%)';
-    dot.style.translate = 'calc(' + tx.toFixed(1) + 'px - 50%) calc(' + ty.toFixed(1) + 'px - 50%)';
-    if (Math.abs(tx - rx) > 0.1 || Math.abs(ty - ry) > 0.1) requestAnimationFrame(loop);
-    else running = false;
-  }
-
-  addEventListener('pointermove', (e) => {
-    if (e.pointerType && e.pointerType !== 'mouse') return;
-    tx = e.clientX; ty = e.clientY;
-    el.classList.add('on');
-    if (!running){ running = true; requestAnimationFrame(loop); }
-    const over = e.target.closest('a, button, .chip, .pf-card, .svc-card, [role="button"], input, textarea');
-    el.classList.toggle('hot', !!over);
-  }, { passive: true });
-
-  addEventListener('pointerdown', () => el.classList.add('hot'));
-  addEventListener('pointerup', () => el.classList.remove('hot'));
-  addEventListener('mouseleave', () => el.classList.remove('on'));
-  addEventListener('blur', () => el.classList.remove('on'));
 })();
 
 /* ============================================================

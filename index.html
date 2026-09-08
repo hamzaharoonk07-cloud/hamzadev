@@ -55,7 +55,6 @@
 .band-tile.dark{ background:var(--foreground); color:var(--background) }
 .svc-badge{ background:var(--foreground); color:var(--background) }
 .pf-card{ box-shadow:0 0 0 1px rgba(255,255,255,.09) }
-.hero-card-tile{ box-shadow:0 0 0 1px rgba(255,255,255,.09) }
 
 /* ============================================================
    RESET / BASE
@@ -280,28 +279,31 @@ img{ display:block }
 .hero-ctas{ display:flex; flex-wrap:wrap; gap:.75rem }
 .hero-right{ display:flex; flex-direction:column; align-items:flex-start; gap:2rem }
 
-.hero-card{ width:100%; max-width:24rem; border-radius:var(--radius-card-sm); background:rgba(var(--raised-rgb),.78);
-  padding:.5rem; box-shadow:var(--shadow-card), 0 0 0 1px var(--hairline); backdrop-filter:blur(12px) }
-.hero-card-row{ display:flex; gap:.5rem; cursor:pointer; border-radius:var(--radius-control); width:100%; text-align:left }
-.hero-card-tile{ aspect-ratio:1/1; width:6rem; display:grid; place-items:center; border-radius:var(--radius-control);
-  background:var(--card); font-size:1.875rem; color:#fff; flex:none }
-.hero-card-tile .ic{ color:var(--accent-from) }
-.hero-card-panel{ flex:1; border-radius:var(--radius-control); background:rgba(var(--surface-rgb),.7); padding:.75rem;
-  display:flex; flex-direction:column; justify-content:space-between; min-width:0 }
-.hero-card-slot{ position:relative; min-height:3.25rem }
-.hero-card-item{ position:absolute; inset:0; transition:transform .42s cubic-bezier(.2,.8,.2,1), opacity .42s cubic-bezier(.2,.8,.2,1) }
-.hero-card-cap{ font-size:.65rem; font-weight:500; text-transform:uppercase; letter-spacing:.05em; color:rgba(var(--fg-rgb),.45) }
-.hero-card-title{ max-width:8rem; font-size:.875rem; font-weight:500; line-height:1.35; margin-top:.125rem }
-.hero-card-bottom{ display:flex; align-items:center; justify-content:space-between; gap:.75rem; margin-top:.5rem }
-.hero-dots{ display:flex; align-items:center; gap:.25rem }
-.hero-dot{ height:.25rem; border-radius:var(--radius-pill); width:.375rem; background:rgba(var(--fg-rgb),.2); transition:all .3s }
-.hero-dot.active{ width:1rem; background:rgba(var(--fg-rgb),.7) }
-.hero-nav-btns{ display:flex; align-items:center; gap:.375rem }
-.hero-nav-btn{ width:1.75rem; height:1.75rem; display:grid; place-items:center; border-radius:var(--radius-pill);
-  background:var(--raised); color:rgba(var(--fg-rgb),.7); box-shadow:0 0 0 1px var(--line); font-size:.75rem; transition:color .2s }
-.hero-nav-btn:hover{ color:var(--foreground) }
-.hero-nav-btn.prev .ic{ transform:rotate(180deg) }
-
+.hero-card{ width:100%; max-width:24rem; border-radius:var(--radius-card-sm);
+  background:rgba(var(--raised-rgb),.72); backdrop-filter:blur(14px); padding:1.125rem;
+  box-shadow:var(--shadow-card), 0 0 0 1px var(--hairline) }
+.hc-top{ display:flex; align-items:center; justify-content:space-between; gap:1rem;
+  font-size:.75rem; font-weight:500 }
+.hc-status{ display:inline-flex; align-items:center; gap:.5rem; color:rgba(var(--fg-rgb),.9) }
+.hc-dot{ width:.5rem; height:.5rem; border-radius:var(--radius-pill); background:#47d16a;
+  box-shadow:0 0 0 0 rgba(71,209,106,.55); animation:hcPulse 2.4s ease-out infinite }
+@keyframes hcPulse{ 70%{ box-shadow:0 0 0 .55rem rgba(71,209,106,0) } 100%{ box-shadow:0 0 0 0 rgba(71,209,106,0) } }
+.hc-place{ color:rgba(var(--fg-rgb),.45); font-variant-numeric:tabular-nums }
+.hc-facts{ margin:1.125rem 0; display:flex; flex-direction:column }
+.hc-facts li{ display:flex; align-items:center; justify-content:space-between; gap:1rem;
+  padding:.625rem 0; border-top:1px solid rgba(var(--fg-rgb),.09) }
+.hc-facts li:first-child{ border-top:0; padding-top:0 }
+.hc-k{ font-size:.75rem; color:rgba(var(--fg-rgb),.45) }
+.hc-v{ font-size:.875rem; font-weight:500 }
+.hc-cta{ display:flex; align-items:center; justify-content:space-between; gap:.75rem; width:100%;
+  border-radius:var(--radius-control); background:rgba(var(--fg-rgb),.07);
+  padding:.5rem .5rem .5rem .875rem; transition:background .3s ease }
+.hc-cta:hover{ background:rgba(var(--amb-rgb),.16) }
+.hc-mail{ font-size:.8125rem; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+.hc-go{ width:2rem; height:2rem; flex:none; display:grid; place-items:center; border-radius:var(--radius-pill);
+  background:rgb(var(--amb-rgb)); color:#0a0a0a; font-size:.875rem;
+  transition:transform .35s cubic-bezier(.2,.8,.2,1) }
+.hc-cta:hover .hc-go{ transform:translate(2px,-2px) }
 #stack{ position:relative; background:transparent; isolation:isolate; overflow:hidden }
 .stack-media{ position:absolute; inset:0; z-index:0; pointer-events:none }
 .stack-media video, .stack-media img{ width:100%; height:100%; object-fit:cover; display:block;
@@ -358,7 +360,7 @@ img{ display:block }
 @media (min-width:1024px){
   .hero-grid{ display:grid; min-height:100lvh; grid-template-columns:repeat(12,1fr); gap:2.5rem; padding:9rem 2rem 7rem; align-content:center }
   .hero-left{ grid-column:span 7 }
-  .hero-right{ grid-column:span 5; align-items:flex-end }
+  .hero-right{ grid-column:span 5; align-items:flex-end; justify-content:center }
   .hero-card{ width:19rem }
   .partners{ width:19rem; max-width:19rem }
   .partners-label{ text-align:right }
@@ -913,22 +915,21 @@ img{ display:block }
 
     <div class="hero-right">
       <div class="hero-card reveal" data-gate="ready" style="--rv-y:16px;--rv-s0:.96;--rv-d:400ms">
-        <div class="hero-card-row" id="hero-card-row" role="button" tabindex="0" aria-label="Next highlight">
-          <div class="hero-card-tile"><svg class="ic" aria-hidden="true"><use href="#i-b-react" id="hero-tile-use"/></svg></div>
-          <div class="hero-card-panel">
-            <div class="hero-card-slot" id="hero-card-slot"></div>
-            <div class="hero-card-bottom">
-              <div class="hero-dots" id="hero-dots" aria-hidden="true"></div>
-              <div class="hero-nav-btns">
-                <button class="hero-nav-btn prev" type="button" id="hero-prev" aria-label="Previous highlight"><svg class="ic"><use href="#i-arrow-right"/></svg></button>
-                <button class="hero-nav-btn next" type="button" id="hero-next" aria-label="Next highlight"><svg class="ic"><use href="#i-arrow-right"/></svg></button>
-              </div>
-            </div>
-          </div>
+        <div class="hc-top">
+          <span class="hc-status"><span class="hc-dot" aria-hidden="true"></span>Available for work</span>
+          <span class="hc-place"><span data-clock-time>9:41am</span> &middot; Karachi</span>
         </div>
+        <ul class="hc-facts">
+          <li><span class="hc-k">Projects live</span><span class="hc-v">Five</span></li>
+          <li><span class="hc-k">Working in</span><span class="hc-v">Code &amp; design</span></li>
+          <li><span class="hc-k">Replies</span><span class="hc-v">Within a day</span></li>
+        </ul>
+        <button class="hc-cta" type="button" data-modal-open>
+          <span class="hc-mail">hamzaharoonk07@gmail.com</span>
+          <span class="hc-go"><svg class="ic" aria-hidden="true"><use href="#i-arrow-ur"/></svg></span>
+        </button>
       </div>
-
-
+    </div>
   </div>
 
   <div class="shell hero-status reveal" data-gate="ready" style="--rv-y:0px;--rv-d:900ms">
@@ -1701,69 +1702,6 @@ document.querySelectorAll('.reveal, .lines, .words').forEach((el) => revealObser
     }
   }
   requestAnimationFrame(tick);
-})();
-
-/* ============================================================
-   8. HERO CARD CAROUSEL
-   ============================================================ */
-(function initHeroCard(){
-  const items = [
-    { caption: 'Front end', title: 'React, JS, CSS.', icon: '#i-b-react', colour: '#61DAFB' },
-    { caption: 'Back end', title: 'PHP, MySQL, Node.', icon: '#i-b-php', colour: '#777BB4' },
-    { caption: 'Design', title: 'Identity systems.', icon: '#i-brush', colour: '#cf8047' }
-  ];
-  const slot = document.getElementById('hero-card-slot');
-  const dotsEl = document.getElementById('hero-dots');
-  const row = document.getElementById('hero-card-row');
-  if (!slot) return;
-  let index = 0, current = null;
-
-  items.forEach(() => {
-    const d = document.createElement('span');
-    d.className = 'hero-dot';
-    dotsEl.appendChild(d);
-  });
-
-  function build(i){
-    const el = document.createElement('div');
-    el.className = 'hero-card-item';
-    el.innerHTML = '<p class="hero-card-cap">' + items[i].caption + '</p><p class="hero-card-title">' + items[i].title + '</p>';
-    return el;
-  }
-
-  function render(i, dir){
-    const next = build(i);
-    next.style.opacity = '0';
-    next.style.transform = 'translateY(' + (dir >= 0 ? 14 : -14) + 'px)';
-    slot.appendChild(next);
-    void next.offsetHeight; // commit the entry state before transitioning
-    next.style.opacity = '1';
-    next.style.transform = 'translateY(0)';
-    if (current){
-      const out = current;
-      out.style.opacity = '0';
-      out.style.transform = 'translateY(' + (dir >= 0 ? -14 : 14) + 'px)';
-      setTimeout(() => out.remove(), 460);
-    }
-    current = next;
-    const tileUse = document.getElementById('hero-tile-use');
-    if (tileUse){
-      tileUse.setAttribute('href', items[i].icon);
-      tileUse.parentNode.style.color = items[i].colour;
-    }
-    Array.from(dotsEl.children).forEach((d, di) => d.classList.toggle('active', di === i));
-  }
-
-  function go(step){
-    index = (index + step + items.length) % items.length;
-    render(index, step);
-  }
-
-  render(index, 1);
-  row.addEventListener('click', (e) => { if (!e.target.closest('.hero-nav-btn')) go(1); });
-  row.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); go(1); } });
-  document.getElementById('hero-next').addEventListener('click', () => go(1));
-  document.getElementById('hero-prev').addEventListener('click', () => go(-1));
 })();
 
 /* ============================================================

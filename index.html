@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>HAMZA HAROON — Full Stack Developer &middot; Graphic Designer</title>
 <meta name="description" content="Hamza Haroon — full stack developer and graphic designer in Karachi. Five live projects built with PHP, MySQL, React, Node and MongoDB." />
-<meta name="theme-color" content="#0b0b0c" />
+<meta name="theme-color" content="#0c0e12" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -14,31 +14,31 @@
    TOKENS
    ============================================================ */
 :root{
-  --background:#0b0b0c;
-  --foreground:#f2f1ef;
+  --background:#0c0e12;
+  --foreground:#eef1f5;
   --ink:#0a0a0a;
-  --muted:#8f8d89;
-  --subtle:#6a6864;
-  --line:rgba(255,255,255,.12);
-  --surface:#1c1c1f;
-  --surface-2:#26262a;
+  --muted:#8b909a;
+  --subtle:#666c77;
+  --line:rgba(255,255,255,.10);
+  --surface:#171b22;
+  --surface-2:#222833;
   --accent:#b15f2c;
   --accent-from:#cf8047;
   --accent-to:#97501f;
-  --hero-from:#141416;
-  --hero-to:#101012;
+  --hero-from:#141821;
+  --hero-to:#0e1116;
   /* the ambient pair, driven by scroll position */
   --amb-rgb:207,128,71;
   --amb2-rgb:97,218,251;
   /* one palette: dark */
-  --fg-rgb:242,241,239;
-  --surface-rgb:30,30,33;
-  --card:#151517;
-  --raised:#202023;
-  --raised-rgb:32,32,35;
-  --hairline:rgba(255,255,255,.14);
+  --fg-rgb:238,241,245;
+  --surface-rgb:26,31,39;
+  --card:#141820;
+  --raised:#1b2029;
+  --raised-rgb:27,32,41;
+  --hairline:rgba(255,255,255,.13);
   --scrim:rgba(0,0,0,.6);
-  --vignette:linear-gradient(to bottom, rgba(11,11,12,.45), transparent, rgba(11,11,12,.55));
+  --vignette:linear-gradient(to bottom, rgba(12,14,18,.45), transparent, rgba(12,14,18,.55));
   --shadow-card:0 1px 2px rgba(0,0,0,.4);
   --radius-pill:9999px;
   --radius-card:2rem;
@@ -63,11 +63,14 @@
 html{ font-size:16px; -webkit-font-smoothing:antialiased }
 body{ color:var(--foreground); font-family:'Onest',sans-serif; overflow-x:hidden;
   background:
-    radial-gradient(1100px 620px at 82% -10%, rgba(var(--amb-rgb),.15), transparent 68%),
-    radial-gradient(900px 520px at 4% 38%, rgba(var(--amb2-rgb),.07), transparent 70%),
-    radial-gradient(1000px 600px at 60% 104%, rgba(var(--amb-rgb),.11), transparent 70%),
-    linear-gradient(180deg, #0c0c0e 0%, #090909 55%, #0b0b0c 100%);
-  background-attachment:fixed; background-repeat:no-repeat }
+    /* a drawn grid, so the empty areas read as a surface rather than a void */
+    linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px) 0 0 / 100% 76px,
+    linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px) 0 0 / 76px 100%,
+    radial-gradient(1100px 620px at 82% -10%, rgba(var(--amb-rgb),.17), transparent 68%),
+    radial-gradient(900px 520px at 4% 38%, rgba(var(--amb2-rgb),.09), transparent 70%),
+    radial-gradient(1000px 600px at 60% 104%, rgba(var(--amb-rgb),.13), transparent 70%),
+    linear-gradient(180deg, #10141b 0%, #0a0d12 52%, #0c0f15 100%);
+  background-attachment:fixed; background-repeat:repeat, repeat, no-repeat, no-repeat, no-repeat, no-repeat }
 /* film grain, so the flat areas have a surface */
 body::after{ content:''; position:fixed; inset:0; z-index:200; pointer-events:none;
   opacity:.05; mix-blend-mode:overlay; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"); background-size:160px 160px }
@@ -169,9 +172,9 @@ img{ display:block }
   position:fixed; inset:0; z-index:120;
   display:flex; color:#fff;
   background:
-    radial-gradient(900px 620px at 18% -10%, rgba(207,128,71,.20), transparent 62%),
-    radial-gradient(700px 480px at 92% 108%, rgba(207,128,71,.13), transparent 66%),
-    #0a0a0a;
+    radial-gradient(900px 620px at 18% -10%, rgba(207,128,71,.22), transparent 62%),
+    radial-gradient(700px 480px at 92% 108%, rgba(97,152,232,.12), transparent 66%),
+    linear-gradient(180deg, #0e121a, #090c11);
   border-radius:0 0 var(--radius-card) var(--radius-card);
   transform:translateY(0%);
 }
@@ -309,13 +312,13 @@ img{ display:block }
 .stack-media video, .stack-media img{ width:100%; height:100%; object-fit:cover; display:block;
   opacity:.72; filter:saturate(1) contrast(1.04) }
 .stack-media::after{ content:''; position:absolute; inset:0; background:
-  linear-gradient(180deg, #0b0b0c 0%, rgba(11,11,12,.42) 18%, rgba(11,11,12,.5) 74%, #0b0b0c 100%),
-  linear-gradient(90deg, rgba(11,11,12,.92) 0%, rgba(11,11,12,.5) 40%, rgba(11,11,12,0) 92%) }
+  linear-gradient(180deg, #0c0f15 0%, rgba(12,15,21,.42) 18%, rgba(12,15,21,.5) 74%, #0c0f15 100%),
+  linear-gradient(90deg, rgba(12,15,21,.92) 0%, rgba(12,15,21,.5) 40%, rgba(12,15,21,0) 92%) }
 #stack > .shell{ position:relative; z-index:1 }
 /* the chips need their own ground now that there is film behind them */
-#stack .chip{ background:rgba(11,11,12,.62); border-color:rgba(255,255,255,.14);
+#stack .chip{ background:rgba(12,15,21,.62); border-color:rgba(255,255,255,.14);
   backdrop-filter:blur(6px); color:rgba(255,255,255,.92) }
-#stack .chip:hover{ background:color-mix(in srgb, var(--c, #b15f2c) 22%, rgba(11,11,12,.7));
+#stack .chip:hover{ background:color-mix(in srgb, var(--c, #b15f2c) 22%, rgba(12,15,21,.7));
   border-color:color-mix(in srgb, var(--c, #b15f2c) 60%, transparent) }
 .stack-label{ text-shadow:0 1px 12px rgba(0,0,0,.6) }
 .stack-inner{ padding:5rem 1.25rem }
@@ -371,7 +374,7 @@ img{ display:block }
    ============================================================ */
 #about{ background:transparent; position:relative }
 #about::before{ content:''; position:absolute; inset-inline:0; top:-2rem; height:8rem; pointer-events:none;
-  background:linear-gradient(to bottom, rgba(11,11,12,.85), transparent) }
+  background:linear-gradient(to bottom, rgba(12,15,21,.85), transparent) }
 .about-grid{ display:grid; grid-template-columns:1fr; align-items:start; gap:3rem; padding:5rem 1.25rem }
 .about-left{ position:relative; display:flex; flex-direction:column; align-items:flex-start; gap:1.75rem }
 .about-now{ max-width:30rem; font-size:1rem; line-height:1.65; color:rgba(var(--fg-rgb),.62) }
@@ -439,7 +442,7 @@ img{ display:block }
 .works-h2{ font-size:2.25rem; font-weight:600; letter-spacing:-.02em; width:fit-content }
 .works-grid{ display:grid; grid-template-columns:1fr; gap:1.5rem }
 .pf-card{ position:relative; min-height:25rem; overflow:hidden; border-radius:var(--radius-card);
-  background:#161619; padding:1.5rem; color:#fff; box-shadow:0 0 0 1px rgba(255,255,255,.07), 0 24px 50px -40px #000;
+  background:#141a23; padding:1.5rem; color:#fff; box-shadow:0 0 0 1px rgba(255,255,255,.07), 0 24px 50px -40px #000;
   display:block; will-change:transform }
 .pf-brand{ width:2.75rem; height:2.75rem; flex:none; border-radius:.875rem; overflow:hidden;
   box-shadow:0 0 0 1px rgba(255,255,255,.16), 0 10px 24px -14px #000; background:#0e0e10;
@@ -496,7 +499,7 @@ img{ display:block }
 .svc-grid{ display:grid; grid-template-columns:1fr; gap:1rem }
 .svc-card{ position:relative; display:block; width:100%; text-align:left; cursor:pointer;
   border-radius:var(--radius-card); padding:1.5rem; min-height:13rem;
-  background:linear-gradient(158deg, rgba(255,255,255,.055), rgba(255,255,255,0) 48%), #141416;
+  background:linear-gradient(158deg, rgba(255,255,255,.055), rgba(255,255,255,0) 48%), #141a23;
   box-shadow:0 0 0 1px rgba(255,255,255,.07);
   transition:transform .45s cubic-bezier(.2,.8,.2,1), box-shadow .45s ease }
 .svc-card:hover{ transform:translateY(-6px);
@@ -526,7 +529,7 @@ img{ display:block }
 .stats{ background:transparent }
 .stats-inner{ padding:0 1.25rem 5rem }
 .stats-panel{ border-radius:var(--radius-card); padding:3rem 1.5rem; color:#fff;
-  background:linear-gradient(155deg, #1a1a1d, #121214 60%);
+  background:linear-gradient(155deg, #1b212c, #11151c 60%);
   box-shadow:0 0 0 1px rgba(255,255,255,.07), 0 40px 80px -50px rgba(0,0,0,.9) }
 .stats-h2{ margin-top:1rem; max-width:20ch; font-size:1.875rem; font-weight:500; letter-spacing:-.01em }
 .stats-grid{ margin-top:3.5rem; display:grid; grid-template-columns:repeat(2,1fr); column-gap:2rem; row-gap:3rem }
@@ -556,7 +559,7 @@ img{ display:block }
    FOOTER
    ============================================================ */
 .site-footer{ position:relative; overflow:hidden; border-radius:var(--radius-card) var(--radius-card) 0 0;
-  background:linear-gradient(180deg, #151517, #0e0e10); color:#fff;
+  background:linear-gradient(180deg, #161c25, #0d1015); color:#fff;
   box-shadow:0 -1px 0 rgba(255,255,255,.07) }
 .footer-inner{ position:relative; z-index:10; padding:5rem 1.25rem 2.5rem }
 .footer-cta{ display:flex; flex-direction:column; gap:2rem; border-bottom:1px solid rgba(255,255,255,.1); padding-bottom:4rem }

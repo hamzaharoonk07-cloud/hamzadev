@@ -71,6 +71,24 @@ body{ color:var(--foreground); font-family:'Onest',sans-serif; overflow-x:hidden
     radial-gradient(1000px 600px at 60% 104%, rgba(var(--amb-rgb),.13), transparent 70%),
     linear-gradient(180deg, #10141b 0%, #0a0d12 52%, #0c0f15 100%);
   background-attachment:fixed; background-repeat:repeat, repeat, no-repeat, no-repeat, no-repeat, no-repeat }
+/* slow-drifting light behind everything, tinted by the scroll colour */
+.bg-drift{ position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden }
+.blob{ position:absolute; border-radius:9999px; filter:blur(90px); opacity:.5;
+  will-change:transform }
+.b1{ width:46rem; height:46rem; left:-10rem; top:-12rem;
+  background:radial-gradient(closest-side, rgba(var(--amb-rgb),.5), transparent 70%);
+  animation:drift1 34s ease-in-out infinite alternate }
+.b2{ width:38rem; height:38rem; right:-8rem; top:28%;
+  background:radial-gradient(closest-side, rgba(var(--amb2-rgb),.42), transparent 70%);
+  animation:drift2 44s ease-in-out infinite alternate }
+.b3{ width:42rem; height:42rem; left:24%; bottom:-14rem;
+  background:radial-gradient(closest-side, rgba(var(--amb-rgb),.38), transparent 70%);
+  animation:drift3 52s ease-in-out infinite alternate }
+@keyframes drift1{ to{ transform:translate3d(14vw, 10vh, 0) scale(1.15) } }
+@keyframes drift2{ to{ transform:translate3d(-12vw, -8vh, 0) scale(1.1) } }
+@keyframes drift3{ to{ transform:translate3d(10vw, -12vh, 0) scale(1.18) } }
+body > *:not(.bg-drift){ position:relative }
+
 /* film grain, so the flat areas have a surface */
 body::after{ content:''; position:fixed; inset:0; z-index:200; pointer-events:none;
   opacity:.05; mix-blend-mode:overlay; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"); background-size:160px 160px }
@@ -307,11 +325,9 @@ img{ display:block }
   font-size:.6875rem; font-weight:600; text-transform:uppercase; letter-spacing:.12em;
   color:rgba(var(--fg-rgb),.45) }
 .stack-chips{ display:flex; flex-wrap:wrap; gap:.5rem }
-/* translate carries the entrance so transform stays free for the hover lift */
-.stack-col .chip{ opacity:0; translate:0 12px;
-  transition:opacity .5s ease, translate .6s cubic-bezier(.2,.8,.2,1);
-  transition-delay:calc(var(--i,0) * 45ms) }
-.stack-col.in .chip{ opacity:1; translate:0 0 }
+/* the scroll sets opacity and translate on these directly; transform stays free for hover */
+.stack-col .stack-label{ will-change:opacity, translate }
+.stack-col .chip{ will-change:opacity, translate }
 .chip{ display:inline-flex; align-items:center; gap:.5rem; border-radius:var(--radius-pill);
   background:rgba(var(--fg-rgb),.06); border:1px solid rgba(var(--fg-rgb),.08);
   padding:.5rem .875rem; font-size:.875rem; font-weight:500; color:rgba(var(--fg-rgb),.88);
@@ -454,8 +470,18 @@ img{ display:block }
 .pf-badge{ width:2.75rem; height:2.75rem; display:grid; place-items:center; border-radius:var(--radius-pill);
   background:rgba(255,255,255,.1); color:#fff; box-shadow:0 0 0 1px rgba(255,255,255,.15);
   font-size:1rem; flex:none; will-change:transform }
+/* the screenshot sits under the mark: blurred and dim at rest, sharper on hover */
+.pf-shot{ position:absolute; inset:0; z-index:0; border-radius:inherit;
+  background-size:cover; background-position:50% 18%;
+  opacity:.16; filter:blur(3px) saturate(.7); transform:scale(1.06);
+  transition:opacity .6s ease, filter .6s ease, transform .8s cubic-bezier(.2,.8,.2,1) }
+.pf-card:hover .pf-shot{ opacity:.34; filter:blur(1px) saturate(1); transform:scale(1.12) }
+.pf-card::before{ content:''; position:absolute; inset:0; z-index:0; border-radius:inherit;
+  background:linear-gradient(180deg, rgba(12,15,21,.55) 0%, rgba(12,15,21,.35) 42%,
+    rgba(12,15,21,.88) 78%, rgba(12,15,21,.96) 100%) }
+
 /* a lit field behind the mark, so the card is not an empty box with a badge in it */
-.pf-field{ position:absolute; inset:0; z-index:0; pointer-events:none; border-radius:inherit; overflow:hidden }
+.pf-field{ position:absolute; inset:0; z-index:1; pointer-events:none; border-radius:inherit; overflow:hidden }
 .pf-field::before{ content:''; position:absolute; left:50%; top:42%; width:22rem; height:22rem;
   transform:translate(-50%,-50%); border-radius:9999px;
   background:radial-gradient(closest-side, color-mix(in srgb, var(--pf-c, #b15f2c) 26%, transparent), transparent 70%);
@@ -466,7 +492,7 @@ img{ display:block }
   -webkit-mask-image:radial-gradient(closest-side at 50% 42%, #000, transparent 78%);
   mask-image:radial-gradient(closest-side at 50% 42%, #000, transparent 78%); opacity:.5 }
 .pf-card:hover .pf-field::before{ opacity:1; transform:translate(-50%,-50%) scale(1.08) }
-.pf-index{ position:absolute; right:1.5rem; bottom:1.25rem; z-index:1; pointer-events:none;
+.pf-index{ position:absolute; right:1.5rem; bottom:1.25rem; z-index:2; pointer-events:none;
   font-size:4.5rem; font-weight:700; line-height:1; letter-spacing:-.04em;
   color:rgba(255,255,255,.05); transition:color .5s ease }
 .pf-card:hover .pf-index{ color:color-mix(in srgb, var(--pf-c, #fff) 16%, transparent) }
@@ -475,7 +501,7 @@ img{ display:block }
   color:var(--pf-c, #fff); opacity:0; transform:translateX(.5rem);
   transition:opacity .35s ease, transform .45s cubic-bezier(.2,.8,.2,1) }
 .pf-card:hover .pf-open-label{ opacity:1; transform:translateX(0) }
-.pf-logo{ position:absolute; inset:0; z-index:1; display:grid; place-items:center; pointer-events:none }
+.pf-logo{ position:absolute; inset:0; z-index:2; display:grid; place-items:center; pointer-events:none }
 .pf-logo img{ width:8rem; height:8rem; object-fit:cover; border-radius:1.75rem; opacity:.9;
   box-shadow:0 0 0 1px rgba(255,255,255,.1), 0 30px 60px -30px #000;
   transform:translateY(-.5rem) scale(1);
@@ -486,7 +512,7 @@ img{ display:block }
 .pf-card:hover .pf-logo img{ transform:translateY(-1rem) scale(1.07); opacity:1;
   box-shadow:0 0 0 1px color-mix(in srgb, var(--pf-c, #fff) 55%, transparent), 0 34px 60px -28px #000 }
 .pf-card:hover .pf-logo::before{ opacity:1; transform:scale(1.12) }
-.pf-meta, .pf-bottom{ position:relative; z-index:2 }
+.pf-meta, .pf-bottom{ position:relative; z-index:3 }
 .pf-tech{ display:inline-block; vertical-align:-.15em; margin-right:.5rem; font-size:1rem;
   color:var(--pf-c, #fff); opacity:.9 }
 .pf-bottom{ position:absolute; inset-inline:1.5rem; bottom:1.5rem }
@@ -841,6 +867,7 @@ img{ display:block }
 
 <a class="skip-link" href="#main">Skip to content</a>
 <div id="scroll-bar" aria-hidden="true"></div>
+<div class="bg-drift" aria-hidden="true"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
 
 <!-- ============================ PAGE LOADER ============================ -->
 <div id="loader" role="status" aria-live="polite">
@@ -1033,15 +1060,15 @@ img{ display:block }
       <span class="ln" style="--i:0"><span>What I build with</span></span>
     </h2>
     <ul class="stack-grid">
-      <li class="stack-col reveal" style="--rv-y:26px;--rv-d:0ms">
+      <li class="stack-col">
         <p class="stack-label">Front end</p>
         <ul class="stack-chips"><li><span class="chip" style="--c:#61DAFB"><svg class="ic" aria-hidden="true"><use href="#i-b-react"/></svg>React</span></li><li><span class="chip" style="--c:#F7DF1E"><svg class="ic" aria-hidden="true"><use href="#i-b-js"/></svg>JavaScript</span></li><li><span class="chip" style="--c:#E34F26"><svg class="ic" aria-hidden="true"><use href="#i-b-html5"/></svg>HTML5</span></li><li><span class="chip" style="--c:#1572B6"><svg class="ic" aria-hidden="true"><use href="#i-b-css3"/></svg>CSS3</span></li><li><span class="chip" style="--c:#7952B3"><svg class="ic" aria-hidden="true"><use href="#i-b-bootstrap"/></svg>Bootstrap</span></li><li><span class="chip" style="--c:#0769AD"><svg class="ic" aria-hidden="true"><use href="#i-b-jquery"/></svg>jQuery</span></li></ul>
       </li>
-      <li class="stack-col reveal" style="--rv-y:26px;--rv-d:90ms">
+      <li class="stack-col">
         <p class="stack-label">Back end</p>
         <ul class="stack-chips"><li><span class="chip" style="--c:#777BB4"><svg class="ic" aria-hidden="true"><use href="#i-b-php"/></svg>PHP</span></li><li><span class="chip" style="--c:#4479A1"><svg class="ic" aria-hidden="true"><use href="#i-b-mysql"/></svg>MySQL</span></li><li><span class="chip" style="--c:#5FA04E"><svg class="ic" aria-hidden="true"><use href="#i-b-node"/></svg>Node</span></li><li><span class="chip" style="--c:var(--foreground)"><svg class="ic" aria-hidden="true"><use href="#i-b-express"/></svg>Express</span></li><li><span class="chip" style="--c:#47A248"><svg class="ic" aria-hidden="true"><use href="#i-b-mongodb"/></svg>MongoDB</span></li></ul>
       </li>
-      <li class="stack-col reveal" style="--rv-y:26px;--rv-d:180ms">
+      <li class="stack-col">
         <p class="stack-label">Design &amp; workflow</p>
         <ul class="stack-chips"><li><span class="chip" style="--c:#31A8FF"><svg class="ic" aria-hidden="true"><use href="#i-b-photoshop"/></svg>Photoshop</span></li><li><span class="chip" style="--c:#88CE02"><svg class="ic" aria-hidden="true"><use href="#i-b-gsap"/></svg>GSAP</span></li><li><span class="chip" style="--c:#F05032"><svg class="ic" aria-hidden="true"><use href="#i-b-git"/></svg>Git</span></li><li><span class="chip" style="--c:var(--foreground)"><svg class="ic" aria-hidden="true"><use href="#i-b-vercel"/></svg>Vercel</span></li></ul>
       </li>
@@ -1076,6 +1103,7 @@ img{ display:block }
         <a href="https://careerpassporttw.vercel.app/" target="_blank" rel="noopener" aria-label="PathSeeker - Career Passport — open the live site">
           <article class="pf-card" style="--pf-c:#61DAFB" data-hs-ty="-8" data-hs-scale="1.012" data-hs-cfg="260,22">
             <span class="pf-index" aria-hidden="true">01</span>
+            <span class="pf-shot" aria-hidden="true" style="background-image:url(shot-pathseeker.jpg)"></span>
             <span class="pf-field" aria-hidden="true"></span>
             <div class="pf-meta">
               <span class="pf-meta-left"><span class="pf-brand"><img src="logo-pathseeker.jpg" alt="" loading="lazy" decoding="async"></span>
@@ -1096,6 +1124,7 @@ img{ display:block }
         <a href="https://care-pk.infinityfreeapp.com/" target="_blank" rel="noopener" aria-label="CARE Group - Appointment Portal — open the live site">
           <article class="pf-card" style="--pf-c:#777BB4" data-hs-ty="-8" data-hs-scale="1.012" data-hs-cfg="260,22">
             <span class="pf-index" aria-hidden="true">02</span>
+            <span class="pf-shot" aria-hidden="true" style="background-image:url(shot-care.jpg)"></span>
             <span class="pf-field" aria-hidden="true"></span>
             <div class="pf-meta">
               <span class="pf-meta-left"><span class="pf-brand"><img src="logo-care.jpg" alt="" loading="lazy" decoding="async"></span>
@@ -1116,6 +1145,7 @@ img{ display:block }
         <a href="https://www.shopxtra.store/" target="_blank" rel="noopener" aria-label="ShopXtra — open the live site">
           <article class="pf-card" style="--pf-c:#cf8047" data-hs-ty="-8" data-hs-scale="1.012" data-hs-cfg="260,22">
             <span class="pf-index" aria-hidden="true">03</span>
+            <span class="pf-shot" aria-hidden="true" style="background-image:url(shot-shopxtra.jpg)"></span>
             <span class="pf-field" aria-hidden="true"></span>
             <div class="pf-meta">
               <span class="pf-meta-left"><span class="pf-brand"><img src="logo-shopxtra.jpg" alt="" loading="lazy" decoding="async"></span>
@@ -1136,6 +1166,7 @@ img{ display:block }
         <a href="https://physiosync-pk.vercel.app/" target="_blank" rel="noopener" aria-label="PhysioSync — open the live site">
           <article class="pf-card" style="--pf-c:#47A248" data-hs-ty="-8" data-hs-scale="1.012" data-hs-cfg="260,22">
             <span class="pf-index" aria-hidden="true">04</span>
+            <span class="pf-shot" aria-hidden="true" style="background-image:url(shot-physiosync.jpg)"></span>
             <span class="pf-field" aria-hidden="true"></span>
             <div class="pf-meta">
               <span class="pf-meta-left"><span class="pf-brand"><img src="logo-physiosync.jpg" alt="" loading="lazy" decoding="async"></span>
@@ -1156,6 +1187,7 @@ img{ display:block }
         <a href="https://zaikaekarachi.vercel.app/" target="_blank" rel="noopener" aria-label="Zaika-e-Karachi — open the live site">
           <article class="pf-card" style="--pf-c:#d9a441" data-hs-ty="-8" data-hs-scale="1.012" data-hs-cfg="260,22">
             <span class="pf-index" aria-hidden="true">05</span>
+            <span class="pf-shot" aria-hidden="true" style="background-image:url(shot-zaika.jpg)"></span>
             <span class="pf-field" aria-hidden="true"></span>
             <div class="pf-meta">
               <span class="pf-meta-left"><span class="pf-brand"><img src="logo-zaika.jpg" alt="" loading="lazy" decoding="async"></span>
@@ -1946,7 +1978,62 @@ if (mailCopy) mailCopy.addEventListener('click', async () => {
 })();
 
 /* ============================================================
-   13. KARACHI WEATHER
+   13. THE STACK, DRAWN IN BY THE SCROLL
+   ============================================================ */
+(function initStackReveal(){
+  const section = document.getElementById('stack');
+  if (!section || REDUCED) return;                 // reduced motion keeps it all visible
+  const cols = Array.from(section.querySelectorAll('.stack-col'));
+  const labels = cols.map((c) => c.querySelector('.stack-label'));
+  const chips = cols.map((c) => Array.from(c.querySelectorAll('.chip')));
+  const media = section.querySelector('.stack-media video');
+  if (!cols.length) return;
+
+  const clamp = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+  const ease = (t) => 1 - Math.pow(1 - t, 3);
+
+  function paint(el, p, lift){
+    el.style.opacity = p.toFixed(3);
+    el.style.translate = '0 ' + ((1 - p) * lift).toFixed(1) + 'px';
+  }
+
+  let ticking = false;
+  function frame(){
+    ticking = false;
+    const r = section.getBoundingClientRect();
+    const vh = window.innerHeight || 1;
+    // 0 as the section's top reaches the bottom of the screen, 1 by the time it is a third up
+    const p = clamp((vh - r.top) / (vh * 0.78));
+
+    cols.forEach((col, i) => {
+      const cp = ease(clamp((p - i * 0.09) / 0.5));
+      if (labels[i]) paint(labels[i], cp, 18);
+      chips[i].forEach((chip, j) => {
+        paint(chip, ease(clamp((p - i * 0.09 - j * 0.035) / 0.45)), 16);
+      });
+      col.style.opacity = cp > 0.001 ? '1' : '0';
+    });
+
+    if (media){
+      // the film drifts against the page as the section passes
+      const drift = clamp((vh - r.top) / (vh + r.height)) - 0.5;
+      media.style.translate = '0 ' + (drift * 56).toFixed(1) + 'px';
+      media.style.scale = (1.06 + Math.abs(drift) * 0.04).toFixed(3);
+    }
+  }
+
+  function onScroll(){ if (!ticking){ ticking = true; requestAnimationFrame(frame); } }
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll);
+  // the frame loop keeps it honest where scroll events are coalesced away
+  window.__stackFrame = frame;   // the ambient loop calls this every frame
+  // timers are not frame-gated: if rAF ever stalls, the chips still appear
+  setInterval(frame, 250);
+  frame();
+})();
+
+/* ============================================================
+   14. KARACHI WEATHER
    ============================================================ */
 (async function initWeather(){
   const label = document.getElementById('hc-wx-temp');
@@ -1978,7 +2065,7 @@ if (mailCopy) mailCopy.addEventListener('click', async () => {
 })();
 
 /* ============================================================
-   14. THE STACK FILM
+   15. THE STACK FILM
    ============================================================ */
 (function initStackFilm(){
   const video = document.getElementById('stack-video');
@@ -2021,7 +2108,7 @@ if (mailCopy) mailCopy.addEventListener('click', async () => {
 })();
 
 /* ============================================================
-   15. POINTER MOTION
+   16. POINTER MOTION
    ============================================================ */
 if (CAN_HOVER && !REDUCED){
   // the hero panels drift against the pointer, a couple of pixels
@@ -2067,7 +2154,7 @@ if (CAN_HOVER && !REDUCED){
 }
 
 /* ============================================================
-   16. AMBIENT COLOUR ON SCROLL
+   17. AMBIENT COLOUR ON SCROLL
    ============================================================ */
 (function initAmbient(){
   const STOPS = [
@@ -2131,6 +2218,7 @@ if (CAN_HOVER && !REDUCED){
       const max = Math.max(document.body.scrollHeight - window.innerHeight, 1);
       bar.style.width = Math.min(window.pageYOffset / max, 1) * 100 + '%';
     }
+    if (window.__stackFrame) window.__stackFrame();   // the stack section rides this loop
     requestAnimationFrame(frame);
   }
 
@@ -2141,7 +2229,7 @@ if (CAN_HOVER && !REDUCED){
 })();
 
 /* ============================================================
-   17. ROUTING
+   18. ROUTING
    ============================================================ */
 document.querySelectorAll('[data-nav]').forEach((btn) => {
   btn.addEventListener('click', () => {

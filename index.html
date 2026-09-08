@@ -302,23 +302,27 @@ img{ display:block }
 .hero-nav-btn:hover{ color:var(--foreground) }
 .hero-nav-btn.prev .ic{ transform:rotate(180deg) }
 
-.stack-panel{ width:100%; max-width:24rem; border-radius:var(--radius-card-sm);
-  background:rgba(var(--raised-rgb),.78); backdrop-filter:blur(12px);
-  box-shadow:var(--shadow-card), 0 0 0 1px var(--hairline); padding:.875rem; text-align:left }
-.stack-head{ display:flex; align-items:center; justify-content:space-between; padding:0 .25rem .625rem;
-  font-size:.6875rem; font-weight:500; text-transform:uppercase; letter-spacing:.1em; color:rgba(var(--fg-rgb),.45) }
-.stack-count{ font-variant-numeric:tabular-nums; color:rgba(var(--fg-rgb),.3) }
-.stack-groups{ display:flex; flex-direction:column }
-.stack-group{ border-top:1px solid rgba(var(--fg-rgb),.09); padding:.75rem .25rem .625rem }
-.stack-label{ margin-bottom:.5rem; font-size:.625rem; font-weight:600; text-transform:uppercase;
-  letter-spacing:.12em; color:rgba(var(--fg-rgb),.4) }
-.stack-chips{ display:flex; flex-wrap:wrap; gap:.375rem }
-.chip{ display:inline-flex; align-items:center; gap:.375rem; border-radius:var(--radius-pill);
-  background:rgba(var(--fg-rgb),.06); border:1px solid rgba(var(--fg-rgb),.07);
-  padding:.25rem .5rem .25rem .4375rem; font-size:.75rem; font-weight:500; color:rgba(var(--fg-rgb),.85);
-  white-space:nowrap; transition:background .25s, border-color .25s }
-.chip:hover{ background:rgba(var(--fg-rgb),.12); border-color:rgba(var(--fg-rgb),.16) }
-.chip .ic{ font-size:.8125rem; color:rgba(var(--fg-rgb),.55) }
+#stack{ background:transparent }
+.stack-inner{ padding:5rem 1.25rem }
+.stack-h2{ margin:1.25rem 0 3rem; max-width:18ch; font-size:2.25rem; font-weight:600; letter-spacing:-.02em }
+.stack-grid{ display:grid; grid-template-columns:1fr; gap:2.5rem }
+.stack-label{ margin-bottom:1.125rem; padding-bottom:.75rem; border-bottom:1px solid var(--line);
+  font-size:.6875rem; font-weight:600; text-transform:uppercase; letter-spacing:.12em;
+  color:rgba(var(--fg-rgb),.45) }
+.stack-chips{ display:flex; flex-wrap:wrap; gap:.5rem }
+.chip{ display:inline-flex; align-items:center; gap:.5rem; border-radius:var(--radius-pill);
+  background:rgba(var(--fg-rgb),.06); border:1px solid rgba(var(--fg-rgb),.08);
+  padding:.5rem .875rem; font-size:.875rem; font-weight:500; color:rgba(var(--fg-rgb),.88);
+  white-space:nowrap }
+.chip .ic{ font-size:1rem }
+@media (min-width:640px){
+  .stack-inner{ padding-left:2rem; padding-right:2rem }
+  .stack-h2{ margin-bottom:3.5rem; font-size:3rem }
+}
+@media (min-width:1024px){
+  .stack-inner{ padding-top:7rem; padding-bottom:7rem }
+  .stack-grid{ grid-template-columns:repeat(3,1fr); gap:3rem }
+}
 .partners{ width:100%; max-width:24rem }
 .partners-label{ margin-bottom:.75rem; font-size:.75rem; font-weight:500; color:rgba(var(--fg-rgb),.45); text-align:left }
 .partners-grid{ display:grid; grid-template-columns:repeat(4,1fr); column-gap:1rem; row-gap:.75rem }
@@ -344,7 +348,6 @@ img{ display:block }
   .hero-right{ grid-column:span 5; align-items:flex-end }
   .hero-card{ width:19rem }
   .partners{ width:19rem; max-width:19rem }
-  .stack-panel{ width:19rem; max-width:19rem }
   .partners-label{ text-align:right }
 }
 
@@ -820,9 +823,10 @@ img{ display:block }
     <nav class="nav-primary" aria-label="Primary">
       <ul>
         <li><button type="button" data-nav="home" aria-current="page"><span data-hs-ty="-2" data-hs-op="0.8,1" data-hs-cfg="320,22">Home</span></button></li>
-        <li><button type="button" data-nav="works"><span data-hs-ty="-2" data-hs-op="0.8,1" data-hs-cfg="320,22">Work</span></button></li>
-        <li><button type="button" data-nav="services"><span data-hs-ty="-2" data-hs-op="0.8,1" data-hs-cfg="320,22">Services<span class="nav-caret" aria-hidden="true">&#9662;</span></span></button></li>
         <li><button type="button" data-nav="about"><span data-hs-ty="-2" data-hs-op="0.8,1" data-hs-cfg="320,22">About</span></button></li>
+        <li><button type="button" data-nav="stack"><span data-hs-ty="-2" data-hs-op="0.8,1" data-hs-cfg="320,22">Stack</span></button></li>
+        <li><button type="button" data-nav="works"><span data-hs-ty="-2" data-hs-op="0.8,1" data-hs-cfg="320,22">Work</span></button></li>
+        <li><button type="button" data-nav="services"><span data-hs-ty="-2" data-hs-op="0.8,1" data-hs-cfg="320,22">Services</span></button></li>
         <li><a href="resume.pdf" target="_blank" rel="noopener"><span data-hs-ty="-2" data-hs-op="0.8,1" data-hs-cfg="320,22">Résumé</span></a></li>
         <li><button type="button" data-modal-open><span data-hs-ty="-2" data-hs-op="0.8,1" data-hs-cfg="320,22">Contact</span></button></li>
       </ul>
@@ -905,24 +909,7 @@ img{ display:block }
         </div>
       </div>
 
-      <div class="stack-panel reveal" data-gate="ready" style="--rv-y:14px;--rv-d:550ms">
-        <div class="stack-head"><span>The stack</span><span class="stack-count">15</span></div>
-        <div class="stack-groups">
-          <div class="stack-group">
-            <p class="stack-label">Front end</p>
-            <ul class="stack-chips"><li><span class="chip" style="--c:#61DAFB"><svg class="ic" aria-hidden="true"><use href="#i-b-react"/></svg>React</span></li><li><span class="chip" style="--c:#F7DF1E"><svg class="ic" aria-hidden="true"><use href="#i-b-js"/></svg>JavaScript</span></li><li><span class="chip" style="--c:#E34F26"><svg class="ic" aria-hidden="true"><use href="#i-b-html5"/></svg>HTML5</span></li><li><span class="chip" style="--c:#1572B6"><svg class="ic" aria-hidden="true"><use href="#i-b-css3"/></svg>CSS3</span></li><li><span class="chip" style="--c:#7952B3"><svg class="ic" aria-hidden="true"><use href="#i-b-bootstrap"/></svg>Bootstrap</span></li><li><span class="chip" style="--c:#0769AD"><svg class="ic" aria-hidden="true"><use href="#i-b-jquery"/></svg>jQuery</span></li></ul>
-          </div>
-          <div class="stack-group">
-            <p class="stack-label">Back end</p>
-            <ul class="stack-chips"><li><span class="chip" style="--c:#777BB4"><svg class="ic" aria-hidden="true"><use href="#i-b-php"/></svg>PHP</span></li><li><span class="chip" style="--c:#4479A1"><svg class="ic" aria-hidden="true"><use href="#i-b-mysql"/></svg>MySQL</span></li><li><span class="chip" style="--c:#5FA04E"><svg class="ic" aria-hidden="true"><use href="#i-b-node"/></svg>Node</span></li><li><span class="chip" style="--c:var(--foreground)"><svg class="ic" aria-hidden="true"><use href="#i-b-express"/></svg>Express</span></li><li><span class="chip" style="--c:#47A248"><svg class="ic" aria-hidden="true"><use href="#i-b-mongodb"/></svg>MongoDB</span></li></ul>
-          </div>
-          <div class="stack-group">
-            <p class="stack-label">Design &amp; workflow</p>
-            <ul class="stack-chips"><li><span class="chip" style="--c:#31A8FF"><svg class="ic" aria-hidden="true"><use href="#i-b-photoshop"/></svg>Photoshop</span></li><li><span class="chip" style="--c:#88CE02"><svg class="ic" aria-hidden="true"><use href="#i-b-gsap"/></svg>GSAP</span></li><li><span class="chip" style="--c:#F05032"><svg class="ic" aria-hidden="true"><use href="#i-b-git"/></svg>Git</span></li><li><span class="chip" style="--c:var(--foreground)"><svg class="ic" aria-hidden="true"><use href="#i-b-vercel"/></svg>Vercel</span></li></ul>
-          </div>
-        </div>
-      </div>
-    </div>
+
   </div>
 
   <div class="shell hero-status reveal" data-gate="ready" style="--rv-y:0px;--rv-d:900ms">
@@ -969,6 +956,32 @@ img{ display:block }
         </a>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ============================ STACK ============================ -->
+<section id="stack">
+  <div class="shell stack-inner">
+    <div class="reveal" style="--rv-y:12px">
+      <span class="eyebrow"><span class="dot"></span>The stack</span>
+    </div>
+    <h2 class="stack-h2 lines" style="--d:120ms">
+      <span class="ln" style="--i:0"><span>What I build with</span></span>
+    </h2>
+    <ul class="stack-grid">
+      <li class="stack-col reveal" style="--rv-y:26px;--rv-d:0ms">
+        <p class="stack-label">Front end</p>
+        <ul class="stack-chips"><li><span class="chip" style="--c:#61DAFB"><svg class="ic" aria-hidden="true"><use href="#i-b-react"/></svg>React</span></li><li><span class="chip" style="--c:#F7DF1E"><svg class="ic" aria-hidden="true"><use href="#i-b-js"/></svg>JavaScript</span></li><li><span class="chip" style="--c:#E34F26"><svg class="ic" aria-hidden="true"><use href="#i-b-html5"/></svg>HTML5</span></li><li><span class="chip" style="--c:#1572B6"><svg class="ic" aria-hidden="true"><use href="#i-b-css3"/></svg>CSS3</span></li><li><span class="chip" style="--c:#7952B3"><svg class="ic" aria-hidden="true"><use href="#i-b-bootstrap"/></svg>Bootstrap</span></li><li><span class="chip" style="--c:#0769AD"><svg class="ic" aria-hidden="true"><use href="#i-b-jquery"/></svg>jQuery</span></li></ul>
+      </li>
+      <li class="stack-col reveal" style="--rv-y:26px;--rv-d:90ms">
+        <p class="stack-label">Back end</p>
+        <ul class="stack-chips"><li><span class="chip" style="--c:#777BB4"><svg class="ic" aria-hidden="true"><use href="#i-b-php"/></svg>PHP</span></li><li><span class="chip" style="--c:#4479A1"><svg class="ic" aria-hidden="true"><use href="#i-b-mysql"/></svg>MySQL</span></li><li><span class="chip" style="--c:#5FA04E"><svg class="ic" aria-hidden="true"><use href="#i-b-node"/></svg>Node</span></li><li><span class="chip" style="--c:var(--foreground)"><svg class="ic" aria-hidden="true"><use href="#i-b-express"/></svg>Express</span></li><li><span class="chip" style="--c:#47A248"><svg class="ic" aria-hidden="true"><use href="#i-b-mongodb"/></svg>MongoDB</span></li></ul>
+      </li>
+      <li class="stack-col reveal" style="--rv-y:26px;--rv-d:180ms">
+        <p class="stack-label">Design &amp; workflow</p>
+        <ul class="stack-chips"><li><span class="chip" style="--c:#31A8FF"><svg class="ic" aria-hidden="true"><use href="#i-b-photoshop"/></svg>Photoshop</span></li><li><span class="chip" style="--c:#88CE02"><svg class="ic" aria-hidden="true"><use href="#i-b-gsap"/></svg>GSAP</span></li><li><span class="chip" style="--c:#F05032"><svg class="ic" aria-hidden="true"><use href="#i-b-git"/></svg>Git</span></li><li><span class="chip" style="--c:var(--foreground)"><svg class="ic" aria-hidden="true"><use href="#i-b-vercel"/></svg>Vercel</span></li></ul>
+      </li>
+    </ul>
   </div>
 </section>
 
@@ -1251,11 +1264,12 @@ img{ display:block }
   <nav class="shell navmenu-nav" aria-label="Overlay">
     <ul>
       <li><button class="navmenu-item" type="button" style="--i:0" data-nav="home"><span class="navmenu-num">01</span><span class="navmenu-label">Home</span></button></li>
-      <li><button class="navmenu-item" type="button" style="--i:1" data-nav="works"><span class="navmenu-num">02</span><span class="navmenu-label">Work</span></button></li>
-      <li><button class="navmenu-item" type="button" style="--i:2" data-nav="services"><span class="navmenu-num">03</span><span class="navmenu-label">Services</span></button></li>
-      <li><button class="navmenu-item" type="button" style="--i:3" data-nav="about"><span class="navmenu-num">04</span><span class="navmenu-label">About</span></button></li>
-      <li><a class="navmenu-item" href="resume.pdf" target="_blank" rel="noopener" style="--i:4"><span class="navmenu-num">05</span><span class="navmenu-label">Résumé</span></a></li>
-      <li><button class="navmenu-item" type="button" style="--i:5" data-modal-open><span class="navmenu-num">06</span><span class="navmenu-label">Contact</span></button></li>
+      <li><button class="navmenu-item" type="button" style="--i:1" data-nav="about"><span class="navmenu-num">02</span><span class="navmenu-label">About</span></button></li>
+      <li><button class="navmenu-item" type="button" style="--i:2" data-nav="stack"><span class="navmenu-num">03</span><span class="navmenu-label">Stack</span></button></li>
+      <li><button class="navmenu-item" type="button" style="--i:3" data-nav="works"><span class="navmenu-num">04</span><span class="navmenu-label">Work</span></button></li>
+      <li><button class="navmenu-item" type="button" style="--i:4" data-nav="services"><span class="navmenu-num">05</span><span class="navmenu-label">Services</span></button></li>
+      <li><a class="navmenu-item" href="resume.pdf" target="_blank" rel="noopener" style="--i:5"><span class="navmenu-num">06</span><span class="navmenu-label">Résumé</span></a></li>
+      <li><button class="navmenu-item" type="button" style="--i:6" data-modal-open><span class="navmenu-num">07</span><span class="navmenu-label">Contact</span></button></li>
     </ul>
   </nav>
 
@@ -1376,13 +1390,11 @@ stopScroll(); // the loader owns the page until it leaves
 function scrollToId(id){
   const el = document.getElementById(id);
   if (!el) return;
-  const wasEnabled = scrollEnabled;
-  scrollEnabled = false;
-  setTimeout(() => {
-    if (lenis) lenis.scrollTo(el, { duration: 1.2 });
-    else window.scrollTo({ top: el.getBoundingClientRect().top + window.pageYOffset, behavior: 'smooth' });
-  }, 50);
-  setTimeout(() => { scrollEnabled = wasEnabled; }, 100);
+  const top = el.getBoundingClientRect().top + window.pageYOffset;
+  // native smooth scroll: Lenis only virtualises the wheel, and its scrollTo does not always land
+  if (lenis) lenis.stop();
+  window.scrollTo({ top: top, behavior: REDUCED ? 'auto' : 'smooth' });
+  setTimeout(() => { if (lenis) lenis.start(); }, 900);
 }
 
 /* ============================================================
@@ -1950,6 +1962,7 @@ if (CAN_HOVER && !REDUCED){
   const STOPS = [
     ['#home', [207, 128, 71]],      // warm, as the hero
     ['#about', [97, 218, 251]],     // react cyan
+    ['#stack', [92, 152, 232]],     // blue
     ['#works', [149, 122, 214]],    // violet
     ['#services', [71, 162, 72]],   // green
     ['.stats', [207, 128, 71]],     // back to warm

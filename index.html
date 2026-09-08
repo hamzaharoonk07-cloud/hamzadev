@@ -408,20 +408,24 @@ img{ display:block }
 /* ============================================================
    CREATE BAND
    ============================================================ */
-.band{ background:transparent }
-.band-list{ display:flex; flex-direction:column; gap:.75rem; padding:2.5rem 1.25rem }
-.band-list > li{ flex:1 }
-.band-tile{ display:grid; place-items:center; height:6rem; border-radius:var(--radius-pill);
-  font-size:1.875rem; font-weight:500; will-change:transform }
-.band-tile.light{ background:var(--surface); color:var(--foreground) }
-.band-tile.accent{ background:linear-gradient(to bottom right, var(--accent-from), var(--accent-to)); color:#fff }
-.band-tile.dark{ background:var(--card); color:#fff }
-.band-tile.dark .ic{ font-size:2.25rem }
-.band-tile.ghost{ background:rgba(var(--surface-rgb),.6); color:rgba(var(--fg-rgb),.35) }
+.band{ background:transparent; overflow:hidden; padding-block:2.75rem;
+  border-block:1px solid var(--line);
+  -webkit-mask-image:linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image:linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent) }
+.marquee{ display:flex; width:max-content }
+.marquee-track{ display:flex; animation:marquee 30s linear infinite; will-change:transform }
+.band:hover .marquee-track{ animation-play-state:paused }
+.marquee-group{ display:flex; align-items:center }
+.marquee span{ font-size:2rem; font-weight:600; letter-spacing:-.02em; color:rgba(var(--fg-rgb),.32);
+  transition:color .5s ease }
+.marquee span.on{ color:rgb(var(--amb-rgb)) }
+.marquee i{ display:block; width:.4375rem; height:.4375rem; border-radius:var(--radius-pill);
+  background:rgba(var(--fg-rgb),.22); margin:0 2rem }
+@keyframes marquee{ from{ transform:translateX(0) } to{ transform:translateX(-50%) } }
 @media (min-width:640px){
-  .band-list{ flex-direction:row; gap:1rem; padding-left:2rem; padding-right:2rem }
-  .band-tile{ height:10rem; font-size:2.25rem }
-  .band-tile.dark .ic{ font-size:3rem }
+  .band{ padding-block:3.5rem }
+  .marquee span{ font-size:3rem }
+  .marquee i{ margin:0 2.75rem }
 }
 
 /* ============================================================
@@ -472,7 +476,13 @@ img{ display:block }
   .pf-bottom{ inset-inline:2rem; bottom:2rem }
   .pf-bottom h3{ font-size:1.875rem }
 }
-@media (min-width:768px){ .works-grid{ grid-template-columns:1fr 1fr } }
+@media (min-width:768px){
+  .works-grid{ grid-template-columns:1fr 1fr }
+  /* the fifth card takes the full row rather than leaving a hole */
+  .works-grid > li:nth-child(5){ grid-column:1 / -1 }
+  .works-grid > li:nth-child(5) .pf-card{ min-height:22rem }
+  .works-grid > li:nth-child(5) .pf-logo img{ width:9rem; height:9rem }
+}
 @media (min-width:1024px){ .works-inner{ padding-bottom:7rem } }
 
 /* ============================================================
@@ -481,32 +491,32 @@ img{ display:block }
 #services{ background:transparent }
 .services-inner{ padding:5rem 1.25rem }
 .services-h2{ margin:1.25rem 0 3rem; max-width:16ch; font-size:2.25rem; font-weight:600; letter-spacing:-.02em }
-.svc{ display:block }
-.svc-in{ display:flex; align-items:center; gap:1rem; border-radius:var(--radius-card-sm);
-  padding-top:1.5rem; padding-bottom:1.5rem; padding-left:1.5rem; padding-right:1.5rem;
-  background:rgba(var(--surface-rgb),0) }
-.services-list > li{ border-top:1px solid var(--line) }
-.services-list > li:first-child{ border-top:0 }
-.svc-idx{ width:1.75rem; font-size:.875rem; font-weight:500; color:rgba(var(--fg-rgb),.4); flex:none }
-.svc-mark{ display:none; font-size:1.5rem; color:rgba(var(--fg-rgb),.35); flex:none }
-.svc-title{ flex:1; font-size:1.5rem; font-weight:500; letter-spacing:-.01em; min-width:0 }
-.svc-desc{ display:none; max-width:20rem; font-size:.875rem; color:rgba(var(--fg-rgb),.55) }
-.svc-badge{ width:2.5rem; height:2.5rem; display:grid; place-items:center; border-radius:var(--radius-pill);
-  background:var(--card); color:#fff; font-size:1rem; flex:none; will-change:transform }
-@media (min-width:640px){
-  .services-inner{ padding-left:2rem; padding-right:2rem }
-  .services-h2{ margin-bottom:3.5rem; font-size:3rem }
-  .svc-in{ gap:1.5rem; padding-top:2rem; padding-bottom:2rem }
-  .svc-idx{ width:2.5rem }
-  .svc-title{ font-size:1.875rem }
-  .svc-badge{ width:3rem; height:3rem }
-}
-@media (min-width:768px){ .svc-title{ font-size:2.25rem } }
-@media (min-width:1024px){
-  .services-inner{ padding-top:7rem; padding-bottom:7rem }
-  .svc-desc{ display:block }
-  .svc-mark{ display:block }
-}
+.svc-grid{ display:grid; grid-template-columns:1fr; gap:1rem }
+.svc-card{ position:relative; display:block; width:100%; text-align:left; cursor:pointer;
+  border-radius:var(--radius-card); padding:1.5rem; min-height:13rem;
+  background:linear-gradient(158deg, rgba(255,255,255,.055), rgba(255,255,255,0) 48%), #141416;
+  box-shadow:0 0 0 1px rgba(255,255,255,.07);
+  transition:transform .45s cubic-bezier(.2,.8,.2,1), box-shadow .45s ease }
+.svc-card:hover{ transform:translateY(-6px);
+  box-shadow:0 0 0 1px color-mix(in srgb, var(--sc) 45%, transparent),
+             0 30px 60px -32px color-mix(in srgb, var(--sc) 75%, transparent) }
+.svc-top{ display:flex; align-items:center; justify-content:space-between }
+.svc-num{ font-size:.75rem; font-weight:600; letter-spacing:.14em; color:rgba(var(--fg-rgb),.35) }
+.svc-go{ width:2.25rem; height:2.25rem; display:grid; place-items:center; border-radius:var(--radius-pill);
+  background:rgba(var(--fg-rgb),.07); color:rgba(var(--fg-rgb),.6); font-size:.875rem;
+  transition:background .35s ease, color .35s ease, transform .35s cubic-bezier(.2,.8,.2,1) }
+.svc-card:hover .svc-go{ background:var(--sc); color:#0a0a0a; transform:translate(2px,-2px) }
+.svc-ic{ display:grid; place-items:center; width:3rem; height:3rem; border-radius:1rem;
+  margin:1.5rem 0 1.25rem; font-size:1.375rem; color:var(--sc);
+  background:color-mix(in srgb, var(--sc) 15%, transparent);
+  box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--sc) 25%, transparent);
+  transition:transform .45s cubic-bezier(.2,.8,.2,1) }
+.svc-card:hover .svc-ic{ transform:scale(1.08) rotate(-4deg) }
+.svc-card h3{ font-size:1.375rem; font-weight:500; letter-spacing:-.01em }
+.svc-card p{ margin-top:.625rem; max-width:34ch; font-size:.9375rem; line-height:1.6;
+  color:rgba(var(--fg-rgb),.55) }
+@media (min-width:640px){ .svc-card{ padding:1.875rem; min-height:14rem } }
+@media (min-width:768px){ .svc-grid{ grid-template-columns:1fr 1fr; gap:1.25rem } }
 
 /* ============================================================
    STATS
@@ -518,8 +528,13 @@ img{ display:block }
   box-shadow:0 0 0 1px rgba(255,255,255,.07), 0 40px 80px -50px rgba(0,0,0,.9) }
 .stats-h2{ margin-top:1rem; max-width:20ch; font-size:1.875rem; font-weight:500; letter-spacing:-.01em }
 .stats-grid{ margin-top:3.5rem; display:grid; grid-template-columns:repeat(2,1fr); column-gap:2rem; row-gap:3rem }
-.stat-num{ font-size:3rem; font-weight:600; letter-spacing:-.02em; font-variant-numeric:tabular-nums }
-.stat-label{ margin-top:.75rem; font-size:.875rem; color:rgba(255,255,255,.55) }
+.stat-num{ font-size:3.25rem; font-weight:600; letter-spacing:-.03em; font-variant-numeric:tabular-nums;
+  background-image:linear-gradient(170deg, #ffffff 30%, rgba(var(--amb-rgb),.85) 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent; -webkit-text-fill-color:transparent }
+.stat-label{ margin-top:.75rem; max-width:14ch; font-size:.875rem; line-height:1.5; color:rgba(255,255,255,.55) }
+.stats-grid > li{ position:relative; padding-left:1.25rem }
+.stats-grid > li::before{ content:''; position:absolute; left:0; top:.375rem; bottom:.375rem; width:2px;
+  border-radius:2px; background:linear-gradient(180deg, rgba(var(--amb-rgb),.8), transparent) }
 @media (min-width:640px){
   .stats-inner{ padding-left:2rem; padding-right:2rem }
   .stats-panel{ padding:4rem 2rem }
@@ -667,9 +682,6 @@ img{ display:block }
   background:linear-gradient(115deg, transparent 38%, rgba(255,255,255,.09) 48%, transparent 58%);
   transform:translateX(-120%); transition:transform .9s cubic-bezier(.2,.8,.2,1) }
 .pf-card:hover::after{ transform:translateX(120%) }
-/* the service title steps toward the cursor */
-.svc-title{ transition:color .3s ease, transform .45s cubic-bezier(.2,.8,.2,1) }
-.svc:hover .svc-title{ transform:translateX(.5rem) }
 /* the outline pill fills from the left */
 .pill.outline .pill-in{ position:relative; overflow:hidden; z-index:0 }
 .pill.outline .pill-in::before{ content:''; position:absolute; inset:0; z-index:-1;
@@ -714,12 +726,6 @@ img{ display:block }
   box-shadow:0 0 0 1px rgba(255,255,255,.28) }
 .tag-code:hover{ background:var(--pf-c, #fff); color:#0a0a0a; border-color:transparent }
 
-/* service rows answer the cursor */
-.svc-idx, .svc-title, .svc-mark{ transition:color .3s ease }
-.svc:hover .svc-idx{ color:var(--accent) }
-.svc:hover .svc-mark{ color:var(--accent) }
-.svc-badge{ transition:background .3s ease, color .3s ease }
-.svc:hover .svc-badge{ background:var(--accent); color:#fff }
 
 /* nav links draw a line */
 .nav-primary button > span{ position:relative }
@@ -1004,13 +1010,11 @@ img{ display:block }
 </section>
 
 <!-- ============================ CREATE BAND ============================ -->
-<section class="band" aria-label="Design, build, ship">
-  <ul class="shell band-list">
-    <li class="reveal" style="--rv-y:28px;--rv-d:0ms"><span class="band-tile light" data-hs-scale="1.03" data-hs-cfg="300,18">Design</span></li>
-    <li class="reveal" style="--rv-y:28px;--rv-d:120ms"><span class="band-tile accent" data-hs-scale="1.03" data-hs-cfg="300,18">Build</span></li>
-    <li class="reveal" style="--rv-y:28px;--rv-d:240ms"><span class="band-tile dark" data-hs-scale="1.03" data-hs-cfg="300,18"><svg class="ic" aria-hidden="true"><use href="#i-arrow-right"/></svg></span></li>
-    <li class="reveal" style="--rv-y:28px;--rv-d:360ms"><span class="band-tile ghost" data-hs-scale="1.03" data-hs-cfg="300,18">Ship</span></li>
-  </ul>
+<section class="band" aria-label="Design, build, ship, repeat">
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track"><div class="marquee-group"><span class="mq">Design</span><i></i><span class="mq on">Build</span><i></i><span class="mq">Ship</span><i></i><span class="mq on">Repeat</span><i></i><span class="mq">Design</span><i></i><span class="mq on">Build</span><i></i><span class="mq">Ship</span><i></i><span class="mq on">Repeat</span><i></i><span class="mq">Design</span><i></i><span class="mq on">Build</span><i></i><span class="mq">Ship</span><i></i><span class="mq on">Repeat</span><i></i></div><div class="marquee-group"><span class="mq">Design</span><i></i><span class="mq on">Build</span><i></i><span class="mq">Ship</span><i></i><span class="mq on">Repeat</span><i></i><span class="mq">Design</span><i></i><span class="mq on">Build</span><i></i><span class="mq">Ship</span><i></i><span class="mq on">Repeat</span><i></i><span class="mq">Design</span><i></i><span class="mq on">Build</span><i></i><span class="mq">Ship</span><i></i><span class="mq on">Repeat</span><i></i></div></div>
+  </div>
+  <p class="sr-only">Design, build, ship, repeat.</p>
 </section>
 
 <!-- ============================ PORTFOLIO ============================ -->
@@ -1131,46 +1135,38 @@ img{ display:block }
       <span class="ln" style="--i:0"><span>What you can hire me for</span></span>
     </h2>
 
-    <ul class="services-list">
-      <li class="reveal" style="--rv-y:24px;--rv-d:0ms">
-        <a class="svc" href="#services">
-          <div class="svc-in">
-            <span class="svc-idx">01</span>
-            <span class="svc-mark" aria-hidden="true"><svg class="ic"><use href="#i-code"/></svg></span><h3 class="svc-title">Websites</h3>
-            <p class="svc-desc">Marketing sites and landing pages, hand-built so they stay fast.</p>
-            <span class="svc-badge" data-hs-tx="5" data-hs-cfg="300,18" data-hs-trigger="closest:.svc"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
-          </div>
-        </a>
+    <ul class="svc-grid">
+      <li class="reveal" style="--rv-y:30px;--rv-d:0ms">
+        <button class="svc-card" type="button" data-modal-open style="--sc:#61DAFB">
+          <span class="svc-top"><span class="svc-num">01</span><span class="svc-go"><svg class="ic" aria-hidden="true"><use href="#i-arrow-ur"/></svg></span></span>
+          <span class="svc-ic"><svg class="ic" aria-hidden="true"><use href="#i-code"/></svg></span>
+          <h3>Websites</h3>
+          <p>Marketing sites, portfolios and landing pages, hand-built rather than dragged together in a builder — so they stay fast and easy to change later.</p>
+        </button>
       </li>
-      <li class="reveal" style="--rv-y:24px;--rv-d:80ms">
-        <a class="svc" href="#services">
-          <div class="svc-in">
-            <span class="svc-idx">02</span>
-            <span class="svc-mark" aria-hidden="true"><svg class="ic"><use href="#i-db"/></svg></span><h3 class="svc-title">Web Apps</h3>
-            <p class="svc-desc">PHP &amp; MySQL or Node &amp; MongoDB — accounts, bookings, dashboards.</p>
-            <span class="svc-badge" data-hs-tx="5" data-hs-cfg="300,18" data-hs-trigger="closest:.svc"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
-          </div>
-        </a>
+      <li class="reveal" style="--rv-y:30px;--rv-d:80ms">
+        <button class="svc-card" type="button" data-modal-open style="--sc:#47A248">
+          <span class="svc-top"><span class="svc-num">02</span><span class="svc-go"><svg class="ic" aria-hidden="true"><use href="#i-arrow-ur"/></svg></span></span>
+          <span class="svc-ic"><svg class="ic" aria-hidden="true"><use href="#i-db"/></svg></span>
+          <h3>Web Apps</h3>
+          <p>PHP and MySQL, or Node and MongoDB, behind the interface — for anything that has to remember something: accounts, bookings, records, dashboards.</p>
+        </button>
       </li>
-      <li class="reveal" style="--rv-y:24px;--rv-d:160ms">
-        <a class="svc" href="#services">
-          <div class="svc-in">
-            <span class="svc-idx">03</span>
-            <span class="svc-mark" aria-hidden="true"><svg class="ic"><use href="#i-brush"/></svg></span><h3 class="svc-title">Brand Identity</h3>
-            <p class="svc-desc">Logos, colour and type systems, and the assets that keep them consistent.</p>
-            <span class="svc-badge" data-hs-tx="5" data-hs-cfg="300,18" data-hs-trigger="closest:.svc"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
-          </div>
-        </a>
+      <li class="reveal" style="--rv-y:30px;--rv-d:160ms">
+        <button class="svc-card" type="button" data-modal-open style="--sc:#cf8047">
+          <span class="svc-top"><span class="svc-num">03</span><span class="svc-go"><svg class="ic" aria-hidden="true"><use href="#i-arrow-ur"/></svg></span></span>
+          <span class="svc-ic"><svg class="ic" aria-hidden="true"><use href="#i-brush"/></svg></span>
+          <h3>Brand Identity</h3>
+          <p>The design side I started in: logos, colour and type systems, and the digital assets that keep a brand consistent wherever it shows up.</p>
+        </button>
       </li>
-      <li class="reveal" style="--rv-y:24px;--rv-d:240ms">
-        <a class="svc" href="#services">
-          <div class="svc-in">
-            <span class="svc-idx">04</span>
-            <span class="svc-mark" aria-hidden="true"><svg class="ic"><use href="#i-layers"/></svg></span><h3 class="svc-title">Deploy &amp; Maintain</h3>
-            <p class="svc-desc">Shipped to a real domain, then kept running and easy to change.</p>
-            <span class="svc-badge" data-hs-tx="5" data-hs-cfg="300,18" data-hs-trigger="closest:.svc"><svg class="ic"><use href="#i-arrow-ur"/></svg></span>
-          </div>
-        </a>
+      <li class="reveal" style="--rv-y:30px;--rv-d:240ms">
+        <button class="svc-card" type="button" data-modal-open style="--sc:#9578d6">
+          <span class="svc-top"><span class="svc-num">04</span><span class="svc-go"><svg class="ic" aria-hidden="true"><use href="#i-arrow-ur"/></svg></span></span>
+          <span class="svc-ic"><svg class="ic" aria-hidden="true"><use href="#i-layers"/></svg></span>
+          <h3>Deploy &amp; Maintain</h3>
+          <p>Shipped to a real domain and kept running — so the thing you paid for stays live, quick, and simple to change later.</p>
+        </button>
       </li>
     </ul>
   </div>
@@ -1481,23 +1477,6 @@ function initHoverSprings(root = document){
   });
 }
 initHoverSprings();
-
-/* --- services row fill (background alpha + padding) --- */
-document.querySelectorAll('.svc').forEach((row) => {
-  const inner = row.querySelector('.svc-in');
-  const apply = (x) => {
-    inner.style.background = 'rgba(' + getComputedStyle(document.documentElement).getPropertyValue('--surface-rgb').trim() + ',' + x + ')';
-    inner.style.paddingLeft = (1.5 + 0.5 * x) + 'rem';
-    inner.style.paddingRight = (1.5 - 0.25 * x) + 'rem';
-  };
-  apply(0);
-  if (!CAN_HOVER) return;
-  const spring = new Spring(240, 26, apply);
-  row.addEventListener('mouseenter', () => spring.set(1));
-  row.addEventListener('mouseleave', () => spring.set(0));
-  row.addEventListener('focusin', () => spring.set(1));
-  row.addEventListener('focusout', () => spring.set(0));
-});
 
 /* ============================================================
    4. TEXT REVEAL / SCROLL REVEAL

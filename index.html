@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="64x64" href="favicon-64.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Hamza Haroon — Full Stack Developer + App Developer</title>
 <meta name="description" content="Step inside the mind of Hamza Haroon, a full stack developer and app developer from Karachi. Seven live websites and apps.">
@@ -39,15 +42,6 @@ a { color: inherit; }
 .nav { margin-left: auto; display: flex; gap: 28px; align-items: center; font-weight: 700; font-size: 18px; text-transform: uppercase; letter-spacing: .03em; position: relative; }
 .nav a, .nav button { all: unset; cursor: pointer; text-decoration: none; transition: transform .2s, opacity .2s; }
 .nav a:hover, .nav button:hover { transform: translateY(-2px); }
-.sound { position: relative; display: inline-flex; align-items: center; gap: 9px; font-weight: 600; }
-.sound .bars { display: inline-flex; gap: 2px; align-items: flex-end; height: 12px; }
-.sound .bars i { width: 3px; background: currentColor; height: 4px; }
-.sound.on .bars i { animation: eq .8s ease-in-out infinite; } .sound.on .bars i:nth-child(2) { animation-delay: .2s; } .sound.on .bars i:nth-child(3) { animation-delay: .4s; } .sound.on .bars i:nth-child(4) { animation-delay: .1s; }
-@keyframes eq { 50% { height: 13px; } }
-.bubble { position: absolute; top: 40px; left: 50%; transform: translateX(-60%); z-index: 31; white-space: nowrap; background: var(--paper); color: var(--ink); border: 2px solid var(--ink); border-radius: 12px; box-shadow: 0 3px 0 var(--ink); padding: 7px 13px; font-weight: 600; font-size: 16px; letter-spacing: 0; text-transform: none; display: inline-flex; gap: 8px; align-items: center; transition: opacity .4s, transform .4s; pointer-events: none; }
-.bubble svg { width: 15px; height: 15px; }
-.bubble::before { content: ''; position: absolute; top: -8px; left: 46%; width: 13px; height: 13px; background: var(--paper); border-left: 2px solid var(--ink); border-top: 2px solid var(--ink); transform: rotate(45deg); }
-.bubble.gone { opacity: 0; transform: translate(-60%, -6px); }
 
 .hint { position: absolute; z-index: 30; left: 32px; bottom: 74px; font-weight: 600; font-size: 16px; text-transform: uppercase; letter-spacing: .04em; transition: opacity .5s; }
 .hint::after { content: ''; display: block; width: 1.5px; height: 36px; margin-top: 12px; background: linear-gradient(var(--paper), transparent); transform-origin: top; animation: hintline 1.8s ease-in-out infinite; }
@@ -219,14 +213,12 @@ a { color: inherit; }
 
 @media (max-width: 760px) {
   .stage { inset: 8px; border-radius: 18px; }
-  /* top bar: status pill left, sound + links right, no brand text (as the reference) */
+  /* top bar: status pill left, links right, no brand text (as the reference) */
   .top { padding: 14px 14px; align-items: flex-start; gap: 10px; }
   .brand .who { display: none; }
   .status { white-space: normal; max-width: 118px; font-size: 11px; line-height: 1.12; padding: 5px 11px 6px; align-items: flex-start; border-radius: 16px; }
   .status i { margin-top: 3px; flex: none; }
   .nav { gap: 11px; font-size: 13px; letter-spacing: .02em; padding-top: 5px; }
-  .sound #soundTxt { display: none; } .sound { gap: 0; }
-  .bubble { left: auto; right: 6px; top: 34px; transform: none; font-size: 14px; padding: 6px 11px; } .bubble.gone { transform: translateY(-6px); } .bubble::before { left: auto; right: 78px; }
   .hint, .ruler { display: none; }
   /* hero */
   .hero .kicker { top: 12.5%; font-size: 3.6vw; }
@@ -274,9 +266,7 @@ a { color: inherit; }
   <header class="top">
     <div class="brand"><a class="who" href="#" data-go="0" style="text-decoration:none">Hamza Haroon</a><span class="status"><i></i>Open to roles and freelance</span></div>
     <nav class="nav" aria-label="Sections">
-      <button class="sound" id="sound" aria-pressed="false" aria-label="Turn background sound on"><span class="bars"><i></i><i></i><i></i><i></i></span><span id="soundTxt">Sound off</span></button>
       <a href="#" data-go="work">Work</a><a href="#" data-go="about">About</a><a href="#" data-go="contact" class="keep">Contact</a>
-      <span class="bubble" id="bubble"><svg viewBox="0 0 24 24"><path d="M9 17.5V5.5l10-2v12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6.5" cy="17.5" r="2.6" fill="currentColor"/><circle cx="16.5" cy="15.5" r="2.6" fill="currentColor"/></svg>Click for sound</span>
     </nav>
   </header>
   <p class="hint" id="hint">Scroll to step inside</p>
@@ -536,12 +526,6 @@ a { color: inherit; }
   var ruler = $('#ruler'), labs = [['hello', 'Hello'], ['build', 'Systems'], ['beliefs', 'Beliefs'], ['karachi', 'Karachi'], ['work', 'Work'], ['about', 'About'], ['contact', 'Contact']];
   labs.forEach(function (l) { var b = document.createElement('button'); b.className = 'lab'; b.textContent = l[1]; b.setAttribute('data-go', l[0]); ruler.appendChild(b); });
 
-  /* ───── sound ───── */
-  var ac, master, on = false, bubble = $('#bubble'), soundBtn = $('#sound'), soundTxt = $('#soundTxt');
-  function audioInit() { var AC = window.AudioContext || window.webkitAudioContext; if (!AC || ac) return; ac = new AC(); master = ac.createGain(); master.gain.value = 0; master.connect(ac.destination);
-    [196, 247, 294, 392].forEach(function (f, i) { var o = ac.createOscillator(), g = ac.createGain(), l = ac.createOscillator(), lg = ac.createGain(); o.type = i % 2 ? 'triangle' : 'sine'; o.frequency.value = f; g.gain.value = .05; l.frequency.value = .08 + i * .03; lg.gain.value = .03; l.connect(lg).connect(g.gain); o.connect(g).connect(master); o.start(); l.start(); }); }
-  soundBtn.addEventListener('click', function () { audioInit(); if (!ac) return; on = !on; if (ac.resume) ac.resume(); master.gain.setTargetAtTime(on ? .55 : 0, ac.currentTime, .4); soundBtn.classList.toggle('on', on); soundBtn.setAttribute('aria-pressed', on); soundTxt.textContent = on ? 'Sound on' : 'Sound off'; bubble.classList.add('gone'); });
-  setTimeout(function () { bubble.classList.add('gone'); }, 9000);
   $('#copyMail').addEventListener('click', function () { try { navigator.clipboard.writeText('hamzaharoonk07@gmail.com'); } catch (e) {} var b = this; b.style.opacity = 1; b.style.color = '#61e37a'; setTimeout(function () { b.style.color = ''; b.style.opacity = ''; }, 1200); });
 
   /* ───── reduced motion / no gsap ───── */

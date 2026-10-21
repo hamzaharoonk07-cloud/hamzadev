@@ -218,16 +218,49 @@ a { color: inherit; }
 .pointer { position: absolute; right: 14%; top: 24%; width: 52px; }
 
 @media (max-width: 760px) {
-  .stage { inset: 8px; border-radius: 18px; } .top { padding: 18px 16px; } .status { display: none; } .who { font-size: 16px; } .nav { gap: 14px; font-size: 15px; } .nav a:not(.keep) { display: none; }
-  .bubble { left: auto; right: 0; transform: none; } .bubble.gone { transform: translateY(-6px); } .bubble::before { left: auto; right: 40px; }
-  .hint { display: none; } .ruler { left: 14px; right: 14px; bottom: 14px; } .ruler .lab:nth-of-type(even) { display: none; }
-  .hero .name { top: 17%; font-size: 11.6vw; white-space: nowrap; padding: 0; line-height: .9; } .sel, #curA { display: none; } .hero .phrase { width: 90vw; font-size: 4.6vw; top: 33%; } .hero .birds { display: none; }
-  .hero .char { width: min(78vw, 46vh); bottom: -6%; } .hero .role { bottom: auto; top: 41%; font-size: .95rem; width: 30ch; } .dream { left: 4%; top: 50%; transform: rotate(-6deg) scale(.82); }
-  .hi { font-size: min(24vw, 22vh); }
-  .bl { left: 8%; right: 8%; top: 28%; } .bl h2 { font-size: 8.2vw; } .bl.r { left: 8%; top: 32%; } .bl.c h2 { font-size: 6vw; } .bl .big { font-size: 9.4vw; white-space: normal; }
-  .based .txt { font-size: min(24vw, 22vh); } .sky { height: 30%; } .tesla { width: 40vw; }
-  .work .head { width: 90%; top: 14%; } .work .peek { width: 78px; top: -40px; } .work h2 { font-size: min(14vw, 4.4rem); line-height: 1; } .work h2 .w { display: inline-block; margin-right: .2em; } .work .head p { display: none; }
-  .reelwrap { left: 6vw; top: 31%; } .reel { gap: 7vw; } .proj { width: 78vw; } .about h2 { font-size: 11vw; } .about .in { left: 7%; top: 22%; }
+  .stage { inset: 8px; border-radius: 18px; }
+  /* top bar: status pill left, sound + links right, no brand text (as the reference) */
+  .top { padding: 14px 14px; align-items: flex-start; gap: 10px; }
+  .brand .who { display: none; }
+  .status { white-space: normal; max-width: 118px; font-size: 11px; line-height: 1.12; padding: 5px 11px 6px; align-items: flex-start; border-radius: 16px; }
+  .status i { margin-top: 3px; flex: none; }
+  .nav { gap: 11px; font-size: 13px; letter-spacing: .02em; padding-top: 5px; }
+  .sound #soundTxt { display: none; } .sound { gap: 0; }
+  .bubble { left: auto; right: 6px; top: 34px; transform: none; font-size: 14px; padding: 6px 11px; } .bubble.gone { transform: translateY(-6px); } .bubble::before { left: auto; right: 78px; }
+  .hint, .ruler { display: none; }
+  /* hero */
+  .hero .kicker { top: 12.5%; font-size: 3.6vw; }
+  .hero .name { top: 16%; left: 0; right: 0; font-size: 21vw; white-space: normal; padding: 0; line-height: .94; }
+  .hero .name span { display: block; }
+  .sel { display: block; left: 9%; width: 82%; top: 15.2%; height: 30%; } .sel b { display: none; }
+  #curA { display: block; left: 66%; top: 33%; }
+  .hero .phrase { width: 92vw; font-size: 4.3vw; top: 48%; justify-content: center; gap: 2.2vw; }
+  .hero .phrase span:first-child::after { content: ' '; }
+  .hero .birds { display: none; }
+  .hero .char { width: min(86vw, 52vh); bottom: -9%; }
+  .hero .role { bottom: auto; top: 58%; font-size: .95rem; width: 30ch; }
+  .dream { left: 4%; top: 50%; transform: rotate(-6deg) scale(.82); }
+  .ico { top: 66%; }
+  /* hello / systems / years */
+  .hi { font-size: min(26vw, 24vh); }
+  .hello .stack { padding: 12vh 6vw 10vh; }
+  .sys small { font-size: 5.4vw; } .sys .word { font-size: min(17.5vw, 20vh); }
+  .sys .stack { padding: 14vh 6vw 16vh; } .kit { opacity: .95; }
+  .years .big { font-size: min(21vw, 22vh); }
+  /* beliefs: left-aligned like the reference */
+  .bl { left: 6%; right: 6%; top: 24%; } .bl h2 { font-size: 9vw; line-height: 1.05; } .bl p { font-size: 1.05rem; max-width: 30ch; }
+  .bl.r { left: 6%; top: 28%; } .bl.c { left: 6%; right: 6%; text-align: left; top: 28%; } .bl.c h2 { font-size: 6.4vw; margin: 0; max-width: none; } .bl .big { font-size: 12vw; white-space: normal; line-height: .98; margin-top: 2vh; }
+  .doodles .stack { padding: 14vh 8vw 18vh; } .doodles h2 { font-size: min(10.6vw, 8vh); } .dd { opacity: .9; }
+  /* based in karachi */
+  .based .stack { padding-top: 12vh; } .based .txt { font-size: min(24vw, 21vh); } .based .cap { padding: 0 7vw; max-width: none; } .sky { height: 30%; } .tesla { width: 42vw; }
+  /* work: heading + intro on top, cards low and swiping sideways */
+  .work .head { width: 90%; left: 6%; top: 15%; } .work .peek { width: 86px; top: -42px; left: 4px; }
+  .work h2 { font-size: min(18vw, 6rem); line-height: .9; } .work h2 .w { display: block; margin-right: 0; }
+  .work .head p { display: block; font-size: 1rem; max-width: 30ch; margin-top: 1.6vh; } .work .head p.dim { display: none; }
+  .reelwrap { left: 5vw; right: 0; top: 55%; bottom: 3%; } .reel { gap: 7vw; } .proj { width: 76vw; }
+  .proj .label { font-size: .8rem; } .proj h3 { font-size: 1.35rem; margin-top: .6rem; } .proj p { font-size: .85rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .about h2 { font-size: 12.4vw; } .about .in { left: 6%; right: 6%; top: 22%; } .about li { font-size: 1.1rem; }
+  .final .fgrid { padding: 12vh 7vw 8vh; }
 }
 @media (prefers-reduced-motion: reduce) { .grain, .wave, .kit.f, .kit.f2, .dd.f, .dd.f2, .hint::after { animation: none !important; } }
 </style>
@@ -251,7 +284,7 @@ a { color: inherit; }
   <!-- 1 · hero -->
   <section class="scene hero first" id="s1">
     <p class="kicker mix" id="kickA">INSIDE THE MIND OF</p>
-    <h1 class="name">HAMZA HAROON</h1>
+    <h1 class="name"><span>HAMZA</span> <span>HAROON</span></h1>
     <div class="sel" id="sel"><i></i><i></i><i></i><i></i><b>878 × 194</b></div>
     <div class="cur" id="curA" style="left:83%;top:31%"><svg viewBox="0 0 24 24"><path d="M3 2l17 8-7 2-3 8z" fill="#3a8bf5" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg><span>Hamza</span></div>
     <p class="phrase"><span>FULL STACK</span><span>+ APP DEV</span></p>
@@ -469,7 +502,12 @@ a { color: inherit; }
   function words(el) { var t = el.textContent; el.innerHTML = ''; return t.split(' ').map(function (w) { var s = document.createElement('span'); s.className = 'wd'; s.textContent = w; el.appendChild(s); el.appendChild(document.createTextNode(' ')); return s; }); }
   var bw = { b1h: words($('#b1 h2')), b1p: words($('#b1 p')), b2h: words($('#b2 h2')), b3h: words($('#b3 h2')), b3p: words($('#b3 p')), b4h: words($('#b4 h2')) };
   var d1w = words($('#d1'));
-  var bigB = $('#bigB'), bigLetters = []; 'I DON’T BELIEVE IN TEMPLATES.'.split('').forEach(function (ch, i) { var s = document.createElement('span'); s.textContent = ch === ' ' ? ' ' : ch; if (ch !== ' ' && i % 4 === 2) s.style.cssText = 'font-size:.78em;position:relative;top:.05em'; bigB.appendChild(s); bigLetters.push(s); });
+  var bigB = $('#bigB'), bigLetters = [];
+  'I DON’T BELIEVE IN TEMPLATES.'.split(' ').forEach(function (word, wi, arr) {
+    var w = document.createElement('span'); w.style.cssText = 'display:inline-block;white-space:nowrap';
+    word.split('').forEach(function (ch, i) { var sp = document.createElement('span'); sp.textContent = ch; if ((wi * 5 + i) % 4 === 2) sp.style.cssText = 'font-size:.78em;position:relative;top:.05em'; w.appendChild(sp); bigLetters.push(sp); });
+    bigB.appendChild(w); if (wi < arr.length - 1) bigB.appendChild(document.createTextNode(' '));
+  });
   var basedTxt = $('#basedTxt'); $$('.l', basedTxt).forEach(function (l) { var t = l.textContent; l.innerHTML = ''; t.split('').forEach(function (ch, i) { var s = document.createElement('span'); s.textContent = ch === ' ' ? ' ' : ch; s.style.display = 'inline-block'; if (ch !== ' ' && i % 3 === 1) s.style.cssText += ';font-size:.84em;position:relative;top:.04em'; l.appendChild(s); }); });
   var basedLetters = $$('.l span', basedTxt);
 

@@ -143,7 +143,7 @@ a { color: inherit; }
 .final .ft span:last-child { color: var(--accent); }
 .final .fsub { margin-top: 3vh; max-width: 38ch; font-weight: 600; font-size: min(1.55vw, 3vh); line-height: 1.3; color: var(--lilac); }
 .final .mail { margin-top: 3vh; display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: min(1.9vw, 3.6vh); text-transform: uppercase; letter-spacing: .03em; }
-.final .mail .addr { user-select: text; text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 2px; }
+.final .mail a { text-decoration: underline; text-underline-offset: 5px; text-decoration-thickness: 2px; }
 .final .row { margin-top: 2.6vh; display: flex; flex-wrap: wrap; gap: 10px; }
 .final .row a { border: 2px solid var(--paper); border-radius: 999px; padding: 7px 20px 8px; text-decoration: none; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; font-size: min(1.05vw, 2.1vh); transition: background .2s, color .2s, transform .2s; }
 .final .row a:hover { background: var(--accent); border-color: var(--accent); color: var(--ink); transform: translateY(-2px); }
@@ -199,7 +199,7 @@ a { color: inherit; }
 .work .head p a { text-underline-offset: 3px; }
 .reelwrap { position: absolute; left: 39.5vw; right: 0; top: 16%; bottom: 4%; overflow: hidden; padding: 6px 0 0 0; }
 .reel { display: flex; gap: 6vw; will-change: transform; width: max-content; align-items: flex-start; }
-.proj { flex: none; width: min(40vw, 640px); display: block; will-change: transform, opacity; }
+.proj { flex: none; width: min(40vw, 640px); text-decoration: none; display: block; will-change: transform, opacity; }
 .proj .label { display: flex; justify-content: space-between; align-items: baseline; font-weight: 700; font-size: clamp(.85rem, 1vw, 1rem); margin-bottom: .55rem; gap: 1rem; }
 .proj .label em { font-style: normal; opacity: .72; font-weight: 600; text-align: right; }
 .proj .cover { aspect-ratio: 1.34; border-radius: 18px; overflow: hidden; border: 2px solid var(--ink); background: #1b2630; transition: transform .5s cubic-bezier(.2,.8,.2,1); }
@@ -313,7 +313,7 @@ a { color: inherit; }
   <section class="scene work" id="s8">
     <div class="head"><svg class="peek" viewBox="0 0 130 70" id="peek" aria-hidden="true"></svg><h2 id="workH" aria-label="Selected work"></h2>
       <p>Seven live sites I&rsquo;ve designed, built and shipped, from a PHP portal to MERN apps.</p>
-      <p class="dim">There&rsquo;s more where that came from.</p></div>
+      <p class="dim">There&rsquo;s more where that came from. Explore the rest of my code on <a href="https://github.com/hamzaharoonk07-cloud" target="_blank" rel="noopener">GitHub</a>.</p></div>
     <div class="reelwrap" id="reelwrap"><div class="reel" id="reel"></div></div>
   </section>
 
@@ -328,7 +328,8 @@ a { color: inherit; }
       <p class="eyebrow">Let&rsquo;s work together</p>
       <h2 class="ft" id="ft"><span>Let&rsquo;s build</span><span>something.</span></h2>
       <p class="fsub">Websites, web apps and mobile apps for Android and Apple iOS. Open to roles and freelance work.</p>
-      <div class="mail"><span class="addr">hamzaharoonk07@gmail.com</span><button class="copy" id="copyMail" aria-label="Copy email"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/></svg></button></div>
+      <div class="mail"><a href="mailto:hamzaharoonk07@gmail.com">hamzaharoonk07@gmail.com</a><button class="copy" id="copyMail" aria-label="Copy email"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/></svg></button></div>
+      <div class="row"><a href="https://www.linkedin.com/in/hamza-haroon-91532b281/" target="_blank" rel="noopener">LinkedIn</a><a href="https://github.com/hamzaharoonk07-cloud" target="_blank" rel="noopener">GitHub</a><a href="resume.pdf" target="_blank" rel="noopener">R&eacute;sum&eacute;</a></div>
       <p class="loc">Karachi, Pakistan</p>
     </div>
     <div class="fr"><div class="char" id="charB"></div>
@@ -487,7 +488,7 @@ a { color: inherit; }
   ];
   var reel = $('#reel');
   WORK.forEach(function (w) {
-    var a = document.createElement('div'); a.className = 'proj';
+    var a = document.createElement('a'); a.className = 'proj'; a.href = w.u; a.target = '_blank'; a.rel = 'noopener noreferrer';
     a.innerHTML = '<div class="label"><span>' + w.n + '</span><em>' + w.c + '</em></div><div class="cover"><img src="' + w.i + '" alt="' + w.n + ' homepage" loading="lazy"></div><h3>' + w.h + '</h3><p>' + w.s + '</p>';
     reel.appendChild(a);
   });

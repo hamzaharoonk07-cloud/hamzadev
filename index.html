@@ -36,6 +36,38 @@ a { color: inherit; }
 /* top bar */
 .top { position: absolute; z-index: 30; top: 0; left: 0; right: 0; display: flex; align-items: center; padding: 30px 32px; }
 .brand { display: flex; align-items: center; gap: 12px; }
+.logo { width: 34px; height: 34px; display: inline-block; flex: none; transition: transform .35s cubic-bezier(.3,1.6,.5,1); }
+.logo svg { width: 100%; height: 100%; display: block; }
+.logo .blink { animation: blinkc 1.05s steps(1) infinite; } @keyframes blinkc { 50% { opacity: 0; } }
+.who:hover .logo { transform: rotate(-10deg) scale(1.08); }
+.who { display: inline-flex; align-items: center; gap: 10px; }
+.clock { font-weight: 700; font-size: 14px; letter-spacing: .05em; text-transform: uppercase; opacity: .8; margin-left: 4px; font-variant-numeric: tabular-nums; }
+.clock b { color: var(--accent); font-weight: 800; }
+#loader { position: fixed; inset: 0; z-index: 200; background: #14202a; color: var(--paper); overflow: hidden; transition: transform 1s cubic-bezier(.77,0,.18,1); }
+#loader.done { transform: translateY(-101%); }
+#loader::after { content: ''; position: absolute; left: -10%; right: -10%; top: 100%; height: 14vh; background: #14202a; border-radius: 0 0 50% 50%; }
+#loader .lt { position: absolute; top: 30px; left: 32px; right: 32px; display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 14px; letter-spacing: .14em; text-transform: uppercase; color: var(--lilac); }
+#loader .lt .logo { width: 34px; height: 34px; }
+#loader .ln { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-62%); text-align: center; font-family: var(--f-name); font-size: 11vw; line-height: .9; color: #fff; white-space: nowrap; }
+#loader .ln span { display: inline-block; overflow: hidden; vertical-align: top; padding: .04em 0; }
+#loader .ln span i { display: inline-block; font-style: normal; transform: translateY(110%); animation: rise .9s cubic-bezier(.2,.8,.2,1) forwards; }
+#loader .ls { position: absolute; left: 0; right: 0; top: calc(50% + 7vw); text-align: center; font-family: var(--f-name); font-size: clamp(1rem, 2.2vw, 2rem); letter-spacing: .08em; color: var(--lilac); opacity: 0; animation: fadeup .8s .7s ease forwards; }
+#loader .lc { position: absolute; left: 28px; bottom: 26px; font-weight: 900; font-size: clamp(5rem, 14vw, 13rem); line-height: .8; color: var(--accent); font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+#loader .lc small { font-size: .3em; font-weight: 700; color: var(--paper); opacity: .6; margin-left: .15em; }
+#loader .lr { position: absolute; right: 32px; bottom: 30px; text-align: right; font-weight: 700; font-size: 14px; letter-spacing: .12em; text-transform: uppercase; line-height: 1.5; opacity: .7; }
+#loader .bar { position: absolute; left: 0; bottom: 0; height: 4px; width: 0; background: var(--accent); }
+@keyframes rise { to { transform: none; } }
+@keyframes fadeup { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@media (max-width: 760px) { #loader .ln { font-size: 21vw; white-space: normal; line-height: .95; } #loader .ln .gap { display: block; height: 0; } #loader .ls { top: calc(50% + 20vw); } #loader .lt { top: 20px; left: 20px; right: 20px; font-size: 11px; } #loader .lr { right: 20px; bottom: 24px; font-size: 11px; } #loader .lc { left: 16px; bottom: 18px; } }
+@keyframes pop { from { transform: scale(.3) rotate(-20deg); opacity: 0; } to { transform: none; opacity: 1; } }
+.hero .char { cursor: pointer; }
+.bubble { position: absolute; left: 66%; top: 44%; z-index: 6; background: var(--paper); color: var(--ink); border: 2px solid var(--ink); border-radius: 16px 16px 16px 4px; box-shadow: 0 4px 0 var(--ink); padding: 9px 15px 10px; font-weight: 700; font-size: clamp(.9rem, 1.1vw, 1.1rem); line-height: 1.2; width: max-content; max-width: 250px; opacity: 0; transform: translateY(10px) scale(.8); transform-origin: left bottom; transition: opacity .25s, transform .35s cubic-bezier(.3,1.6,.5,1); pointer-events: none; }
+.bubble.on { opacity: 1; transform: none; }
+body.scrolled .bubble { opacity: 0 !important; }
+.eyes { transform-box: fill-box; transform-origin: center; animation: blink 4.6s infinite; }
+@keyframes blink { 0%, 93%, 100% { transform: scaleY(1); } 95.5% { transform: scaleY(.08); } }
+.hop { animation: hop .5s cubic-bezier(.3,1.6,.5,1); }
+@keyframes hop { 40% { translate: 0 -4%; } }
 .who { font-weight: 800; font-size: 18px; text-transform: uppercase; letter-spacing: .03em; }
 .status { display: inline-flex; align-items: center; gap: 8px; border: 1.5px solid rgba(255,248,236,.5); border-radius: 999px; padding: 4px 13px 5px; font-size: 14px; font-weight: 600; letter-spacing: .01em; }
 .status i { width: 8px; height: 8px; border-radius: 50%; background: #61e37a; box-shadow: 0 0 9px #61e37a; }
@@ -61,19 +93,26 @@ a { color: inherit; }
 
 /* hero */
 .hero .kicker { position: absolute; top: 11.2%; left: 0; right: 0; text-align: center; font-weight: 800; font-size: clamp(1rem, 1.9vw, 1.7rem); letter-spacing: .03em; color: var(--lilac); text-transform: uppercase; }
-.hero .name { position: absolute; top: 16%; left: 0; right: 0; text-align: center; font-family: var(--f-name); font-weight: 400; font-size: 11.6vw; line-height: .9; letter-spacing: -.01em; text-transform: uppercase; color: #fff; white-space: nowrap; }
-.sel { position: absolute; left: 15.5%; width: 69%; top: 15.3%; height: 21%; border: 1.5px solid #3a8bf5; z-index: 4; pointer-events: none; }
-.sel i { position: absolute; width: 8px; height: 8px; background: #fff; border: 1.5px solid #3a8bf5; }
-.sel i:nth-child(1) { left: -5px; top: -5px; } .sel i:nth-child(2) { right: -5px; top: -5px; } .sel i:nth-child(3) { left: -5px; bottom: -5px; } .sel i:nth-child(4) { right: -5px; bottom: -5px; }
+.namewrap { position: absolute; top: 16%; left: 0; right: 0; display: flex; justify-content: center; z-index: 4; pointer-events: none; }
+.namebox { position: relative; pointer-events: auto; }
+.hero .name { display: block; text-align: center; font-family: var(--f-name); font-weight: 400; font-size: 11vw; line-height: .9; letter-spacing: -.01em; text-transform: uppercase; color: #fff; white-space: nowrap; padding: .05em .07em 0; }
+.sel { position: absolute; inset: 0; border: 1.5px solid #3a8bf5; z-index: 4; pointer-events: none; }
+.sel i { position: absolute; width: 10px; height: 10px; background: #fff; border: 1.5px solid #3a8bf5; pointer-events: auto; touch-action: none; cursor: nwse-resize; transition: transform .15s; }
+.sel i:hover, .sel i.on { transform: scale(1.5); background: #3a8bf5; }
+.sel i:nth-child(2), .sel i:nth-child(3) { cursor: nesw-resize; }
+.namebox .tip { position: absolute; left: 50%; bottom: -30px; transform: translateX(-50%); font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: #9cc4ff; opacity: 0; transition: opacity .3s; white-space: nowrap; pointer-events: none; }
+.namebox:hover .tip { opacity: .9; }
+#curA { left: auto; top: auto; right: -46px; bottom: -18px; }
+.sel i:nth-child(1) { left: -6px; top: -6px; } .sel i:nth-child(2) { right: -6px; top: -6px; } .sel i:nth-child(3) { left: -6px; bottom: -6px; } .sel i:nth-child(4) { right: -6px; bottom: -6px; }
 .sel b { position: absolute; right: 0; top: -22px; font-size: 11px; font-weight: 700; background: #3a8bf5; color: #fff; padding: 1px 7px; border-radius: 3px; letter-spacing: 0; }
 .cur { position: absolute; z-index: 5; width: 22px; pointer-events: none; }
 .cur svg { width: 22px; display: block; filter: drop-shadow(0 1px 1px rgba(0,0,0,.3)); }
 .cur span { position: absolute; left: 14px; top: 20px; background: #3a8bf5; color: #fff; font-size: 11px; font-weight: 800; padding: 2px 9px 3px; border-radius: 4px 12px 12px 12px; white-space: nowrap; letter-spacing: .01em; }
-.hero .phrase { position: absolute; top: 37.5%; left: 50%; transform: translateX(-50%); width: 68vw; display: flex; justify-content: space-between; font-family: var(--f-name); font-weight: 400; font-size: 3.1vw; letter-spacing: .02em; text-transform: uppercase; color: var(--lilac); }
+.hero .phrase { position: absolute; top: 37.5%; left: 0; right: 0; margin: 0 auto; width: 68vw; display: flex; justify-content: space-between; font-family: var(--f-name); font-weight: 400; font-size: 3.1vw; letter-spacing: .02em; text-transform: uppercase; color: var(--lilac); }
 .hero .birds { position: absolute; left: 10.8%; top: 46%; width: 13.4%; }
-.hero .char { position: absolute; left: 50%; bottom: -12%; width: clamp(300px, min(42vw, 76vh), 740px); transform: translateX(-50%); }
+.hero .char { position: absolute; left: 50%; bottom: -4%; width: clamp(300px, min(42vw, 76vh), 740px); transform: translateX(-50%); }
 .hero .char svg { width: 100%; display: block; overflow: visible; }
-.hero .role { position: absolute; left: 50%; bottom: 6.8%; transform: translateX(-50%); text-align: center; font-weight: 600; font-size: clamp(.9rem, 1.2vw, 1.2rem); line-height: 1.25; color: var(--lilac); width: 44ch; z-index: 3; }
+.hero .role { position: absolute; left: 0; right: 0; margin: 0 auto; bottom: auto; text-align: center; font-weight: 600; font-size: clamp(.9rem, 1.2vw, 1.2rem); line-height: 1.25; color: var(--lilac); width: 42ch; z-index: 3; }
 .hero .role b { color: var(--paper); font-weight: 600; }
 .ico { position: absolute; left: 50%; top: 45%; width: clamp(46px, 5.4vw, 84px); opacity: 0; z-index: 2; }
 .ico svg { width: 100%; display: block; overflow: visible; }
@@ -215,22 +254,24 @@ a { color: inherit; }
   .stage { inset: 8px; border-radius: 18px; }
   /* top bar: status pill left, links right, no brand text (as the reference) */
   .top { padding: 14px 14px; align-items: flex-start; gap: 10px; }
-  .brand .who { display: none; }
+  .brand .who .wt, .clock { display: none; } .logo { width: 30px; height: 30px; }
+  .bubble { left: 50%; top: 54%; font-size: .85rem; max-width: 170px; }
   .status { white-space: normal; max-width: 118px; font-size: 11px; line-height: 1.12; padding: 5px 11px 6px; align-items: flex-start; border-radius: 16px; }
   .status i { margin-top: 3px; flex: none; }
   .nav { gap: 11px; font-size: 13px; letter-spacing: .02em; padding-top: 5px; }
   .hint, .ruler { display: none; }
   /* hero */
   .hero .kicker { top: 12.5%; font-size: 3.6vw; }
-  .hero .name { top: 16%; left: 0; right: 0; font-size: 21vw; white-space: normal; padding: 0; line-height: .94; }
+  .hero .name { font-size: 21vw; white-space: normal; line-height: .94; }
+  .namewrap { top: 15.5%; } .namebox .tip { display: none; }
   .hero .name span { display: block; }
-  .sel { display: block; left: 9%; width: 82%; top: 15.2%; height: 30%; } .sel b { display: none; }
-  #curA { display: block; left: 66%; top: 33%; }
-  .hero .phrase { width: 92vw; font-size: 4.3vw; top: 48%; justify-content: center; gap: 2.2vw; }
+  .sel b { display: none; }
+  #curA { right: 8px; bottom: -34px; }
+  .hero .phrase { width: 92vw !important; font-size: 4.3vw; top: 48%; justify-content: center; gap: 2.2vw; }
   .hero .phrase span:first-child::after { content: ' '; }
   .hero .birds { display: none; }
   .hero .char { width: min(86vw, 52vh); bottom: -9%; }
-  .hero .role { bottom: auto; top: 58%; font-size: .95rem; width: 30ch; }
+  .hero .role { bottom: auto; top: 45%; font-size: .95rem; width: 30ch; }
   .dream { left: 4%; top: 50%; transform: rotate(-6deg) scale(.82); }
   .ico { top: 66%; }
   /* hello / systems / years */
@@ -254,17 +295,18 @@ a { color: inherit; }
   .about h2 { font-size: 12.4vw; } .about .in { left: 6%; right: 6%; top: 22%; } .about li { font-size: 1.1rem; }
   .final .fgrid { padding: 12vh 7vw 8vh; }
 }
-@media (prefers-reduced-motion: reduce) { .grain, .wave, .kit.f, .kit.f2, .dd.f, .dd.f2, .hint::after { animation: none !important; } }
+@media (prefers-reduced-motion: reduce) { .grain, .wave, .eyes, .logo .blink, .kit.f, .kit.f2, .dd.f, .dd.f2, .hint::after { animation: none !important; } }
 </style>
 </head>
 <body>
+<div id="loader" aria-hidden="true"><div class="lt"><span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#14202a"/><path d="M15 12V52M15 34C15 26.5 20.5 23.5 26.5 23.5C33 23.5 37.5 27.5 37.5 34V52" fill="none" stroke="#fff8ec" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round"/><rect class="blink" x="43" y="45" width="11" height="7.5" rx="2" fill="#ffb627"/></svg></span><span>Portfolio &middot; 2026</span></div><div class="ln"><span><i style="animation-delay:0.10s">H</i></span><span><i style="animation-delay:0.15s">A</i></span><span><i style="animation-delay:0.20s">M</i></span><span><i style="animation-delay:0.25s">Z</i></span><span><i style="animation-delay:0.30s">A</i></span><span class="gap">&nbsp;</span><span><i style="animation-delay:0.35s">H</i></span><span><i style="animation-delay:0.40s">A</i></span><span><i style="animation-delay:0.45s">R</i></span><span><i style="animation-delay:0.50s">O</i></span><span><i style="animation-delay:0.55s">O</i></span><span><i style="animation-delay:0.60s">N</i></span></div><div class="ls">Full Stack Developer + App Developer</div><div class="lc"><span id="lcount">0</span><small>%</small></div><div class="lr">Karachi, Pakistan<br>Loading the mind</div><i class="bar" id="lbar"></i></div>
 <div class="track" id="track"></div>
 
 <div class="stage" id="stage">
   <canvas class="dust" id="dust"></canvas>
 
   <header class="top">
-    <div class="brand"><a class="who" href="#" data-go="0" style="text-decoration:none">Hamza Haroon</a><span class="status"><i></i>Open to roles and freelance</span></div>
+    <div class="brand"><a class="who" href="#" data-go="0" style="text-decoration:none" aria-label="Hamza Haroon, home"><span class="logo"><svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#14202a"/><path d="M15 12V52M15 34C15 26.5 20.5 23.5 26.5 23.5C33 23.5 37.5 27.5 37.5 34V52" fill="none" stroke="#fff8ec" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round"/><rect class="blink" x="43" y="45" width="11" height="7.5" rx="2" fill="#ffb627"/></svg></span><span class="wt">Hamza Haroon</span></a><span class="status"><i></i>Open to roles and freelance</span><span class="clock" id="clock"></span></div>
     <nav class="nav" aria-label="Sections">
       <a href="#" data-go="work">Work</a><a href="#" data-go="about">About</a><a href="#" data-go="contact" class="keep">Contact</a>
     </nav>
@@ -274,12 +316,15 @@ a { color: inherit; }
   <!-- 1 · hero -->
   <section class="scene hero first" id="s1">
     <p class="kicker mix" id="kickA">INSIDE THE MIND OF</p>
+    <div class="namewrap" id="nameWrap"><div class="namebox" id="nameBox">
     <h1 class="name"><span>HAMZA</span> <span>HAROON</span></h1>
-    <div class="sel" id="sel"><i></i><i></i><i></i><i></i><b>878 × 194</b></div>
-    <div class="cur" id="curA" style="left:83%;top:31%"><svg viewBox="0 0 24 24"><path d="M3 2l17 8-7 2-3 8z" fill="#3a8bf5" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg><span>Hamza</span></div>
+    <div class="sel" id="sel"><i></i><i></i><i></i><i></i><b>0 × 0</b></div>
+    <span class="tip">Drag a corner to resize · double-click to reset</span>
+    <div class="cur" id="curA"><svg viewBox="0 0 24 24"><path d="M3 2l17 8-7 2-3 8z" fill="#3a8bf5" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg><span>Hamza</span></div>
+    </div></div>
     <p class="phrase"><span>FULL STACK</span><span>+ APP DEV</span></p>
     <svg class="birds" viewBox="0 0 220 90" fill="none" stroke="#fff8ec" stroke-width="3" stroke-linecap="round"><path d="M110 18c10-12 24-10 32 4 8-14 24-14 32-2"/><path d="M52 52c8-9 18-8 26 3 7-10 18-10 24-2"/><path d="M8 62c7-8 15-7 22 2 6-9 15-9 21-2"/><path d="M150 70c6-7 14-6 20 2 6-8 13-8 19-1"/></svg>
-    <div class="char" id="charA"></div>
+    <div class="char" id="charA"></div><p class="bubble" id="bubble"></p>
     <div class="ico" data-i="0"></div><div class="ico" data-i="1"></div><div class="ico" data-i="2"></div><div class="ico" data-i="3"></div><div class="ico" data-i="4"></div><div class="ico" data-i="5"></div>
     <p class="role" id="roleA"><b>Full Stack Developer + App Developer</b><br>I design &amp; build products you&rsquo;ll want to use</p>
   </section>
@@ -387,10 +432,22 @@ a { color: inherit; }
     + '<circle cx="92" cy="196" r="17" fill="var(--skin)"/><circle cx="308" cy="196" r="17" fill="var(--skin)"/>'
     + '<rect x="96" y="108" width="208" height="166" rx="28" fill="var(--skin)"/>'
     + '<ellipse cx="200" cy="112" rx="104" ry="22" fill="#10181f"/><g fill="none" stroke="#fff3dd" stroke-width="1.6" opacity=".4"><ellipse cx="200" cy="112" rx="86" ry="17"/><ellipse cx="200" cy="112" rx="66" ry="12.5"/><ellipse cx="200" cy="112" rx="46" ry="8.5"/><ellipse cx="200" cy="112" rx="26" ry="4.5"/></g>'
-    + '<g><circle cx="156" cy="188" r="23" fill="#fff"/><circle cx="244" cy="188" r="23" fill="#fff"/><circle class="pu" cx="156" cy="184" r="9.5" fill="#15131c"/><circle class="pu" cx="244" cy="184" r="9.5" fill="#15131c"/></g>'
-    + '<path d="M130 156Q156 142 178 154M222 154Q244 142 270 156" stroke-width="5"/>'
+    + '<g class="eyes"><circle cx="156" cy="188" r="23" fill="#fff"/><circle cx="244" cy="188" r="23" fill="#fff"/><circle class="pu" cx="156" cy="184" r="9.5" fill="#15131c"/><circle class="pu" cx="244" cy="184" r="9.5" fill="#15131c"/></g>'
+    + '<path d="M130 161Q156 148 178 159M222 159Q244 148 270 161" stroke-width="5"/>'
     + '<path d="M168 232Q200 262 232 232Q200 244 168 232Z" fill="#15131c"/>'
-    + '<g class="capg"><path d="M92 118C90 52 140 22 204 22 262 22 308 56 308 118Z" fill="var(--cap)"/><ellipse cx="200" cy="120" rx="118" ry="19" fill="#223445"/><path d="M104 74C130 52 172 46 204 46" stroke="#4d6a82" stroke-width="5" opacity=".6"/></g>'
+    + '<g class="capg">'
+    + '<defs><linearGradient id="cgC" x1="0" x2="1"><stop offset="0" stop-color="#101a24"/><stop offset=".42" stop-color="#253b50"/><stop offset="1" stop-color="#0e1720"/></linearGradient><linearGradient id="cgB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d465d"/><stop offset="1" stop-color="#1a2a39"/></linearGradient></defs>'
+    + '<path d="M100 138C150 154 250 154 300 138L300 156C250 170 150 170 100 156Z" fill="#000" stroke="none" opacity=".13"/>'
+    + '<path d="M92 113C86 50 136 14 200 14C264 14 314 50 308 113C260 128 140 128 92 113Z" fill="url(#cgC)"/>'
+    + '<g stroke="#3b5670" stroke-width="2.6" fill="none"><path d="M200 18C196 56 196 92 200 124"/><path d="M152 26C128 52 120 84 122 120"/><path d="M248 26C272 52 280 84 278 120"/></g>'
+    + '<path d="M160 34C140 56 134 84 136 114" stroke="#fff" stroke-width="10" opacity=".07"/>'
+    + '<path d="M118 60C126 44 140 34 156 28" stroke="#6f8ca6" stroke-width="5" opacity=".5"/>'
+    + '<g fill="#0a1117" stroke="#3b5670" stroke-width="1.6"><circle cx="134" cy="58" r="4.5"/><circle cx="266" cy="58" r="4.5"/></g>'
+    + '<ellipse cx="200" cy="15" rx="15" ry="6.5" fill="#ffb627" stroke-width="4"/>'
+    + '<path d="M92 113C140 128 260 128 308 113C326 115 336 124 330 134C290 152 110 152 70 134C64 124 74 115 92 113Z" fill="url(#cgB)"/>'
+    + '<g stroke="#5f7f9c" stroke-width="2" stroke-dasharray="7 6" fill="none" opacity=".85"><path d="M100 121C146 134 254 134 300 121"/><path d="M86 128C132 143 268 143 314 128"/></g>'
+    + '<path d="M73 136C113 152 287 152 327 136" stroke="#ffb627" stroke-width="4.5" fill="none"/>'
+    + '</g>'
     + '<g class="wave"><g class="hand"><g fill="var(--skin)"><rect x="34" y="150" width="19" height="66" rx="9.5"/><rect x="55" y="136" width="19" height="80" rx="9.5"/><rect x="76" y="148" width="19" height="68" rx="9.5"/><rect x="95" y="170" width="17" height="52" rx="8.5" transform="rotate(14 100 200)"/><path d="M34 196H96C100 232 84 252 66 252 46 252 32 232 34 196Z"/></g></g></g>'
     + '</svg>';
   $('#charA').innerHTML = CHAR; $('#charB').innerHTML = CHAR;
@@ -405,6 +462,69 @@ a { color: inherit; }
   function scrolledClass() { document.body.classList.toggle('scrolled', scrollY > 4); }
   addEventListener('scroll', scrolledClass, { passive: true }); scrolledClass();
   addEventListener('pointermove', function (e) { var nx = (e.clientX / innerWidth - .5) * 2, ny = (e.clientY / innerHeight - .5) * 2; pupils.forEach(function (p) { p.style.transform = 'translate(' + nx * 7 + 'px,' + ny * 6 + 'px)'; }); });
+
+  /* ───── name always fits its selection box; corners drag to resize ───── */
+  var bubble = $('#bubble');
+  var nameWrap = $('#nameWrap'), nameBox = $('#nameBox'), nameEl = $('#nameBox .name'), selLab = $('#sel b'), phraseA = $('#s1 .phrase'), stageEl = $('#stage'), userScale = 1;
+  function fitName() {
+    var mob = innerWidth <= 760, sw = stageEl.clientWidth, sh = stageEl.clientHeight, ch = $('#charA'), role = $('#roleA');
+    // reference layout: compact framed name, roomy padding inside the box
+    nameEl.style.padding = mob ? '' : '.26em .12em .2em';
+    nameEl.style.fontSize = '100px';
+    var w = nameEl.offsetWidth, h = nameEl.offsetHeight;
+    var fs = Math.min(100 * sw * (mob ? .84 : .54) / w, 100 * sh * (mob ? .3 : .27) / h) * userScale;
+    nameEl.style.fontSize = fs.toFixed(2) + 'px';
+    var bw = nameBox.offsetWidth, bh = nameBox.offsetHeight, boxBottom = nameWrap.offsetTop + bh;
+    selLab.textContent = Math.round(bw) + ' × ' + Math.round(bh);
+    if (mob) {
+      phraseA.style.top = (boxBottom + sh * .03) + 'px';
+      ch.style.width = ''; ch.style.bottom = ''; bubble.style.left = ''; bubble.style.top = ''; role.style.top = ''; return;
+    }
+    // character: cap top sits just under the name box, shirt shows above the ruler for the role text
+    var limit = boxBottom + sh * .012, B = sh * 1.04, rh = role.offsetHeight || 40, target = sh - 74 - rh - 10;
+    var hgt = (B - limit) / (426 / 440);
+    if (B - hgt * (152 / 440) > target) { hgt = (target - limit) / ((426 - 152) / 440); B = Math.max(sh, limit + hgt * 426 / 440); }
+    var cw = Math.min(hgt * 400 / 440, sw * .5, 820); hgt = cw * 440 / 400;
+    ch.style.width = cw + 'px'; ch.style.bottom = (sh - B) + 'px';
+    var top = B - hgt;
+    // tagline splits left and right of the head
+    var sp = $$('span', phraseA), word = Math.max(sp[0].offsetWidth, sp[1].offsetWidth);
+    phraseA.style.width = Math.min(sw * .92, Math.max(bw * 1.08, cw * .66 + word * 2 + 40)) + 'px';
+    phraseA.style.top = (boxBottom + sh * .015) + 'px';
+    // role sits on the shirt, bubble next to the head
+    role.style.top = (top + hgt * (288 / 440) + Math.min(28, hgt * .05)) + 'px';
+    bubble.style.left = (sw / 2 + cw * .36) + 'px'; bubble.style.top = (top + hgt * .2) + 'px';
+  }
+  fitName(); addEventListener('resize', fitName);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitName);
+  $$('#sel i').forEach(function (hd) {
+    hd.addEventListener('pointerdown', function (e) {
+      e.preventDefault(); e.stopPropagation(); hd.setPointerCapture(e.pointerId); hd.classList.add('on');
+      var r = nameBox.getBoundingClientRect(), cxm = r.left + r.width / 2, half0 = Math.max(20, Math.abs(e.clientX - cxm)), s0 = userScale;
+      function mv(ev) { userScale = Math.min(1, Math.max(.3, s0 * Math.abs(ev.clientX - cxm) / half0)); fitName(); }
+      function up() { hd.classList.remove('on'); hd.removeEventListener('pointermove', mv); hd.removeEventListener('pointerup', up); hd.removeEventListener('pointercancel', up); }
+      hd.addEventListener('pointermove', mv); hd.addEventListener('pointerup', up); hd.addEventListener('pointercancel', up);
+    });
+  });
+  nameBox.addEventListener('dblclick', function () { userScale = 1; fitName(); });
+
+  /* ───── Karachi local time ───── */
+  var clockEl = $('#clock');
+  function tick() { try { var t = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Karachi', hour: 'numeric', minute: '2-digit' }).format(new Date()); clockEl.innerHTML = '<b>KHI</b> ' + t; } catch (e) { clockEl.style.display = 'none'; } }
+  tick(); setInterval(tick, 15000);
+
+  /* ───── loader ───── */
+  (function () {
+    var ld = $('#loader'), bar = $('#lbar'), cnt = $('#lcount'), t0 = performance.now(), D = 1700;
+    function step(now) { var k = Math.min(1, (now - t0) / D), e = 1 - Math.pow(1 - k, 3); bar.style.width = (e * 100) + '%'; cnt.textContent = Math.round(e * 100); if (k < 1) requestAnimationFrame(step); else setTimeout(function () { ld.classList.add('done'); setTimeout(function () { ld.remove(); }, 1100); }, 350); }
+    requestAnimationFrame(step);
+  })();
+
+  /* ───── talk to the character ───── */
+  var charA = $('#charA'), bt, lines = ['Hi, I\u2019m Hamza! Click me.', 'Scroll down, I\u2019ll show you inside my head.', 'Yes, I built this site too.', 'Websites, web apps, Android, iOS.', 'Chai first, then code.', 'From Karachi, building for anywhere.', 'Got a project? Let\u2019s talk.'], li = 0;
+  function say(txt, ms) { bubble.textContent = txt; bubble.classList.add('on'); clearTimeout(bt); bt = setTimeout(function () { bubble.classList.remove('on'); }, ms || 3200); }
+  charA.addEventListener('click', function () { li = (li + 1) % lines.length; say(lines[li]); charA.classList.remove('hop'); void charA.offsetWidth; charA.classList.add('hop'); });
+  setTimeout(function () { if (scrollY < 5) say(lines[0], 4200); }, 3300);
 
   /* ───── icons (original stickers) ───── */
   var S = 'fill="none" stroke="#15131c" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"';
@@ -543,7 +663,7 @@ a { color: inherit; }
 
   // 1 hero
   var LID = { svgOrigin: '92 118' };
-  tl.fromTo(capsA, { rotation: -8, svgOrigin: '92 118' }, { rotation: -78, duration: 3.4, ease: 'power2.out', svgOrigin: '92 118' }, 2.4);
+  tl.fromTo(capsA, { rotation: 0, svgOrigin: '92 118' }, { rotation: -78, duration: 3.4, ease: 'power2.out', svgOrigin: '92 118' }, 2.4);
   var capLift = { rotation: 36, x: 16, y: -16, transformOrigin: '300px 118px', duration: 3.4, ease: 'power2.out' };
   var heroIcons = $$('#s1 .ico'), fan = [[9, -20, -10], [16, -30, 10], [23, -18, 0], [30, -26, 14], [13, -9, 0], [21, -36, -12]];
   heroIcons.forEach(function (ic, k) { tl.fromTo(ic, { xPercent: -50, yPercent: -50, x: 0, y: 0, scale: .2, opacity: 0, rotation: 0 }, { x: function () { return fan[k][0] * innerWidth / 100; }, y: function () { return fan[k][1] * innerHeight / 100 * .9; }, scale: 1, opacity: 1, rotation: fan[k][2], duration: 2.4, ease: 'back.out(1.5)' }, 3.6 + k * .3); });
@@ -632,7 +752,7 @@ a { color: inherit; }
   tl.fromTo('#s10 .fsub, #s10 .mail, #s10 .loc', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 1, stagger: .25 }, 132);
   tl.fromTo('#s10 .row a', { y: 20, opacity: 0, scale: .9 }, { y: 0, opacity: 1, scale: 1, duration: .8, stagger: .12, ease: 'back.out(2)' }, 132.8);
   tl.fromTo('#charB', { x: 90, opacity: 0 }, { x: 0, opacity: 1, duration: 1.8, ease: 'power3.out' }, 130.9);
-  tl.fromTo(capsB, { rotation: -8, svgOrigin: '92 118' }, { rotation: -78, duration: 3.2, ease: 'power2.out', svgOrigin: '92 118' }, 132.2);
+  tl.fromTo(capsB, { rotation: 0, svgOrigin: '92 118' }, { rotation: -78, duration: 3.2, ease: 'power2.out', svgOrigin: '92 118' }, 132.2);
   tl.fromTo('#s10 .dream', { scale: 0, rotation: -30 }, { scale: 1, rotation: -8, duration: 1.2, ease: 'back.out(2)' }, 133.4);
   tl.to({}, { duration: 2.6 }, 135);
 

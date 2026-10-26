@@ -170,7 +170,8 @@ body.scrolled .bubble { opacity: 0 !important; }
 .based .stack { position: absolute; left: 0; right: 0; top: 0; display: flex; flex-direction: column; align-items: center; text-align: center; padding-top: 8vh; z-index: 6; }
 .based .txt { font-weight: 900; font-size: min(14.6vw, 23vh); line-height: .84; text-transform: uppercase; color: #fff3dd; letter-spacing: 0; }
 .based .txt .l { display: block; }
-.based .cap { margin-top: 1.8vh; max-width: 40ch; }
+.based .cap { margin-top: 1.8vh; max-width: 40ch; text-shadow: 0 2px 10px rgba(20,12,8,.7); }
+.based .txt { text-shadow: 0 4px 24px rgba(60,30,10,.35); }
 /* final */
 .final .fgrid { position: absolute; inset: 0; display: grid; grid-template-columns: 1.2fr .8fr; align-items: center; gap: 3vw; padding: 11vh 6vw 14vh 7vw; }
 .final .eyebrow { font-weight: 800; letter-spacing: .14em; text-transform: uppercase; font-size: min(1.1vw, 2vh); color: var(--lilac); margin-bottom: 1.6vh; }
@@ -214,11 +215,14 @@ body.scrolled .bubble { opacity: 0 !important; }
 .dd svg { width: 100%; overflow: visible; display: block; }
 
 /* based in karachi */
-.sky { position: absolute; left: -2%; right: -2%; bottom: 8.4%; width: 104%; height: 35%; z-index: 2; }
+.dusk { position: absolute; inset: 0; z-index: 3; pointer-events: none; background: linear-gradient(180deg, #d1802a 0%, rgba(209,128,42,.92) 30%, rgba(209,128,42,.25) 52%, rgba(209,128,42,0) 66%); }
+.sky { position: absolute; inset: 0; z-index: 1; background: url(karachi-skyline.jpg) 50% 72% / cover no-repeat; filter: saturate(1.05) contrast(1.04); }
+.sky::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255,170,80,.25), rgba(120,60,20,.12)); mix-blend-mode: multiply; }
 .sky svg { width: 100%; height: 100%; display: block; overflow: visible; }
-.ground { position: absolute; left: 0; right: 0; bottom: 8.4%; height: 1.5px; background: rgba(255,243,221,.85); z-index: 3; }
-.road { position: absolute; left: 0; right: 0; bottom: 0; height: 8.4%; z-index: 2; background: linear-gradient(rgba(0,0,0,.14), rgba(0,0,0,.02)); }
-.tesla { position: absolute; left: 0; bottom: 8.2%; width: clamp(180px, 23vw, 360px); z-index: 5; will-change: transform; }
+.ground { position: absolute; left: 0; right: 0; bottom: 8.4%; height: 2px; background: #2a1214; z-index: 3; }
+.road { position: absolute; left: 0; right: 0; bottom: 0; height: 8.4%; z-index: 2; background: linear-gradient(#3a2a2a, #241a1c); }
+.road::after { content: ''; position: absolute; left: 0; right: 0; top: 45%; height: 3px; background: repeating-linear-gradient(90deg, rgba(255,230,170,.75) 0 46px, transparent 46px 96px); }
+.tesla { position: absolute; left: 0; bottom: 1.6%; width: clamp(230px, 30vw, 470px); z-index: 5; will-change: transform; }
 .tesla svg { width: 100%; display: block; overflow: visible; }
 
 /* work */
@@ -287,7 +291,7 @@ body.scrolled .bubble { opacity: 0 !important; }
   .bl.r { left: 6%; top: 28%; } .bl.c { left: 6%; right: 6%; text-align: left; top: 28%; } .bl.c h2 { font-size: 6.4vw; margin: 0; max-width: none; } .bl .big { font-size: 12vw; white-space: normal; line-height: .98; margin-top: 2vh; }
   .doodles .stack { padding: 14vh 8vw 18vh; } .doodles h2 { font-size: min(10.6vw, 8vh); } .dd { opacity: .9; }
   /* based in karachi */
-  .based .stack { padding-top: 12vh; } .based .txt { font-size: min(24vw, 21vh); } .based .cap { padding: 0 7vw; max-width: none; } .sky { height: 30%; } .tesla { width: 42vw; }
+  .based .stack { padding-top: 12vh; } .based .txt { font-size: min(24vw, 21vh); } .based .cap { padding: 0 7vw; max-width: none; } .sky { background-position: 38% 70%; } .tesla { width: 58vw; }
   /* work: heading + intro on top, cards low and swiping sideways */
   .work .head { width: 90%; left: 6%; top: 15%; } .work .peek { width: 86px; top: -42px; left: 4px; }
   .work h2 { font-size: min(18vw, 6rem); line-height: .9; } .work h2 .w { display: block; margin-right: 0; }
@@ -375,7 +379,7 @@ body.scrolled .bubble { opacity: 0 !important; }
   <section class="scene based" id="s7">
     <div class="stack"><h2 class="txt" id="basedTxt" aria-label="Based in Karachi"><span class="l">Based in</span><span class="l">Karachi.</span></h2>
     <p class="cap" id="basedCap">Karachi by address. A city of chai, traffic and the sea breeze. I build from here, for anywhere.</p></div>
-    <div class="sky" id="sky"></div><div class="ground"></div><div class="road"></div>
+    <div class="sky" id="sky" role="img" aria-label="Karachi skyline from Clifton beach"></div><div class="dusk"></div><div class="ground"></div><div class="road"></div>
     <div class="tesla" id="tesla"></div>
   </section>
 
@@ -560,49 +564,49 @@ body.scrolled .bubble { opacity: 0 !important; }
   var workH = $('#workH'), workLetters = [];
   [['Selected', [1, 3, 7], [5]], ['Work', [], []]].forEach(function (wd) { var w = document.createElement('span'); w.className = 'w'; wd[0].split('').forEach(function (ch, i) { var c = document.createElement('span'); c.textContent = ch; if (wd[1].indexOf(i) > -1) c.className = 's'; if (wd[2].indexOf(i) > -1) c.className = 'u'; w.appendChild(c); workLetters.push(c); }); workH.appendChild(w); });
 
-  /* ───── Karachi skyline + Tesla (original line-art) ───── */
+  /* ───── realistic car for the Karachi scene (skyline is a real photo) ───── */
   (function () {
-    var C = '#fff3dd', E = 'stroke="' + C + '" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"', F1 = 'fill="rgba(255,243,221,.14)"', W1 = 'fill="#fff3dd" fill-opacity=".93"';
-    function win(x, y, cols, rows, gx, gy) { var o = ''; for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) { var lit = ((r * 7 + c * 3 + x) % 5) < 2; o += '<rect x="' + (x + c * gx) + '" y="' + (y + r * gy) + '" width="6" height="9" rx="1" fill="' + (lit ? '#ffe9a8' : 'rgba(255,243,221,.3)') + '" stroke="none"/>'; } return o; }
-    function arches(x, y, n, w, gap, h) { var o = ''; for (var i = 0; i < n; i++) { var ax = x + i * (w + gap); o += '<path d="M' + ax + ' ' + y + 'v-' + (h - w / 2) + 'a' + (w / 2) + ' ' + (w / 2) + ' 0 0 1 ' + w + ' 0v' + (h - w / 2) + '" fill="rgba(0,0,0,.13)"/>'; } return o; }
-    function palm(x, h) { var y = 400 - h; return '<g ' + E + ' fill="none"><path d="M' + x + ' 400C' + (x + 8) + ' ' + (400 - h * .5) + ' ' + (x - 6) + ' ' + (400 - h * .8) + ' ' + (x + 2) + ' ' + y + '"/><path d="M' + (x + 2) + ' ' + y + 'q-36 -6 -52 22M' + (x + 2) + ' ' + y + 'q-24 -26 -54 -8M' + (x + 2) + ' ' + y + 'q10 -34 44 -30M' + (x + 2) + ' ' + y + 'q34 -8 52 20M' + (x + 2) + ' ' + y + 'q26 -22 54 -2"/></g>'; }
-    function lamp(x) { return '<g ' + E + ' fill="none"><path d="M' + x + ' 400V312h-26"/><circle cx="' + (x - 30) + '" cy="312" r="5" fill="#ffe9a8"/></g>'; }
-    var v = '<svg viewBox="-300 0 2040 400" preserveAspectRatio="xMidYMax meet">';
-    // wide haze + edge blocks so the skyline spans the whole frame
-    v += '<g fill="rgba(255,243,221,.09)" stroke="rgba(255,243,221,.26)" stroke-width="2"><path d="M-300 400V292h60v-40h50v60h50v-70h44v50h60v-26h60v100zM1430 400V282h56v-44h46v62h52v-36h60v76h60v-30h66v94z"/></g>';
-    v += '<g ' + E + ' ' + F1 + '><path d="M-170 400V262h96v138"/><path d="M1470 400V250h100v150"/><path d="M1590 400V290h110v110"/></g>' + win(-160, 276, 5, 7, 17, 16) + win(1482, 264, 5, 8, 18, 16) + win(1602, 304, 5, 5, 20, 16) + palm(-60, 130) + palm(1700, 140);
-    // haze
-    v += '<g fill="rgba(255,243,221,.09)" stroke="rgba(255,243,221,.26)" stroke-width="2"><path d="M0 400V300h50v-34h44v54h46v-70h40v60h60v-26h64v82zM560 400V282h50v-34h40v54h54v-40h50v72zM930 400V272h44v-44h40v62h50v-34h54v82zM1200 400V290h50v-40h46v60h46v-30h60v60z"/></g>';
-    // Teen Talwar
-    v += '<g ' + E + ' ' + F1 + '><path d="M40 400C42 320 74 250 104 196C100 270 84 340 70 400Z"/><path d="M168 400C166 320 134 250 104 196C108 270 124 340 138 400Z"/><path d="M96 400V176l8-22 8 22V400Z" ' + W1 + '/><circle cx="104" cy="250" r="30" fill="none"/><path d="M26 400h156"/></g>';
-    // Frere Hall
-    v += '<g ' + E + ' ' + F1 + '><path d="M216 400V326h190v74"/>' + arches(224, 400, 6, 20, 10, 40) + '<path d="M296 326V232h30v94"/><path d="M290 232h42l-21-32Z" ' + W1 + '/><path d="M311 200v-16"/><path d="M216 326h190"/>' + arches(224, 354, 6, 20, 10, 20) + '</g>';
-    // Mazar-e-Quaid
-    v += '<g ' + E + ' ' + F1 + '><path d="M452 400V312h222v88"/><path d="M476 400V350a16 20 0 0 1 32 0v50M532 400V350a16 20 0 0 1 32 0v50M588 400V350a16 20 0 0 1 32 0v50" fill="rgba(0,0,0,.14)"/><path d="M486 312h154c0-62 -32-104 -77-104s-77 42 -77 104Z" ' + W1 + '/><path d="M563 208v-24"/><circle cx="563" cy="180" r="5" fill="#fff3dd"/><path d="M440 312h246M440 400h246"/><path d="M462 312v-26h18v26M646 312v-26h18v26"/></g>';
-    // Empress Market
-    v += '<g ' + E + ' ' + F1 + '><path d="M724 400V338h170v62"/>' + arches(734, 400, 5, 22, 10, 36) + '<path d="M792 338V190h34v148"/><path d="M786 190h46l-23-36Z" ' + W1 + '/><circle cx="809" cy="224" r="12" ' + W1 + '/><path d="M809 216v8l6 4"/><path d="M809 154v-16"/><path d="M724 338h170"/></g>';
-    // Mosque
-    v += '<g ' + E + ' ' + F1 + '><path d="M940 400V344h140v56"/><path d="M952 344c0-44 20-66 58-66s58 22 58 66Z" ' + W1 + '/><path d="M1010 278v-18"/><path d="M944 400V238h13v162M1076 400V238h13v162"/><path d="M944 238l6.5-22 6.5 22M1076 238l6.5-22 6.5 22"/>' + arches(962, 400, 4, 22, 10, 36) + '</g>';
-    // towers: Bahria Icon, MCB, Ocean, Habib Bank Plaza
-    v += '<g ' + E + ' ' + F1 + '><path d="M1118 400V120h52v280"/><path d="M1124 120l8-30h30l8 30"/><path d="M1148 90V56"/></g>' + win(1128, 140, 3, 16, 13, 15)
-       + '<g ' + E + ' ' + F1 + '><path d="M1186 400V190l30-26v236"/></g>' + win(1196, 204, 2, 12, 13, 15)
-       + '<g ' + E + ' ' + F1 + '><path d="M1236 400V210q0-30 22-34t22 34V400"/><path d="M1294 400V230q0-26 20-30t20 30V400"/></g>' + win(1246, 226, 2, 11, 12, 15)
-       + '<g ' + E + ' ' + F1 + '><path d="M1352 400V200h56v200"/></g>' + win(1362, 214, 3, 12, 14, 15);
-    // street furniture
-    v += palm(214, 150) + palm(700, 120) + palm(1420, 150) + lamp(430) + lamp(900) + lamp(1100);
-    v += '<g ' + E + ' fill="none"><path d="M1010 120c8-10 18-8 24 2 6-10 16-10 22-2"/><path d="M1060 90c7-8 14-6 19 2 5-8 13-8 18-1"/></g>';
-    v += '</svg>';
-    $('#sky').innerHTML = v;
-    var T = '#14202a';
-    $('#tesla').innerHTML = '<svg viewBox="0 0 320 120" fill="none" stroke="' + T + '" stroke-width="4.5" stroke-linejoin="round" stroke-linecap="round">'
-      + '<path id="beam" d="M300 70 L420 44 L420 110 L300 86Z" fill="rgba(255,238,180,.22)" stroke="none"/>'
-      + '<ellipse cx="160" cy="108" rx="140" ry="6" fill="rgba(0,0,0,.25)" stroke="none"/>'
-      + '<path d="M12 84C12 70 22 64 42 60L84 36C110 18 188 18 222 36L264 58C288 62 304 68 306 82V90H12Z" fill="#fff8ec"/>'
-      + '<path d="M92 56L112 36C136 28 180 28 206 38L238 56Z" fill="#1f2e3c"/><path d="M158 31V56"/>'
-      + '<path d="M44 66H82M232 66H270" stroke-width="3" opacity=".5"/>'
-      + '<path d="M298 72h8" stroke="#ffe9a8" stroke-width="6"/><path d="M14 74h8" stroke="#ff5d6c" stroke-width="6"/>'
-      + '<g class="wh"><circle cx="76" cy="90" r="19" fill="#14202a"/><circle cx="76" cy="90" r="8" fill="#fff3dd"/><path d="M76 72v36M58 90h36" stroke="#fff3dd" stroke-width="2" opacity=".6"/></g>'
-      + '<g class="wh"><circle cx="246" cy="90" r="19" fill="#14202a"/><circle cx="246" cy="90" r="8" fill="#fff3dd"/><path d="M246 72v36M228 90h36" stroke="#fff3dd" stroke-width="2" opacity=".6"/></g>'
+
+    // realistic white sedan, side view, facing right
+    $('#tesla').innerHTML = '<svg viewBox="0 0 640 210" fill="none" stroke-linejoin="round" stroke-linecap="round"><defs>'
+      + '<linearGradient id="cBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".38" stop-color="#eef1f4"/><stop offset=".55" stop-color="#c9d0d8"/><stop offset=".7" stop-color="#f4f6f8"/><stop offset="1" stop-color="#8f99a4"/></linearGradient>'
+      + '<linearGradient id="cGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3c4d5e"/><stop offset=".5" stop-color="#121a22"/><stop offset="1" stop-color="#26323e"/></linearGradient>'
+      + '<radialGradient id="cRim" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#f2f4f6"/><stop offset=".7" stop-color="#aeb6bf"/><stop offset="1" stop-color="#5d6670"/></radialGradient>'
+      + '<linearGradient id="cBeam" x1="0" x2="1"><stop offset="0" stop-color="#fff3c8" stop-opacity=".55"/><stop offset="1" stop-color="#fff3c8" stop-opacity="0"/></linearGradient>'
+      + '</defs>'
+      + '<path id="beam" d="M600 118L860 84V176L600 134Z" fill="url(#cBeam)"/>'
+      + '<ellipse cx="322" cy="200" rx="300" ry="9" fill="#000" opacity=".35"/>'
+      // wheel wells
+      + '<circle cx="146" cy="160" r="50" fill="#0c1014"/><circle cx="494" cy="160" r="50" fill="#0c1014"/>'
+      // body
+      + '<path d="M40 158C30 146 28 128 34 116C40 106 62 100 96 96C148 74 206 54 270 50C324 47 364 52 398 64C426 74 444 88 462 98C510 102 566 108 596 116C610 120 616 134 614 148C612 156 606 160 598 160L550 160C548 128 524 104 494 104C464 104 440 128 438 160L202 160C200 128 176 104 146 104C116 104 92 128 90 160Z" fill="url(#cBody)" stroke="#5e6873" stroke-width="2"/>'
+      // greenhouse glass
+      + '<path d="M120 98C160 78 214 62 268 60C314 58 352 62 382 72C404 80 422 90 436 98Z" fill="url(#cGlass)"/>'
+      + '<path d="M300 60L296 98" stroke="#0a0f14" stroke-width="7"/><path d="M178 80L170 98" stroke="#0a0f14" stroke-width="5"/>'
+      + '<path d="M204 72C240 64 276 62 300 62L230 96H180Z" fill="#fff" opacity=".12"/><path d="M322 64C350 66 370 70 390 78L340 96H316Z" fill="#fff" opacity=".1"/>'
+      // chrome window trim
+      + '<path d="M120 99H436" stroke="#d9dee3" stroke-width="2.5"/>'
+      // shoulder highlight and character line
+      + '<path d="M70 110C180 104 400 104 590 120" stroke="#fff" stroke-width="3" opacity=".9"/>'
+      + '<path d="M96 128C220 124 400 124 560 132" stroke="#8f99a4" stroke-width="1.6" opacity=".7"/>'
+      // door seams + handles + mirror
+      + '<path d="M298 100V156M180 100C182 120 190 140 200 156M430 100C432 120 436 140 440 156" stroke="#7c8792" stroke-width="1.6"/>'
+      + '<rect x="244" y="112" width="26" height="5" rx="2.5" fill="#7c8792"/><rect x="362" y="112" width="26" height="5" rx="2.5" fill="#7c8792"/>'
+      + '<path d="M412 92c10-4 22-4 28 2l-2 8h-24Z" fill="#1a232c"/>'
+      // side skirt
+      + '<path d="M202 160L438 160L436 150L204 150Z" fill="#2a323a"/>'
+      // lights
+      + '<path d="M560 110C580 112 598 116 608 122L600 126C584 120 568 116 556 115Z" fill="#fffbe6" stroke="#cfd6dc" stroke-width="1.5"/>'
+      + '<path d="M564 113h30" stroke="#ffe9a8" stroke-width="2.5"/>'
+      + '<path d="M36 112C48 106 70 102 94 100L92 108C72 110 52 112 38 118Z" fill="#d3172f"/><path d="M44 110l40-6" stroke="#ff6a7a" stroke-width="2"/>'
+      + '<path d="M598 146h14v6h-16Z" fill="#20272e"/><path d="M574 150h22" stroke="#20272e" stroke-width="5"/>'
+      // wheels (spin)
+      + [146, 494].map(function (cx) {
+          var sp = ''; for (var i = 0; i < 10; i++) { var a = i * Math.PI / 5; sp += '<path d="M' + (cx + Math.cos(a) * 8).toFixed(1) + ' ' + (160 + Math.sin(a) * 8).toFixed(1) + 'L' + (cx + Math.cos(a + .14) * 29).toFixed(1) + ' ' + (160 + Math.sin(a + .14) * 29).toFixed(1) + '" stroke="#6d7780" stroke-width="4.5"/>'; }
+          return '<circle cx="' + cx + '" cy="160" r="42" fill="#15191d"/><circle cx="' + cx + '" cy="160" r="40" stroke="#262c31" stroke-width="3"/>'
+            + '<path d="M' + (cx - 20) + ' 138a30 30 0 0 1 24 -8" stroke="#c4172c" stroke-width="9"/>'
+            + '<g class="wh"><circle cx="' + cx + '" cy="160" r="31" fill="url(#cRim)"/>' + sp + '<circle cx="' + cx + '" cy="160" r="31" stroke="#4c555e" stroke-width="2"/><circle cx="' + cx + '" cy="160" r="8" fill="#3a4148"/><circle cx="' + cx + '" cy="160" r="4" fill="#c9d0d6"/></g>';
+        }).join('')
       + '</svg>';
   })();
 
@@ -724,7 +728,7 @@ body.scrolled .bubble { opacity: 0 !important; }
   swap('#s6', '#s7', 82);
   tl.fromTo(basedLetters, { y: 120, opacity: 0, rotation: function (i) { return (i % 2 ? 1 : -1) * 10; } }, { y: 0, opacity: 1, rotation: 0, duration: 1.6, stagger: .09, ease: 'back.out(1.3)' }, 81.6);
   tl.fromTo('#basedCap', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 1.4 }, 84.4);
-  tl.fromTo('#sky', { y: 120, opacity: 0 }, { y: 0, opacity: 1, duration: 3, ease: 'power2.out' }, 82.6);
+  tl.fromTo('#sky', { scale: 1.12, opacity: 0 }, { scale: 1, opacity: 1, duration: 3, ease: 'power2.out' }, 82.6);
   var tesla = $('#tesla'), whs = $$('.wh', tesla);
   tl.fromTo(tesla, { x: function () { return -tesla.offsetWidth * 1.2; } }, { x: function () { return $('#stage').clientWidth + tesla.offsetWidth * .3; }, duration: 12, ease: 'none' }, 84.6);
   whs.forEach(function (w) { tl.fromTo(w, { rotation: 0, transformOrigin: '50% 50%' }, { rotation: 1440, transformOrigin: '50% 50%', duration: 12, ease: 'none' }, 84.6); });

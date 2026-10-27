@@ -24,7 +24,7 @@
 html { background: #000; }
 body { background: #000; color: var(--paper); font-family: var(--f-bs); font-weight: 500; letter-spacing: .012em; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 a { color: inherit; }
-.track { height: 1680vh; }
+.track { height: 2180vh; }
 
 /* ───────── frame + stage ───────── */
 .stage { position: fixed; inset: 12px; border-radius: 22px; overflow: hidden; background: #1f6a63; isolation: isolate; }
@@ -301,6 +301,38 @@ body.scrolled .bubble { opacity: 0 !important; }
   .about h2 { font-size: 12.4vw; } .about .in { left: 6%; right: 6%; top: 22%; } .about li { font-size: 1.1rem; }
   .final .fgrid { padding: 12vh 7vw 8vh; }
 }
+
+/* hire scenes: what I build / vaultflow / process / why (hx-) */
+.hx-up { display: block; overflow: hidden; padding-bottom: .04em; }
+.hx-up > span { display: inline-block; }
+.hx-small { position: absolute; left: 0; right: 0; top: 13%; text-align: center; font-weight: 800; font-size: clamp(1rem, 1.8vw, 1.6rem); letter-spacing: .1em; text-transform: uppercase; }
+.hx-bw { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); text-align: center; opacity: 0; }
+.hx-bw h2 { font-weight: 900; text-transform: uppercase; font-size: clamp(4rem, 15vw, 17rem); line-height: .82; }
+.hx-bw p { margin: 3vh auto 0; max-width: 34ch; font-weight: 600; font-size: clamp(1.05rem, 1.8vw, 1.7rem); line-height: 1.25; color: rgba(255,248,236,.82); }
+.hx-bw .n { display: block; font-size: clamp(1rem, 1.6vw, 1.4rem); font-weight: 800; letter-spacing: .14em; color: var(--accent); margin-bottom: 2vh; }
+.hx-vfl { position: absolute; left: 6%; top: 18%; width: 40%; z-index: 3; }
+.hx-vfl .k { font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--lilac); font-size: clamp(.95rem, 1.4vw, 1.3rem); }
+.hx-vfl h2 { font-weight: 900; text-transform: uppercase; font-size: clamp(3.2rem, 8.4vw, 9rem); line-height: .84; margin: 1.4vh 0 2.4vh; }
+.hx-vfl p { font-weight: 600; font-size: clamp(1rem, 1.45vw, 1.4rem); line-height: 1.3; max-width: 30ch; }
+.hx-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 3vh; }
+.hx-chips span { border: 1.5px solid rgba(255,248,236,.6); border-radius: 999px; padding: 5px 14px 6px; font-weight: 700; font-size: clamp(.85rem, 1.1vw, 1.05rem); text-transform: uppercase; }
+.hx-vfp { position: absolute; right: 5%; top: 14%; bottom: 12%; width: 48%; display: flex; gap: 2.2%; align-items: center; justify-content: flex-end; }
+.hx-vfp img { height: 86%; max-width: 32%; object-fit: contain; border-radius: 22px; box-shadow: 0 30px 60px rgba(0,0,0,.35); }
+.hx-vfp img:nth-child(2) { height: 96%; }
+.hx-steps { position: absolute; left: 6%; right: 6%; top: 26%; bottom: 14%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.4vw; }
+.hx-step { border-top: 3px solid var(--ink); padding-top: 2vh; color: var(--ink); }
+.hx-step b { display: block; font-weight: 900; font-size: clamp(4rem, 10vw, 10rem); line-height: .8; color: transparent; -webkit-text-stroke: 3px var(--ink); }
+.hx-step h3 { font-weight: 900; text-transform: uppercase; font-size: clamp(2rem, 4vw, 4.2rem); line-height: .9; margin: 2vh 0 1.4vh; color: var(--paper); text-shadow: 0 3px 0 var(--ink); }
+.hx-step p { font-weight: 600; font-size: clamp(.95rem, 1.3vw, 1.3rem); line-height: 1.3; max-width: 24ch; }
+.hx-st { position: absolute; left: 6%; right: 6%; top: 50%; transform: translateY(-50%); opacity: 0; }
+.hx-st h2 { font-weight: 900; text-transform: uppercase; font-size: clamp(3.6rem, 10.6vw, 12rem); line-height: .84; }
+.hx-st p { margin-top: 3vh; font-weight: 600; font-size: clamp(1.05rem, 1.8vw, 1.7rem); max-width: 34ch; line-height: 1.3; color: rgba(255,248,236,.85); }
+@media (max-width: 760px) {
+  .hx-vfl { left: 7%; right: 7%; width: auto; top: 12%; } .hx-vfl p { font-size: 1rem; }
+  .hx-vfp { left: 5%; right: 5%; width: auto; top: auto; bottom: 6%; height: 40%; justify-content: center; }
+  .hx-steps { grid-template-columns: 1fr 1fr; top: 22%; bottom: 6%; gap: 4vw; row-gap: 3vh; }
+  .hx-step b { font-size: 3.6rem; } .hx-step h3 { font-size: 2rem; } .hx-step p { font-size: .9rem; }
+}
 @media (prefers-reduced-motion: reduce) { .grain, .wave, .eyes, .logo .blink, .kit.f, .kit.f2, .dd.f, .dd.f2, .hint::after { animation: none !important; } }
 </style>
 </head>
@@ -392,6 +424,42 @@ body.scrolled .bubble { opacity: 0 !important; }
   </section>
 
   <!-- 9 · about -->
+
+  <!-- 8b · what I build -->
+  <section class="scene" id="s8b">
+    <p class="hx-small" style="color:var(--accent)">What I build</p>
+    <div class="hx-bw" id="hw1"><span class="n">01</span><h2><span class="hx-up"><span>Websites</span></span></h2><p>Fast, modern sites that make customers trust you and contact you on WhatsApp.</p></div>
+    <div class="hx-bw" id="hw2"><span class="n">02</span><h2><span class="hx-up"><span>Online</span></span><span class="hx-up"><span>stores</span></span></h2><p>Sell online. Cart, checkout, cash on delivery and orders straight to your phone.</p></div>
+    <div class="hx-bw" id="hw3"><span class="n">03</span><h2><span class="hx-up"><span>Web apps</span></span></h2><p>Booking systems, dashboards and portals built around how your business works.</p></div>
+    <div class="hx-bw" id="hw4"><span class="n">04</span><h2><span class="hx-up"><span>Mobile</span></span><span class="hx-up"><span>apps</span></span></h2><p>Native Android and iOS apps your customers keep on their phone.</p></div>
+  </section>
+
+  <!-- 8c · vaultflow -->
+  <section class="scene" id="s8c">
+    <div class="hx-vfl"><p class="k">Featured app</p><h2><span class="hx-up"><span>VaultFlow</span></span><span class="hx-up"><span>360</span></span></h2>
+      <p id="hvp">A native money app for Android and iOS. Cash, bank and wallets in one place, every rupee tracked, loans and bill splits. Designed and built by me.</p>
+      <div class="hx-chips" id="hvc"><span>Android</span><span>iOS</span><span>Native</span></div></div>
+    <div class="hx-vfp"><img src="vf-1.jpg" alt="VaultFlow 360 home" loading="lazy"><img src="vf-2.jpg" alt="VaultFlow 360 transactions" loading="lazy"><img src="vf-3.jpg" alt="VaultFlow 360 calendar" loading="lazy"></div>
+  </section>
+
+  <!-- 8d · how it works -->
+  <section class="scene" id="s8d">
+    <p class="hx-small" style="color:var(--ink)">How it works</p>
+    <div class="hx-steps">
+      <div class="hx-step"><b>01</b><h3>Chat</h3><p>Tell me about your business on WhatsApp. I send a plan, a quote and a date.</p></div>
+      <div class="hx-step"><b>02</b><h3>Design</h3><p>I design the look around your brand and share it with you.</p></div>
+      <div class="hx-step"><b>03</b><h3>Build</h3><p>You check a private preview and ask for any changes.</p></div>
+      <div class="hx-step"><b>04</b><h3>Launch</h3><p>It goes live on your domain or the app stores. I show you how it works.</p></div>
+    </div>
+  </section>
+
+  <!-- 8e · why me -->
+  <section class="scene" id="s8e">
+    <div class="hx-st" id="hy1"><h2><span class="hx-up"><span>No agency.</span></span><span class="hx-up"><span style="color:var(--accent)">Just me.</span></span></h2><p>You talk directly to the person building your project. No managers, no middlemen.</p></div>
+    <div class="hx-st" id="hy2"><h2><span class="hx-up"><span>See it</span></span><span class="hx-up"><span style="color:var(--accent)">before launch.</span></span></h2><p>A private preview link, and changes until you are happy with it.</p></div>
+    <div class="hx-st" id="hy3"><h2><span class="hx-up"><span>50% to start.</span></span><span class="hx-up"><span style="color:var(--accent)">Rest when happy.</span></span></h2><p>JazzCash, Easypaisa or bank transfer. Simple and fair.</p></div>
+    <div class="hx-st" id="hy4"><h2><span class="hx-up"><span>I stay</span></span><span class="hx-up"><span style="color:var(--accent)">after launch.</span></span></h2><p>Updates, fixes and new features as your business grows.</p></div>
+  </section>
   <section class="scene about" id="s9"><div class="in"><h2 id="d1">I care about the details.</h2>
     <ul><li><i></i>Responsive from the smallest screen up.</li><li><i></i>Logins, roles and real data behind every screen.</li><li><i></i>Deployed, tested on real devices, handed over.</li></ul></div>
     <svg class="pointer" viewBox="0 0 60 60" id="pointer"><path d="M6 8 52 28 30 34 24 54Z" fill="#fff8ec" stroke="#15131c" stroke-width="4" stroke-linejoin="round"/></svg></section>
@@ -648,8 +716,8 @@ body.scrolled .bubble { opacity: 0 !important; }
   });
 
   /* ───── ruler ───── */
-  var T = { hello: 21, build: 30, beliefs: 48, karachi: 82, work: 99, about: 124, contact: 133 };
-  var ruler = $('#ruler'), labs = [['hello', 'Hello'], ['build', 'Systems'], ['beliefs', 'Beliefs'], ['karachi', 'Karachi'], ['work', 'Work'], ['about', 'About'], ['contact', 'Contact']];
+  var T = { hello: 21, build: 30, beliefs: 48, karachi: 82, work: 99, services: 123, vault: 137, process: 146.5, why: 154.5, about: 165, contact: 174 };
+  var ruler = $('#ruler'), labs = [['hello', 'Hello'], ['build', 'Systems'], ['beliefs', 'Beliefs'], ['karachi', 'Karachi'], ['work', 'Work'], ['services', 'Services'], ['vault', 'VaultFlow'], ['process', 'Process'], ['why', 'Why me'], ['about', 'About'], ['contact', 'Contact']];
   labs.forEach(function (l) { var b = document.createElement('button'); b.className = 'lab'; b.textContent = l[1]; b.setAttribute('data-go', l[0]); ruler.appendChild(b); });
 
   $('#copyMail').addEventListener('click', function () { try { navigator.clipboard.writeText('hamzaharoonk07@gmail.com'); } catch (e) {} var b = this; b.style.opacity = 1; b.style.color = '#61e37a'; setTimeout(function () { b.style.color = ''; b.style.opacity = ''; }, 1200); });
@@ -661,10 +729,10 @@ body.scrolled .bubble { opacity: 0 !important; }
   /* ───── timeline ───── */
   gsap.registerPlugin(ScrollTrigger);
   var stage = $('#stage'), mark = $('#mark');
-  var SC = ['#s1', '#s2', '#s3', '#s4', '#s4y', '#s5', '#s6', '#s7', '#s8', '#s9', '#s10'];
+  var SC = ['#s1', '#s2', '#s3', '#s4', '#s4y', '#s5', '#s6', '#s7', '#s8', '#s8b', '#s8c', '#s8d', '#s8e', '#s9', '#s10'];
   var tl = gsap.timeline({ defaults: { ease: 'none' } });
   tl.set(SC, { autoAlpha: 0 }).set('#s1', { autoAlpha: 1 });
-  var BG = { s1: '#1f6a63', s2: '#0d1f1d', s3: '#c4472f', s4: '#2563b0', s4y: '#12476b', s5: '#143a35', s6: '#0f4a57', s7: '#d1802a', s8: '#2e6b4a', s9: '#7a4e2c', s10: '#1f6a63' };
+  var BG = { s1: '#1f6a63', s2: '#0d1f1d', s3: '#c4472f', s4: '#2563b0', s4y: '#12476b', s5: '#143a35', s6: '#0f4a57', s7: '#d1802a', s8: '#2e6b4a', s8b: '#0d1f1d', s8c: '#c4472f', s8d: '#d1802a', s8e: '#143a35', s9: '#7a4e2c', s10: '#1f6a63' };
   function swap(from, to, at) { var f = .7; if (from) tl.to(from, { autoAlpha: 0, duration: f }, at - f / 2); tl.to(to, { autoAlpha: 1, duration: f }, at - f / 2); tl.to(stage, { backgroundColor: BG[to.slice(1)], duration: 1.1 }, at - .8); }
 
   // 1 hero
@@ -744,23 +812,52 @@ body.scrolled .bubble { opacity: 0 !important; }
   var reelEl = $('#reel');
   tl.fromTo(reelEl, { x: 0 }, { x: function () { return -(reelEl.scrollWidth - $('#reelwrap').clientWidth + 24); }, duration: 22, ease: 'power1.inOut' }, 100);
 
+
+  // 8b-8e hire scenes: what I build, vaultflow, process, why me
+  function hxRise(sel, at, gap) { tl.fromTo(sel, { yPercent: 110 }, { yPercent: 0, duration: 1.2, stagger: gap || .18, ease: 'power3.out' }, at); }
+  swap('#s8', '#s8b', 123);
+  ['#hw1', '#hw2', '#hw3', '#hw4'].forEach(function (w, k) {
+    var at = 123.6 + k * 3.2;
+    tl.to(w, { opacity: 1, duration: .5 }, at);
+    hxRise(w + ' .hx-up > span', at, .15);
+    tl.fromTo(w + ' p, ' + w + ' .n', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: .8 }, at + .5);
+    tl.fromTo(w + ' h2', { scale: .92 }, { scale: 1.04, duration: 3 }, at);
+    if (k < 3) tl.to(w, { opacity: 0, y: -30, duration: .5 }, at + 2.9);
+  });
+  swap('#s8b', '#s8c', 137);
+  hxRise('#s8c .hx-up > span', 137.2, .2);
+  tl.fromTo('#hvp, #hvc', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 1, stagger: .3 }, 138);
+  tl.fromTo('#s8c .hx-vfp img', { y: 500, rotation: function (i) { return [-8, 0, 8][i]; } }, { y: 0, rotation: function (i) { return [-4, 0, 4][i]; }, duration: 1.8, stagger: .25, ease: 'power3.out' }, 137.4);
+  tl.to('#s8c .hx-vfp img', { y: function (i) { return [-20, -50, -20][i]; }, duration: 6 }, 139.4);
+  swap('#s8c', '#s8d', 146.5);
+  tl.fromTo('#s8d .hx-step', { opacity: 0, y: 70 }, { opacity: 1, y: 0, duration: 1.4, stagger: 1.1, ease: 'power3.out' }, 146.9);
+  tl.to({}, { duration: 2 }, 152.4);
+  swap('#s8d', '#s8e', 154.5);
+  ['#hy1', '#hy2', '#hy3', '#hy4'].forEach(function (y, k) {
+    var at = 154.9 + k * 2.6;
+    tl.to(y, { opacity: 1, duration: .5 }, at);
+    hxRise(y + ' .hx-up > span', at, .2);
+    tl.fromTo(y + ' p', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: .8 }, at + .5);
+    if (k < 3) tl.to(y, { opacity: 0, duration: .5 }, at + 2.1);
+  });
+
   // 9 about
-  swap('#s8', '#s9', 123);
-  tl.fromTo(d1w, { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 1.4, stagger: .3, ease: 'power3.out' }, 122.7);
-  $$('#s9 li').forEach(function (li, k) { tl.fromTo(li, { x: -30, opacity: 0 }, { x: 0, opacity: 1, duration: 1.2 }, 124.4 + k * .9); });
-  tl.fromTo('#pointer', { x: 120, y: 120, rotation: 20 }, { x: 0, y: 0, rotation: 0, duration: 3 }, 123.5).to('#pointer', { x: -60, y: 70, duration: 3 }, 126.5);
+  swap('#s8e', '#s9', 164);
+  tl.fromTo(d1w, { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 1.4, stagger: .3, ease: 'power3.out' }, 163.7);
+  $$('#s9 li').forEach(function (li, k) { tl.fromTo(li, { x: -30, opacity: 0 }, { x: 0, opacity: 1, duration: 1.2 }, 165.4 + k * .9); });
+  tl.fromTo('#pointer', { x: 120, y: 120, rotation: 20 }, { x: 0, y: 0, rotation: 0, duration: 3 }, 164.5).to('#pointer', { x: -60, y: 70, duration: 3 }, 167.5);
 
   // 10 contact
-  swap('#s9', '#s10', 130.6);
-  tl.to('.ruler .lab', { opacity: 0, duration: 1 }, 130.6);
-  tl.fromTo('#ft span', { y: 90, opacity: 0 }, { y: 0, opacity: 1, duration: 1.6, stagger: .22, ease: 'power3.out' }, 130.7);
-  tl.fromTo('#s10 .eyebrow', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 1 }, 130.6);
-  tl.fromTo('#s10 .fsub, #s10 .mail, #s10 .loc', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 1, stagger: .25 }, 132);
-  tl.fromTo('#s10 .row a', { y: 20, opacity: 0, scale: .9 }, { y: 0, opacity: 1, scale: 1, duration: .8, stagger: .12, ease: 'back.out(2)' }, 132.8);
-  tl.fromTo('#charB', { x: 90, opacity: 0 }, { x: 0, opacity: 1, duration: 1.8, ease: 'power3.out' }, 130.9);
-  tl.fromTo(capsB, { rotation: 0, svgOrigin: '92 118' }, { rotation: -78, duration: 3.2, ease: 'power2.out', svgOrigin: '92 118' }, 132.2);
-  tl.fromTo('#s10 .dream', { scale: 0, rotation: -30 }, { scale: 1, rotation: -8, duration: 1.2, ease: 'back.out(2)' }, 133.4);
-  tl.to({}, { duration: 2.6 }, 135);
+  swap('#s9', '#s10', 171.6);
+  tl.to('.ruler .lab', { opacity: 0, duration: 1 }, 171.6);
+  tl.fromTo('#ft span', { y: 90, opacity: 0 }, { y: 0, opacity: 1, duration: 1.6, stagger: .22, ease: 'power3.out' }, 171.7);
+  tl.fromTo('#s10 .eyebrow', { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 1 }, 171.6);
+  tl.fromTo('#s10 .fsub, #s10 .mail, #s10 .loc', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 1, stagger: .25 }, 173);
+  tl.fromTo('#s10 .row a', { y: 20, opacity: 0, scale: .9 }, { y: 0, opacity: 1, scale: 1, duration: .8, stagger: .12, ease: 'back.out(2)' }, 173.8);
+  tl.fromTo('#charB', { x: 90, opacity: 0 }, { x: 0, opacity: 1, duration: 1.8, ease: 'power3.out' }, 171.9);
+  tl.fromTo(capsB, { rotation: 0, svgOrigin: '92 118' }, { rotation: -78, duration: 3.2, ease: 'power2.out', svgOrigin: '92 118' }, 173.2);
+  tl.fromTo('#s10 .dream', { scale: 0, rotation: -30 }, { scale: 1, rotation: -8, duration: 1.2, ease: 'back.out(2)' }, 174.4);
+  tl.to({}, { duration: 2.6 }, 176);
 
   var total = tl.duration();
   var P = {}; Object.keys(T).forEach(function (k) { P[k] = T[k] / total * 100; });
